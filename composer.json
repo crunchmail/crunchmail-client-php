@@ -1,5 +1,5 @@
 {
-    "name": "crunchmail/client",
+    "name": "crunchmail/crunchmail-client-php",
     "type": "library",
     "description": "Crunchmail is a PHP client to request crunchmail API",
     "license": "MIT",
@@ -11,12 +11,15 @@
         }
     ],
     "require": {
+        "php": ">=5.4",
         "guzzlehttp/guzzle": "^6.1"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.0"
     },
     "autoload": {
-        "files": ["src/autoload.php"]
+        "psr-4": {
+            "Crunchmail\\": "src/"
+        }
     }
 }
