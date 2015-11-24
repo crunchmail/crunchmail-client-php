@@ -15,11 +15,11 @@ Crunchmail-client uses [composer](https://getcomposer.org/).
 
 First edit your composer.json config file:
 
-{
-    "require": {
-        "crunchmail/crunchmail-client-php"
+    {
+        "require": {
+            "crunchmail/crunchmail-client-php"
+        }
     }
-}
 
 Get composer if needed:
 
