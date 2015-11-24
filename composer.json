@@ -1,0 +1,22 @@
+{
+    "name": "crunchmail/client",
+    "type": "library",
+    "description": "Crunchmail is a PHP client to request crunchmail API",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Yannick Huerre",
+            "email": "dev@sheoak.fr",
+            "homepage": "https://github.com/sheoak"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "^6.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.0"
+    },
+    "autoload": {
+        "files": ["src/autoload.php"]
+    }
+}
