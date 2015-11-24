@@ -2,6 +2,14 @@
 <phpunit bootstrap="./vendor/autoload.php"
          forceCoversAnnotation="true"
          verbose="false"
+         strict="true"
+         timeoutForSmallTests="1"
+         timeoutForMediumTests="3"
+         timeoutForLargeTests="8"
+         beStrictAboutTestsThatDoNotTestAnything="true"
+         beStrictAboutOutputDuringTests="true"
+         beStrictAboutTestSize="true"
+         beStrictAboutChangesToGlobalState="true"
          colors="true">
 
     <testsuites>
