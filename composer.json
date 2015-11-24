@@ -19,7 +19,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Crunchmail\\": "crunchmail-client-php/src/"
+            "Crunchmail\\": "src/"
         }
     },
     "autoload-dev": {
