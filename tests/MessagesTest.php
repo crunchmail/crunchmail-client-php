@@ -2,6 +2,10 @@
 /**
  * TODO: Test Exception result for unexpected errors
  * TODO: Test Exception result for API errors
+ *
+ * @author Yannick Huerre <dev@sheoak.fr>
+ *
+ * @coversDefaultClass \Crunchmail\Messages
  */
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -44,17 +48,20 @@ class MessagesTest extends PHPUnit_Framework_TestCase
 
     /**
      * Test
+     *
      */
-    public function testGetPreviewUrl()
+    public function testGetPreviewUrlReturnsUrl()
     {
         $tpl = 'message_ok';
         $res = $this->prepareCheck('getPreviewUrl', $tpl, 'fakeid');
         $this->assertStringStartsWith('http', $res);
     }
 
-    // TODO
-    // TODO: result testing?
-    public function testSendMessage()
+    /**
+     * @covers ::sendMessage
+     * @todo: result testing?
+     */
+    public function testSendMessageReturnsResponse()
     {
         $tpl = 'message_ok';
         $body = file_get_contents(__DIR__ . '/responses/' . $tpl . '.json');
@@ -73,6 +80,10 @@ class MessagesTest extends PHPUnit_Framework_TestCase
         $res = $client->messages->sendMessage('fakeid');
 
         $this->assertInstanceOf('GuzzleHttp\Psr7\Response', $res);
+
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
 
         // TODO: test post request?
         // Iterate over the requests and responses
@@ -93,19 +104,31 @@ class MessagesTest extends PHPUnit_Framework_TestCase
          */
     }
 
-    // TODO
+    /**
+     * @covers ::sendPreview
+     */
     public function testSendPreview()
     {
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
     }
 
-    /*
+    /**
+     * @covers ::sendPreview
      * FIXME
+     */
+    /**
      public function testGetPreviewUrlError()
      {
          $tpl = 'empty';
          $res = $this->prepareCheck('getPreviewUrl', $tpl, 'fakeid', 400);
          $this->assertFalse($res);
-}
+
+         $this->markTestIncomplete(
+             'This test has not been implemented yet.'
+         );
+     }
      */
 
 }

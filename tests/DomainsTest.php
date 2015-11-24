@@ -2,6 +2,10 @@
 /**
  * TODO: Test Exception result for unexpected errors
  * TODO: Test Exception result for API errors
+ *
+ * @author Yannick Huerre <dev@sheoak.fr>
+ *
+ * @coversDefaultClass \Crunchmail\Domains
  */
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -46,12 +50,19 @@ class DomainsTest extends PHPUnit_Framework_TestCase
     /**
      * Test
      */
+
+    /**
+     * @covers ::verify
+     */
     public function testVerifyInternalServerError()
     {
         $client = $this->prepareTestException(500, 'Crunchmail\Exception\ApiException');
         $res = $client->domains->verify('fake.com');
     }
 
+    /**
+     * @covers ::search
+     */
     public function testSearchInternalServerError()
     {
         $client = $this->prepareTestException(500, 'Crunchmail\Exception\ApiException');
@@ -60,6 +71,8 @@ class DomainsTest extends PHPUnit_Framework_TestCase
 
     /**
      * Check searching a defined domain
+     *
+     * @covers ::search
      */
     public function testSearchDomain()
     {
@@ -69,6 +82,8 @@ class DomainsTest extends PHPUnit_Framework_TestCase
 
     /**
      * Check searching an undefined domain
+     *
+     * @covers ::search
      */
     public function testSearchUnknowDomain()
     {
@@ -80,6 +95,8 @@ class DomainsTest extends PHPUnit_Framework_TestCase
 
     /**
      * Check testing a valid domain
+     *
+     * @covers ::verify
      */
     public function testDomainOK()
     {
@@ -89,6 +106,8 @@ class DomainsTest extends PHPUnit_Framework_TestCase
 
     /**
      * Check testing an invalid domain
+     *
+     * @covers ::verify
      */
     public function testDomainError()
     {
@@ -98,6 +117,8 @@ class DomainsTest extends PHPUnit_Framework_TestCase
 
     /**
      * Check testing an existing but invalid domain (dkim error)
+     *
+     * @covers ::verify
      */
     public function testDomainInvalidDKIM()
     {
@@ -107,6 +128,8 @@ class DomainsTest extends PHPUnit_Framework_TestCase
 
     /**
      * Check testing an existing but invalid domain (mx error)
+     *
+     * @covers ::verify
      */
     public function testDomainInvalidMX()
     {
@@ -117,6 +140,8 @@ class DomainsTest extends PHPUnit_Framework_TestCase
 
     /**
      * Check testing an existing but invalid domain (mx error)
+     *
+     * @covers ::verify
      */
     public function testVerifyEmptyDomain()
     {

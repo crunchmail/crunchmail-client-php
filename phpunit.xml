@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<phpunit bootstrap="./vendor/autoload.php">
+<phpunit bootstrap="./vendor/autoload.php"
+         forceCoversAnnotation="true"
+         verbose="false"
+         colors="true">
 
     <testsuites>
         <testsuite name="Crunchmail PHP Client Test Suite">
             <directory>./tests</directory>
         </testsuite>
     </testsuites>
+
 
 </phpunit>

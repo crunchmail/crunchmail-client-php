@@ -4,6 +4,10 @@
  * TODO: Test Exception result for API errors
  * TODO: Test empty base_uri / invalid conifguration
  * TODO: Test invalid auth
+ *
+ * @author Yannick Huerre <dev@sheoak.fr>
+ *
+ * @coversDefaultClass \Crunchmail\Client
  */
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -21,6 +25,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
      * Helpers
      * -----------------------------------------------------------------------
      */
+
     private function prepareTestException($code)
     {
         // Create a mock and queue two responses.
@@ -41,16 +46,20 @@ class ClientTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException RuntimeException
+     *
+     * @covers ::__construct
      */
-    public function testInvalidConfiguration()
+    public function testInvalidConfigurationThrowException()
     {
         $client = new Crunchmail\Client([]);
     }
 
     /**
      * @expectedException GuzzleHttp\Exception\RequestException
+     *
+     * @covers ::__call
      */
-    public function testInvalidMethod()
+    public function testInvalidMethodThrowException()
     {
         $client = new Crunchmail\Client(['base_uri' => '']);
         $client->invalidMethod();
@@ -64,8 +73,21 @@ class ClientTest extends PHPUnit_Framework_TestCase
     {
     }
 
+    public function testCreate()
+    {
+    }
+
+    /**
+     * @covers ::createOrUpdate
+     */
+    public function testCreateOrUpdate()
+    {
+        $this->markTestIncomplete('Todo');
+    }
+
     /**
      * @expectedException Crunchmail\Exception\ApiException
+     * @covers ::retrieve
      */
     public function testRetrieveInternalServerError()
     {
@@ -75,6 +97,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException Crunchmail\Exception\ApiException
+     * @covers ::retrieve
      */
     public function testRetrieve404Error()
     {
@@ -84,6 +107,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException Crunchmail\Exception\ApiException
+     * @covers ::update
      */
     public function testUpdateInternalServerError()
     {
@@ -93,6 +117,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException Crunchmail\Exception\ApiException
+     * @covers ::create
      */
     public function testCreateInternalServerError()
     {
@@ -102,6 +127,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException Crunchmail\Exception\ApiException
+     * @covers ::remove
      */
     /*
     public function testRemoveInternalServerError()
@@ -113,8 +139,10 @@ class ClientTest extends PHPUnit_Framework_TestCase
 
     /**
      * Invalid status should return the translated string
+     *
+     * @covers ::readableMessageStatus
      */
-    public function testReadableMessageStatus()
+    public function testValidStatusReturnsString()
     {
         $res = Crunchmail\Client::readableMessageStatus('message_ok');
         $this->assertInternalType('string', $res);
@@ -123,8 +151,10 @@ class ClientTest extends PHPUnit_Framework_TestCase
 
     /**
      * Invalid status should return the given string
+     *
+     * @covers ::readableMessageStatus
      */
-    public function testInvalidReadableMessageStatus()
+    public function testInvalidStatusReturnsString()
     {
         $res = Crunchmail\Client::readableMessageStatus('error');
         $this->assertTrue($res === 'error');
