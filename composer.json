@@ -26,5 +26,5 @@
         "psr-4": {
             "Crunchmail\\Tests\\": "tests/"
         }
-    },
+    }
 }
