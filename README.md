@@ -17,11 +17,13 @@ First edit your composer.json config file:
 
     {
         "require": {
+            "guzzlehttp/guzzle": "^6.1",
             "crunchmail/crunchmail-client-php"
         }
     }
 
-Get composer if needed:
+Get composer if needed.
+Note that this is a security risk, but this is the way recommended by composer:
 
     curl -sS https://getcomposer.org/installer | php
 
