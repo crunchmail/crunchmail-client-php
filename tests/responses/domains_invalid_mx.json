@@ -1,0 +1,19 @@
+{
+    "count": 1,
+    "next": null,
+    "page_count": 1,
+    "previous": null,
+    "results": [
+        {
+            "_links": {
+                "revalidate": {
+                    "href": "https://api.crunchmail.me/v1/domains/8/revalidate/"
+                }
+            },
+            "dkim_status": "ok",
+            "mx_status": "ko",
+            "name": "oasiswork.fr",
+            "url": "https://api.crunchmail.me/v1/domains/8/"
+        }
+    ]
+}

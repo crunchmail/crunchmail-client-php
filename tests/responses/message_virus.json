@@ -1,0 +1,54 @@
+{
+    "_links": {
+        "archive_url": {
+            "href": "https://api.crunchmail.me/hosted/message/9959db9b-158c-4e40-9741-5a7b69f4022c/"
+        },
+        "bounces": {
+            "href": "https://api.crunchmail.me/v1/messages/576/bounces/"
+        },
+        "mails": {
+            "href": "https://api.crunchmail.me/v1/messages/576/mails/"
+        },
+        "opt_outs": {
+            "href": "https://api.crunchmail.me/v1/messages/576/opt_outs/"
+        },
+        "preview": {
+            "href": "https://api.crunchmail.me/v1/messages/576/preview/"
+        },
+        "preview.html": {
+            "href": "https://api.crunchmail.me/v1/messages/576/preview.html"
+        },
+        "preview.txt": {
+            "href": "https://api.crunchmail.me/v1/messages/576/preview.txt"
+        },
+        "preview_send": {
+            "href": "https://api.crunchmail.me/v1/messages/576/preview_send/"
+        },
+        "spam_details": {
+            "href": "https://api.crunchmail.me/v1/messages/576/spam_details/"
+        },
+        "stats": {
+            "href": "https://api.crunchmail.me/v1/messages/576/stats/"
+        }
+    },
+    "category": null,
+    "completion_date": null,
+    "creation_date": "2015-09-17T18:19:50.566Z",
+    "detach_images": false,
+    "external_optout": false,
+    "html": "It is a virus\u2026",
+    "is_spam": false,
+    "mail_count": 2,
+    "msg_issue": "",
+    "name": "Wow, it's a virus",
+    "properties": null,
+    "send_date": null,
+    "sender_email": "fakeuser@oasiswork.fr",
+    "sender_name": "A virus !!!",
+    "spam_score": null,
+    "status": "message_ok",
+    "subject": "Open me, I'm a nice virus",
+    "track_clicks": true,
+    "track_open": true,
+    "url": "https://api.crunchmail.me/v1/messages/576/"
+}
