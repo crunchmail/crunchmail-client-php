@@ -59,6 +59,11 @@ class Client extends \GuzzleHttp\Client
      */
     public function __construct(array $config = [])
     {
+        if (!isset($config['base_uri']))
+        {
+            throw new \RuntimeException('base_uri is missing in configuration');
+        }
+
         $this->base_uri = $config['base_uri'];
         return parent::__construct($config);
     }
@@ -224,7 +229,6 @@ class Client extends \GuzzleHttp\Client
             'message_issues'  => "Le message contient des erreurs",
             'sent'            => "Le message a été envoyé",
             'sending'         => "En cours d'envoi…"
-
         ];
 
         return isset($match[$status]) ? $match[$status] : $status;
