@@ -49,7 +49,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
      *
      * @covers ::__construct
      */
-    public function testInvalidConfigurationThrowException()
+    public function testInvalidConfigurationThrowsAnException()
     {
         $client = new Crunchmail\Client([]);
     }
@@ -59,26 +59,27 @@ class ClientTest extends PHPUnit_Framework_TestCase
      *
      * @covers ::__call
      */
-    public function testInvalidMethodThrowException()
+    public function testInvalidMethodThrowsAnException()
     {
         $client = new Crunchmail\Client(['base_uri' => '']);
         $client->invalidMethod();
     }
 
-    public function testAPIOffline()
+    public function testApiOfflineThrowsAnException()
     {
     }
 
-    public function testAPITimeout()
+    public function testApiTimeoutThrowsAnException()
     {
     }
 
-    public function testCreate()
+    public function testCreateReturnsAValidResponse()
     {
     }
 
     /**
      * @covers ::createOrUpdate
+     * @todo rename
      */
     public function testCreateOrUpdate()
     {

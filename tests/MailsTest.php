@@ -42,8 +42,9 @@ class MailsTest extends PHPUnit_Framework_TestCase
      *
      * @covers ::push
      */
-    public function testInvalidEmail()
+    public function testAddingInvalidEmailReturnsFailure()
     {
+        $this->markTestIncomplete('Todo');
     }
 
     /**
@@ -52,7 +53,7 @@ class MailsTest extends PHPUnit_Framework_TestCase
      *
      * @covers ::push
      */
-    public function testPush()
+    public function testAddingValidEmailReturnsProperCount()
     {
         // Create a mock and queue two responses.
         $tpl = 'mails_push_ok';
@@ -66,6 +67,8 @@ class MailsTest extends PHPUnit_Framework_TestCase
             $handler]);
 
         $res = $client->mails->push('fakeid', 'fakeemail@domain.com');
+
+        $this->markTestIncomplete('Todo');
     }
 
 }

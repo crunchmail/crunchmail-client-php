@@ -61,7 +61,7 @@ class MessagesTest extends PHPUnit_Framework_TestCase
      * @covers ::sendMessage
      * @todo: result testing?
      */
-    public function testSendMessageReturnsResponse()
+    public function testSendingAMessageReturnsAValidResponse()
     {
         $tpl = 'message_ok';
         $body = file_get_contents(__DIR__ . '/responses/' . $tpl . '.json');
@@ -107,7 +107,7 @@ class MessagesTest extends PHPUnit_Framework_TestCase
     /**
      * @covers ::sendPreview
      */
-    public function testSendPreview()
+    public function testSendingPreviewReturnsAValidResponse()
     {
         $this->markTestIncomplete(
             'This test has not been implemented yet.'

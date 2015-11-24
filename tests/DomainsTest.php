@@ -74,7 +74,7 @@ class DomainsTest extends PHPUnit_Framework_TestCase
      *
      * @covers ::search
      */
-    public function testSearchDomain()
+    public function testSearchDomainReturnsTrue()
     {
         $res = $this->prepareCheck('search', 'domains_ok');
         $this->assertTrue(is_array($res));
@@ -85,7 +85,7 @@ class DomainsTest extends PHPUnit_Framework_TestCase
      *
      * @covers ::search
      */
-    public function testSearchUnknowDomain()
+    public function testSearchUnknowDomainReturnsFalse()
     {
         $res = $this->prepareCheck('search', 'domains_empty');
 
@@ -98,7 +98,7 @@ class DomainsTest extends PHPUnit_Framework_TestCase
      *
      * @covers ::verify
      */
-    public function testDomainOK()
+    public function testVerifyValidDomainReturnsTrue()
     {
         $res = $this->prepareCheck('verify', 'domains_ok');
         $this->assertTrue($res);
@@ -109,7 +109,7 @@ class DomainsTest extends PHPUnit_Framework_TestCase
      *
      * @covers ::verify
      */
-    public function testDomainError()
+    public function testVerifyInvalidDomainReturnsFalse()
     {
         $res = $this->prepareCheck('verify', 'domains_empty');
         $this->assertFalse($res);
@@ -120,7 +120,7 @@ class DomainsTest extends PHPUnit_Framework_TestCase
      *
      * @covers ::verify
      */
-    public function testDomainInvalidDKIM()
+    public function testDomainInvalidDkim()
     {
         $res = $this->prepareCheck('verify', 'domains_invalid_dkim');
         $this->assertFalse($res);
@@ -131,7 +131,7 @@ class DomainsTest extends PHPUnit_Framework_TestCase
      *
      * @covers ::verify
      */
-    public function testDomainInvalidMX()
+    public function testDomainInvalidMx()
     {
         $res = $this->prepareCheck('verify', 'domains_invalid_mx');
 
@@ -143,7 +143,7 @@ class DomainsTest extends PHPUnit_Framework_TestCase
      *
      * @covers ::verify
      */
-    public function testVerifyEmptyDomain()
+    public function testVerifyEmptyDomainReturnFalse()
     {
         $res = $this->prepareCheck('verify', 'domains_invalid_mx', '');
         $this->assertFalse($res);
