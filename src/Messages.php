@@ -83,6 +83,14 @@ class Messages extends Client
         return $this->retrieve($url);
     }
 
+    protected static function checkMessage($msg)
+    {
+        if (!isset($msg->status))
+        {
+            throw new \RuntimeException('Invalid message');
+        }
+    }
+
     /**
      * Return true if the message status is message_ok
      *
@@ -90,7 +98,8 @@ class Messages extends Client
      */
     public static function hasIssue($msg)
     {
-        return isset($msg->status) && $msg->status === 'message_issues';
+        self::checkMessage($msg);
+        return $msg->status === 'message_issues';
     }
 
     /**
@@ -100,7 +109,8 @@ class Messages extends Client
      */
     public static function isReady($msg)
     {
-        return isset($msg->status) && $msg->status === 'message_ok';
+        self::checkMessage($msg);
+        return $msg->status === 'message_ok';
     }
 
     /**
@@ -110,7 +120,8 @@ class Messages extends Client
      */
     public static function isSending($msg)
     {
-        return isset($msg->status) && $msg->status === 'sending';
+        self::checkMessage($msg);
+        return $msg->status === 'sending';
     }
 
     /**
@@ -120,6 +131,7 @@ class Messages extends Client
      */
     public static function hasBeenSent($msg)
     {
-        return isset($msg->status) && $msg->status === 'sent';
+        self::checkMessage($msg);
+        return $msg->status === 'sent';
     }
 }
