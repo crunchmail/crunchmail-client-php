@@ -33,19 +33,26 @@ Then install:
 # Getting started
 
     <?php
-
-    // require libs
+    // require composer libs
     require 'vendor/autoload.php';
 
     // prepare configuration
     $config = [
           'base_uri'    => 'https://api.crunchmail.me/v1/',
+          // edit with your own customer path
           'client_uri'  => '/customers/999999999/',
           // SSL
           'verify'      => true,
+          // edit with your own Munch API key
           'auth'        => [ 'api', 'my-super-secret-apikey' ]
     ];
 
     // instanciate new client
     $Client = new Crunchmail\Client($config);
+
+    $messages = $Client->retrieve('/path/to/ressource/');
+    $Client->remove('/path/to/ressource/');
+
+    // retrieve all messages
+    $list = $Client->messages->retrieve();
 
