@@ -33,7 +33,7 @@ $Client = new Crunchmail\Client($config);
 /******************************************************************************
  * WORKING EXAMPLES
  *
- * You should catch all exceptions, but the examples below have been simplify
+ * You should catch all exceptions, but the examples below have been simplified
  * for easy reading:
  *****************************************************************************/
 
