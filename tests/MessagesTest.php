@@ -35,6 +35,34 @@ class MessagesTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @testdox Method create() works properly
+     *
+     * @covers ::create
+     */
+    public function testCreateAMessage()
+    {
+        $client = cm_mock_client(200, 'message_ok');
+        $result = $client->messages->create([]);
+
+        $this->assertEquals('message_ok', $result->status);
+    }
+
+    /**
+     * @testdox Method update() works properly
+     *
+     * @covers ::update
+     */
+    public function testUpdateAMessage()
+    {
+        $client = cm_mock_client(200, 'message_ok');
+        $result = $client->messages->update([]);
+
+        $this->assertEquals('message_ok', $result->status);
+    }
+
+    /**
+     * @testdox Method hasBeenSent() works properly
+     *
      * @covers ::hasBeenSent
      */
     public function testMessageHasBeenSent()
@@ -47,16 +75,8 @@ class MessagesTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::hasBeenSent
-     * @expectedExceptionCode 0
-     * @expectedException \RuntimeException
-     */
-    public function testMessageHasBeenSentThrowsAnException()
-    {
-        Crunchmail\Messages::hasBeenSent('error');
-    }
-
-    /**
+     * @testdox Method isSending() works properly
+     *
      * @covers ::isSending
      */
     public function testMessageIsSending()
@@ -69,19 +89,11 @@ class MessagesTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::isSending
-     * @expectedExceptionCode 0
-     * @expectedException \RuntimeException
-     */
-    public function testMessageIsSendingThrowsAnException()
-    {
-        Crunchmail\Messages::isSending('error');
-    }
-
-    /**
+     * @testdox Method isReady() works properly
+     *
      * @covers ::isReady
      */
-    public function testMessageIsReady()
+    public function testIsReady()
     {
         $msg = cm_get_message('message_ok');
         $this->assertTrue(Crunchmail\Messages::isReady($msg));
@@ -91,16 +103,8 @@ class MessagesTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::isReady
-     * @expectedExceptionCode 0
-     * @expectedException \RuntimeException
-     */
-    public function testMessageIsReadyThrowsAnException()
-    {
-        Crunchmail\Messages::isReady('error');
-    }
-
-    /**
+     * @testdox Method hasError() works properly
+     *
      * @covers ::hasIssue
      */
     public function testMessageHasError()
@@ -113,7 +117,49 @@ class MessagesTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @testdox Method hasBeenSent() throws an exception on invalid parameter
+     *
+     * @covers ::hasBeenSent
+     *
+     * @expectedExceptionCode 0
+     * @expectedException \RuntimeException
+     */
+    public function testHasBeenSentThrowsAnExceptionOnInvalidParameter()
+    {
+        Crunchmail\Messages::hasBeenSent('error');
+    }
+
+    /**
+     * @testdox Method isSending() throws an exception on invalid parameter
+     *
+     * @covers ::isSending
+     *
+     * @expectedExceptionCode 0
+     * @expectedException \RuntimeException
+     */
+    public function testIsSendingThrowsAnExceptionOnInvalidParameter()
+    {
+        Crunchmail\Messages::isSending('error');
+    }
+
+    /**
+     * @testdox Method isReady() throws an exception on invalid parameter
+     *
+     * @covers ::isReady
+     *
+     * @expectedExceptionCode 0
+     * @expectedException \RuntimeException
+     */
+    public function testIsReadyThrowsAnExceptionOnInvalidParameter()
+    {
+        Crunchmail\Messages::isReady('error');
+    }
+
+    /**
+     * @testdox Method hasIssue() throws an exception on invalid parameter
+     *
      * @covers ::hasIssue
+     *
      * @expectedExceptionCode 0
      * @expectedException \RuntimeException
      */
@@ -123,18 +169,10 @@ class MessagesTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @testdox Method create() throws an exception on invalid domain
+     *
      * @covers ::create
-     */
-    public function testCreateAMessage()
-    {
-        $client = cm_mock_client(200, 'message_ok');
-        $result = $client->messages->create([]);
-
-        $this->assertEquals('message_ok', $result->status);
-    }
-
-    /**
-     * @covers ::create
+     *
      * @expectedException Crunchmail\Exception\ApiException
      * @expectedExceptionCode 400
      */
@@ -142,17 +180,6 @@ class MessagesTest extends PHPUnit_Framework_TestCase
     {
         $client = cm_mock_client(400, 'domains_invalid_mx');
         $result = $client->messages->create([]);
-    }
-
-    /**
-     * @covers ::update
-     */
-    public function testUpdateAMessage()
-    {
-        $client = cm_mock_client(200, 'message_ok');
-        $result = $client->messages->update([]);
-
-        $this->assertEquals('message_ok', $result->status);
     }
 
     /**

@@ -31,8 +31,6 @@ class AttachmentsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Check adding a file
-     *
      * @covers \Crunchmail\Attachments::join
      */
     public function testAddingAFileReturnsAProperResult()
@@ -46,9 +44,8 @@ class AttachmentsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Check adding a file that already exists
-     *
      * @covers \Crunchmail\Attachments::join
+     *
      * @expectedException Crunchmail\Exception\ApiException
      * @expectedExceptionCode 400
      */
@@ -60,9 +57,8 @@ class AttachmentsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Check adding a missing file
-     *
      * @covers \Crunchmail\Attachments::join
+     *
      * @expectedExceptionCode 0
      * @expectedException \RuntimeException
      */
@@ -74,13 +70,12 @@ class AttachmentsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Check adding an unreadable file
-     *
      * @covers \Crunchmail\Attachments::join
+     *
      * @expectedExceptionCode 0
      * @expectedException \RuntimeException
      */
-    public function testAddingAUnreadableFileThrowsAnException()
+    public function testAddingAnUnreadableFileThrowsAnException()
     {
         $client = cm_mock_client(200, 'empty');
         $filepath=$this->fileUnreadable;

@@ -38,9 +38,10 @@ class DomainsTest extends PHPUnit_Framework_TestCase
      */
 
     /**
+     * @covers \Crunchmail\Domains::verify
+     *
      * @expectedException Crunchmail\Exception\ApiException
      * @expectedExceptionCode 500
-     * @covers \Crunchmail\Domains::verify
      */
     public function testVerifyInternalServerError()
     {
@@ -50,6 +51,7 @@ class DomainsTest extends PHPUnit_Framework_TestCase
 
     /**
      * @covers Crunchmail\Domains::search
+     *
      * @expectedException Crunchmail\Exception\ApiException
      * @expectedExceptionCode 500
      */
@@ -60,22 +62,22 @@ class DomainsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Check searching a defined domain
+     * @testdox Searching a valid domain returns an array
      *
      * @covers \Crunchmail\Domains::search
      */
-    public function testSearchDomainReturnsTrue()
+    public function testSearchDomainReturnsAnArray()
     {
         $res = $this->prepareCheck('search', 'domains_ok');
         $this->assertTrue(is_array($res));
     }
 
     /**
-     * Check searching an undefined domain
+     * @testdox Searching a invalid domain returns an empty array
      *
      * @covers \Crunchmail\Domains::search
      */
-    public function testSearchUnknowDomainReturnsFalse()
+    public function testSearchUnknowDomainReturnsAnEmptyArray()
     {
         $res = $this->prepareCheck('search', 'domains_empty');
 
@@ -84,9 +86,10 @@ class DomainsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Check testing a valid domain
+     * @testdox Verifying a valid domain returns true
      *
      * @covers \Crunchmail\Domains::verify
+     *
      * @todo check call to post, with domain and email as parameter
      */
     public function testVerifyValidDomainReturnsTrue()
@@ -96,7 +99,7 @@ class DomainsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Check testing an invalid domain
+     * @testdox Verifying an unknow domain returns false
      *
      * @covers \Crunchmail\Domains::verify
      */
@@ -107,7 +110,7 @@ class DomainsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Check testing an existing but invalid domain (dkim error)
+     * @testdox Verifying an invalid existing domain returns false (dkim)
      *
      * @covers \Crunchmail\Domains::verify
      */
@@ -118,25 +121,13 @@ class DomainsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Check testing an existing but invalid domain (mx error)
+     * @testdox Verifying an invalid existing domain returns false (mx)
      *
      * @covers \Crunchmail\Domains::verify
      */
     public function testDomainInvalidMx()
     {
         $res = $this->prepareCheck('verify', 'domains_invalid_mx');
-
-        $this->assertFalse($res);
-    }
-
-    /**
-     * Check testing an existing but invalid domain (mx error)
-     *
-     * @covers \Crunchmail\Domains::verify
-     */
-    public function testVerifyEmptyDomainReturnFalse()
-    {
-        $res = $this->prepareCheck('verify', 'domains_invalid_mx', '');
         $this->assertFalse($res);
     }
 }

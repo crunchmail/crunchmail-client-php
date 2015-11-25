@@ -28,7 +28,6 @@ class ClientTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('message_ok', $msg->status);
     }
 
-
     /**
      * -----------------------------------------------------------------------
      * Tests
@@ -39,7 +38,9 @@ class ClientTest extends PHPUnit_Framework_TestCase
      * @covers ::__construct
      * @covers ::handleGuzzleException
      * @covers ::catchGuzzleException
+     *
      * @expectedException RuntimeException
+     * @expectedExceptionCode 0
      */
     public function testInvalidConfigurationThrowsAnException()
     {
@@ -49,6 +50,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
     /**
      * @covers ::handleGuzzleException
      * @covers ::catchGuzzleException
+     *
      * @expectedException Crunchmail\Exception\ApiException
      * @expectedExceptionCode 401
      */
@@ -61,6 +63,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
      * @covers ::__call
      * @covers ::handleGuzzleException
      * @covers ::catchGuzzleException
+     *
      * @expectedException GuzzleHttp\Exception\RequestException
      * @expectedExceptionCode 0
      */
@@ -74,6 +77,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
      * @covers ::__call
      * @covers ::handleGuzzleException
      * @covers ::catchGuzzleException
+     *
      * @expectedException RuntimeException
      * @expectedExceptionCode 0
      */
@@ -86,6 +90,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
     /**
      * @covers ::handleGuzzleException
      * @covers ::catchGuzzleException
+     *
      * @expectedException Crunchmail\Exception\ApiException
      * @expectedExceptionCode 500
      */
@@ -105,9 +110,11 @@ class ClientTest extends PHPUnit_Framework_TestCase
 
     /**
      * @testdox retrieve() throws an exception on error 500
+     *
      * @covers ::retrieve
      * @covers ::handleGuzzleException
      * @covers ::catchGuzzleException
+     *
      * @expectedException Crunchmail\Exception\ApiException
      * @expectedExceptionCode 500
      */
@@ -118,9 +125,11 @@ class ClientTest extends PHPUnit_Framework_TestCase
 
     /**
      * @testdox retrieve() throws an exception on error 400
+     *
      * @covers ::retrieve
      * @covers ::handleGuzzleException
      * @covers ::catchGuzzleException
+     *
      * @expectedException Crunchmail\Exception\ApiException
      * @expectedExceptionCode 404
      */
@@ -131,9 +140,11 @@ class ClientTest extends PHPUnit_Framework_TestCase
 
     /**
      * @testdox udpate() throws an exception on error 500
+     *
      * @covers ::update
      * @covers ::handleGuzzleException
      * @covers ::catchGuzzleException
+     *
      * @expectedException Crunchmail\Exception\ApiException
      * @expectedExceptionCode 500
      */
@@ -144,9 +155,11 @@ class ClientTest extends PHPUnit_Framework_TestCase
 
     /**
      * @testdox create() throws an exception on error 500
+     *
      * @covers ::create
      * @covers ::handleGuzzleException
      * @covers ::catchGuzzleException
+     * 
      * @expectedException Crunchmail\Exception\ApiException
      * @expectedExceptionCode 500
      */
@@ -156,10 +169,46 @@ class ClientTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::create
+     * @covers ::formatResponseOutput
+     * @covers ::handleGuzzleException
+     * @covers ::catchGuzzleException
+     *
+     * @expectedException Crunchmail\Exception\ApiException
+     * @expectedExceptionCode 400
+     *
+     * @group bug-2030
+     * @todo update template when API has been fixed
+     */
+    public function testCreateOnInvalidDomainsThrowsAnException()
+    {
+        cm_mock_client(400, 'domain_error')->create([]);
+    }
+
+    /**
+     * @testdox Receiving an invalid error does not breaks formatting
+     *
+     * @covers ::formatResponseOutput
+     * @covers ::handleGuzzleException
+     * @covers ::catchGuzzleException
+     *
+     * @expectedException Crunchmail\Exception\ApiException
+     * @expectedExceptionCode 400
+     *
+     * @group bug-2030
+     */
+    public function testReceivingAnInvalidError()
+    {
+        cm_mock_client(400, 'invalid_error')->create([]);
+    }
+
+    /**
      * @testdox remove() throws an exception on error 500
+     *
      * @covers ::remove
      * @covers ::handleGuzzleException
      * @covers ::catchGuzzleException
+     *
      * @expectedException Crunchmail\Exception\ApiException
      * @expectedExceptionCode 500
      */
@@ -169,14 +218,12 @@ class ClientTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Check that last 404 error is saved
-     *
      * @covers ::getLastError
      * @covers ::getLastErrorCode
      * @covers ::handleGuzzleException
      * @covers ::catchGuzzleException
      */
-    public function testLastErrorIsSaved()
+    public function testLast404ErrorIsSaved()
     {
         $client = cm_mock_client(404, 'empty');
 
@@ -193,7 +240,9 @@ class ClientTest extends PHPUnit_Framework_TestCase
 
     /**
      * @testdox getLastError returns the last exception
+     *
      * @covers ::getLastError
+     *
      * @todo check error message matches
      */
     public function testGetLastError()
@@ -211,6 +260,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
     }
     /**
      * @testdox Exception generates a proper error message and error code
+     *
      * @covers ::getLastError
      * @covers ::getLastErrorCode
      * @covers ::handleGuzzleException
@@ -235,6 +285,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
 
     /**
      * @testdox create() returns a valid result
+     *
      * @covers ::createOrUpdate
      * @covers ::create
      *
@@ -249,6 +300,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
 
     /**
      * @testdox update() returns a valid result
+     *
      * @covers ::createOrUpdate
      * @covers ::update
      *
@@ -263,6 +315,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
 
     /**
      * @testdox createOrUpdate() returns a valid result
+     *
      * @covers ::createOrUpdate
      * @covers ::create
      *
@@ -275,7 +328,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Invalid status should return the translated string
+     * @testdox Valid status should return the translated string
      *
      * @covers ::readableMessageStatus
      */
@@ -287,7 +340,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Invalid status should return the given string
+     * @testdox Invalid status should return the given string
      *
      * @covers ::readableMessageStatus
      */
