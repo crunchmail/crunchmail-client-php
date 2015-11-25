@@ -249,7 +249,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
     /**
      * @testdox update() returns a valid result
      * @covers ::createOrUpdate
-     * @covers ::udpate
+     * @covers ::update
      *
      * @todo spy that client call get method on guzzle
      */

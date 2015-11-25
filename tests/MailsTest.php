@@ -12,6 +12,11 @@ use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Middleware;
 
+require_once('helpers/cm_mock.php');
+
+/**
+ * Test class
+ */
 class MailsTest extends PHPUnit_Framework_TestCase
 {
     /**
@@ -19,7 +24,7 @@ class MailsTest extends PHPUnit_Framework_TestCase
      *
      * @todo verify API is working (404)
      *
-     * @covers ::push
+     * @covers \Crunchmail\Mails::push
      */
     /*
     public function testInvalidPush()
@@ -42,7 +47,7 @@ class MailsTest extends PHPUnit_Framework_TestCase
     /**
      * Test adding invalid recipients
      *
-     * @covers ::push
+     * @covers \Crunchmail\Mails::push
      */
     public function testAddingInvalidEmailReturnsFailure()
     {
@@ -61,7 +66,7 @@ class MailsTest extends PHPUnit_Framework_TestCase
     /**
      * Test adding a proper recipient
      *
-     * @covers ::push
+     * @covers \Crunchmail\Mails::push
      */
     public function testAddingValidEmailReturnsProperCount()
     {
@@ -75,7 +80,7 @@ class MailsTest extends PHPUnit_Framework_TestCase
     /**
      * Test adding a proper recipient list
      *
-     * @covers ::push
+     * @covers \Crunchmail\Mails::push
      */
     public function testAddingValidEmailListReturnsProperCount()
     {
