@@ -1,0 +1,10 @@
+{
+    "failed": {
+        "error": {
+            "to": [
+                "Saisissez une adresse email valable."
+            ]
+        }
+    },
+    "success_count": 0
+}

@@ -6,13 +6,13 @@
  *
  * @coversDefaultClass \Crunchmail\Messages
  */
+require_once('helpers/cm_mock.php');
+
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Middleware;
-
-require_once('helpers/cm_mock.php');
 
 class MessagesTest extends PHPUnit_Framework_TestCase
 {
@@ -30,8 +30,6 @@ class MessagesTest extends PHPUnit_Framework_TestCase
      */
     protected function prepareCheck($method, $tpl, $param, $code=200)
     {
-        $client = cm_mock_client($code, $tpl);
-        return $client->messages->$method($param);
     }
 
     /**
@@ -72,7 +70,6 @@ class MessagesTest extends PHPUnit_Framework_TestCase
 
     /**
      * @covers ::hasIssue
-     * @todo better message_issues
      */
     public function testMessageHasError()
     {
@@ -88,15 +85,21 @@ class MessagesTest extends PHPUnit_Framework_TestCase
      */
     public function testCreateAMessage()
     {
-        $this->markTestIncomplete('Todo');
+        $client = cm_mock_client(200, 'message_ok');
+        $result = $client->messages->create([]);
+
+        $this->assertEquals('message_ok', $result->status);
     }
 
     /**
      * @covers ::create
+     * @expectedException Crunchmail\Exception\ApiException
+     * @expectedExceptionCode 400
      */
     public function testCreateWithInvalidDomain()
     {
-        $this->markTestIncomplete('Todo');
+        $client = cm_mock_client(400, 'domains_invalid_mx');
+        $result = $client->messages->create([]);
     }
 
     /**
@@ -104,34 +107,30 @@ class MessagesTest extends PHPUnit_Framework_TestCase
      */
     public function testUpdateAMessage()
     {
-        $this->markTestIncomplete('Todo');
+        $client = cm_mock_client(200, 'message_ok');
+        $result = $client->messages->update([]);
+
+        $this->assertEquals('message_ok', $result->status);
     }
 
     /**
-     * @covers ::retrieve
-     */
-    public function testRetrieveAMessage()
-    {
-        $this->markTestIncomplete('Todo');
-    }
-
-    /**
-     * @covers ::remove
-     */
-    public function testRemoveAMessage()
-    {
-        $this->markTestIncomplete('Todo');
-    }
-
-    /**
-     * Test
-     *
+     * @covers ::getPreviewUrl
      */
     public function testGetPreviewUrlReturnsUrl()
     {
-        $tpl = 'message_ok';
-        $res = $this->prepareCheck('getPreviewUrl', $tpl, 'fakeid');
+        $client = cm_mock_client(200, 'message_ok');
+        $res = $client->messages->getPreviewUrl('fakeid');
         $this->assertStringStartsWith('http', $res);
+    }
+
+    /**
+     * @covers ::sendPreview
+     */
+    public function testSendingPreviewReturnsAValidResponse()
+    {
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
     }
 
     /**
@@ -179,16 +178,6 @@ class MessagesTest extends PHPUnit_Framework_TestCase
             //> dumps the request options of the sent request.
         }
          */
-    }
-
-    /**
-     * @covers ::sendPreview
-     */
-    public function testSendingPreviewReturnsAValidResponse()
-    {
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
     }
 
     /**

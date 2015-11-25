@@ -18,6 +18,18 @@ class ClientTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Helpers
+     */
+    function checkMessage($msg)
+    {
+        $this->assertInstanceOf('stdClass', $msg);
+        $this->assertObjectHasAttribute('_links', $msg);
+        $this->assertInternalType('boolean', $msg->track_clicks);
+        $this->assertEquals('message_ok', $msg->status);
+    }
+
+
+    /**
      * -----------------------------------------------------------------------
      * Tests
      * -----------------------------------------------------------------------
@@ -112,21 +124,6 @@ class ClientTest extends PHPUnit_Framework_TestCase
             $this->assertEquals(404, Crunchmail\Client::getLastErrorCode());
             $this->assertContains('404', Crunchmail\Client::getLastError());
         }
-    }
-
-    /**
-     * @testdox createOrUpdate() returns a valid result
-     * @covers ::createOrUpdate
-     * @covers ::create
-     *
-     * @todo spy that client call get method on guzzle
-     */
-    public function testCreateOrUpdate()
-    {
-        $msg = cm_get_message('message_ok');
-        $this->assertObjectHasAttribute('_links', $msg);
-        $this->assertInternalType('boolean', $msg->track_clicks);
-        $this->assertEquals('message_ok', $msg->status);
     }
 
     /**
@@ -233,6 +230,47 @@ class ClientTest extends PHPUnit_Framework_TestCase
         $this->assertInternalType('string', $err);
         $this->assertTrue($err !== '');
         $this->assertEquals(500, $code);
+    }
+
+    /**
+     * @testdox create() returns a valid result
+     * @covers ::createOrUpdate
+     * @covers ::create
+     *
+     * @todo spy that client call get method on guzzle
+     */
+    public function testCreateReturnsAProperResult()
+    {
+        $client = cm_mock_client('200', 'message_ok');
+        $msg = $client->create('/fake');
+        $this->checkMessage($msg);
+    }
+
+    /**
+     * @testdox update() returns a valid result
+     * @covers ::createOrUpdate
+     * @covers ::udpate
+     *
+     * @todo spy that client call get method on guzzle
+     */
+    public function testUpdateReturnsAProperResult()
+    {
+        $client = cm_mock_client('200', 'message_ok');
+        $msg = $client->create('/fake');
+        $this->checkMessage($msg);
+    }
+
+    /**
+     * @testdox createOrUpdate() returns a valid result
+     * @covers ::createOrUpdate
+     * @covers ::create
+     *
+     * @todo spy that client call get method on guzzle
+     */
+    public function testRetrieveReturnsAProperResult()
+    {
+        $msg = cm_get_message('message_ok');
+        $this->checkMessage($msg);
     }
 
     /**

@@ -38,6 +38,6 @@ function cm_mock_client($code, $tpl=null)
 function cm_get_message($tpl, $code=200)
 {
     $client = cm_mock_client($code, $tpl);
-    return $client->messages->retrieve('/fake');
+    return $client->retrieve('/fake');
 }
 

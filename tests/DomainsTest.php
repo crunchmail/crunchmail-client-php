@@ -6,11 +6,6 @@
  *
  * @coversDefaultClass \Crunchmail\Domains
  */
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Psr7\Request;
-
 class DomainsTest extends PHPUnit_Framework_TestCase
 {
     protected function setUp()
@@ -19,30 +14,14 @@ class DomainsTest extends PHPUnit_Framework_TestCase
 
     /**
      * Helpers
-     *
-     * @TODO: helper factorize
      */
-    private function prepareTestException($code, $name)
-    {
-        // Create a mock and queue two responses.
-        $mock = new MockHandler([ new Response($code, ['X-Foo' => 'Bar']) ]);
 
-        $handler = HandlerStack::create($mock);
-        $client = new Crunchmail\Client(['base_uri' => '', 'handler' => $handler]);
-
-        $this->setExpectedException($name);
-
-        return $client;
-    }
-
+    /**
+     * Create a client and call requested method
+     */
     protected function prepareCheck($method, $tpl, $domain='fake.com')
     {
-        $body = file_get_contents(__DIR__ . '/responses/' . $tpl . '.json');
-
-        $mock = new MockHandler([ new Response(200, [], $body) ]);
-        $handler = HandlerStack::create($mock);
-
-        $client = new Crunchmail\Client(['base_uri' => '', 'handler' => $handler]);
+        $client = cm_mock_client(200, $tpl);
         return $client->domains->$method($domain);
     }
 
@@ -52,19 +31,23 @@ class DomainsTest extends PHPUnit_Framework_TestCase
 
     /**
      * @covers ::verify
+     * @expectedException Crunchmail\Exception\ApiException
+     * @expectedExceptionCode 500
      */
     public function testVerifyInternalServerError()
     {
-        $client = $this->prepareTestException(500, 'Crunchmail\Exception\ApiException');
+        $client = cm_mock_client(500);
         $res = $client->domains->verify('fake.com');
     }
 
     /**
      * @covers ::search
+     * @expectedException Crunchmail\Exception\ApiException
+     * @expectedExceptionCode 500
      */
     public function testSearchInternalServerError()
     {
-        $client = $this->prepareTestException(500, 'Crunchmail\Exception\ApiException');
+        $client = cm_mock_client(500);
         $res = $client->domains->search('fake.com');
     }
 
@@ -96,6 +79,7 @@ class DomainsTest extends PHPUnit_Framework_TestCase
      * Check testing a valid domain
      *
      * @covers ::verify
+     * @todo check call to post, with domain and email as parameter
      */
     public function testVerifyValidDomainReturnsTrue()
     {

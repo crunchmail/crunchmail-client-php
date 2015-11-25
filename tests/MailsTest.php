@@ -40,37 +40,51 @@ class MailsTest extends PHPUnit_Framework_TestCase
      */
 
     /**
-     * Test adding mail to an invalid message
+     * Test adding invalid recipients
      *
      * @covers ::push
      */
     public function testAddingInvalidEmailReturnsFailure()
     {
-        $this->markTestIncomplete('Todo');
+        // Create a mock and queue two responses.
+        $client = cm_mock_client(200, 'mail_push_error');
+        $res = $client->mails->push('fakeid', 'invalid');
+
+        $this->assertEquals(0, $res->success_count);
+
+        $invalid = (array) $res->failed;
+
+        $this->assertInternalType('array', $invalid);
+        $this->assertEquals(1, count($invalid));
     }
 
     /**
-     * Test adding mail to an invalid message
-     * @todo test result type
+     * Test adding a proper recipient
      *
      * @covers ::push
      */
     public function testAddingValidEmailReturnsProperCount()
     {
         // Create a mock and queue two responses.
-        $tpl = 'mails_push_ok';
-        $body = file_get_contents(__DIR__ . '/responses/' . $tpl . '.json');
-
-        // Create a mock and queue two responses.
-        $mock = new MockHandler([ new Response('200', [], $body) ]);
-
-        $handler = HandlerStack::create($mock);
-        $client = new Crunchmail\Client(['base_uri' => '', 'handler' =>
-            $handler]);
-
+        $client = cm_mock_client(200, 'mails_push_ok');
         $res = $client->mails->push('fakeid', 'fakeemail@domain.com');
 
-        $this->markTestIncomplete('Todo');
+        $this->assertEquals(1, $res->success_count);
+    }
+
+    /**
+     * Test adding a proper recipient list
+     *
+     * @covers ::push
+     */
+    public function testAddingValidEmailListReturnsProperCount()
+    {
+        $client = cm_mock_client(200, 'mails_push_ok');
+
+        $list = [ 'anemail@test.com' ];
+        $res = $client->mails->push('fakeid', 'fakeemail@domain.com');
+
+        $this->assertEquals(1, $res->success_count);
     }
 
 }
