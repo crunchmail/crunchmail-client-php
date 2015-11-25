@@ -60,4 +60,44 @@ class Messages extends Client
         // sending the preview via crunchmail API
         return $this->create(['to' => implode(',', $recipients) ], $url);
     }
+
+    /**
+     * Return true if the message status is message_ok
+     *
+     * @param object $msg Message
+     */
+    public static function hasIssue($msg)
+    {
+        return isset($msg->status) && $msg->status === 'message_issues';
+    }
+
+    /**
+     * Return true if the message status is message_ok
+     *
+     * @param object $msg Message
+     */
+    public static function isReady($msg)
+    {
+        return isset($msg->status) && $msg->status === 'message_ok';
+    }
+
+    /**
+     * Return true if the message is being sent
+     *
+     * @param object $msg Message
+     */
+    public static function isSending($msg)
+    {
+        return isset($msg->status) && $msg->status === 'sending';
+    }
+
+    /**
+     * Return true if the message has been sent
+     *
+     * @param object $msg Message
+     */
+    public static function hasBeenSent($msg)
+    {
+        return isset($msg->status) && $msg->status === 'sent';
+    }
 }
