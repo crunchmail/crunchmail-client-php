@@ -139,7 +139,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
      */
     public function testUpdateInternalServerError()
     {
-        cm_mock_client(500)->update('/fake');
+        cm_mock_client(500)->update([]);
     }
 
     /**
@@ -152,7 +152,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
      */
     public function testCreateInternalServerError()
     {
-        cm_mock_client(500)->create('/fake');
+        cm_mock_client(500)->create([]);
     }
 
     /**
@@ -243,7 +243,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
     public function testCreateReturnsAProperResult()
     {
         $client = cm_mock_client('200', 'message_ok');
-        $msg = $client->create('/fake');
+        $msg = $client->create([]);
         $this->checkMessage($msg);
     }
 
@@ -257,7 +257,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
     public function testUpdateReturnsAProperResult()
     {
         $client = cm_mock_client('200', 'message_ok');
-        $msg = $client->create('/fake');
+        $msg = $client->create([]);
         $this->checkMessage($msg);
     }
 
