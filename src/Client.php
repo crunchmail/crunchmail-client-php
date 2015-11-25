@@ -231,9 +231,9 @@ class Client extends \GuzzleHttp\Client
      *
      * @todo add string sanitize
      */
-    protected static function formatResponseOutput($body, $showErrorKey=false)
+    protected static function formatResponseOutput($body, $showErrorKey=true)
     {
-        if (get_class($body) !== 'stdClass')
+        if (!is_object($body) || get_class($body) !== 'stdClass')
         {
             throw new \RuntimeException('Invalid error format');
         }
