@@ -169,6 +169,45 @@ class ClientTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @testdox formatResponseOutput formats output properly
+     *
+     * @covers ::formatResponseOutput
+     */
+    public function testFormatingErrorFormatsProperly()
+    {
+        $body = new stdClass();
+        $body->keyone = [
+            'This is an error',
+            'This is another error'
+            ];
+
+        $out = \Crunchmail\Client::formatResponseOutput($body, true);
+
+        $this->assertContains('keyone', $out);
+        $this->assertContains('This is an error', $out);
+        $this->assertContains('This is another error', $out);
+    }
+
+    /**
+     * @testdox formatResponseOutput hides error key if asked to
+     *
+     * @covers ::formatResponseOutput
+     */
+    public function testFormatingErrorHidesErrorKey()
+    {
+        $body = new stdClass();
+        $body->keyone = [
+            'This is an error',
+            'This is another error'
+            ];
+
+        $out = \Crunchmail\Client::formatResponseOutput($body, false);
+
+        $this->assertNotContains('keyone', $out);
+    }
+
+
+    /**
      * @covers ::create
      * @covers ::formatResponseOutput
      * @covers ::handleGuzzleException
@@ -258,6 +297,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('\stdClass', $err);
     }
+
     /**
      * @testdox Exception generates a proper error message and error code
      *
