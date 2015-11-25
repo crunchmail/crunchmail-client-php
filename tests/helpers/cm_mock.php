@@ -2,6 +2,8 @@
 /**
  * Helpers for unit testing
  *
+ * @license MIT
+ * @copyright (C) 2015 Oasis Work
  * @author Yannick Huerre <dev@sheoak.fr>
  */
 

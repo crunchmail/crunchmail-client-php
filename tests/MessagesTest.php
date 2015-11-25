@@ -2,6 +2,8 @@
 /**
  * Test class for Crunchmail\Messages
  *
+ * @license MIT
+ * @copyright (C) 2015 Oasis Work
  * @author Yannick Huerre <dev@sheoak.fr>
  *
  * @coversDefaultClass \Crunchmail\Messages
