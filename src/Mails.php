@@ -41,15 +41,6 @@ class Mails extends Client
         // adding recipients on the API
         $result = $this->create($format);
 
-        $this->invalidRecipients = array();
-
-        // some invalid recipients?
-        if (isset($result->failed))
-        {
-            foreach ($result->failed as $mail => $err)
-            {
-                $this->invalidRecipients[] = $mail;
-            }
-        }
+        return $result;
     }
 }
