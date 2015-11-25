@@ -22,10 +22,7 @@ First edit your composer.json config file:
         }
     }
 
-Get composer if needed.
-Note that this is a security risk, but this is the way recommended by composer:
-
-    curl -sS https://getcomposer.org/installer | php
+[Install composer](https://getcomposer.org/doc/00-intro.md) if needed.
 
 Then install:
 
