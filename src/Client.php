@@ -29,6 +29,8 @@
  * @version 0.1.1
  *
  * @link http://docs.guzzlephp.org/en/latest/
+ *
+ * @todo propagation of guzzle exceptions?
  */
 namespace Crunchmail;
 
@@ -86,9 +88,6 @@ class Client extends \GuzzleHttp\Client
      *
      * @param string $name
      * @return mixed
-     *
-     * @todo clean me
-     * @todo optionnal class creation?
      */
     public function __get($name)
     {
@@ -278,7 +277,7 @@ class Client extends \GuzzleHttp\Client
     /**
      * Return the last error object or string
      *
-     * @return mixed
+     * @return stdClass
      */
     public static function getLastErrorObject()
     {
@@ -303,6 +302,11 @@ class Client extends \GuzzleHttp\Client
         return false;
     }
 
+    /**
+     * Catch all guzzle exception types and execute proper action
+     *
+     * @param mixed $e
+     */
     protected static function catchGuzzleException($e)
     {
         switch (get_class($e))

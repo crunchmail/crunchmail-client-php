@@ -5,6 +5,8 @@
  * Usage:
  * $Client->Mails->push($url, $listOfEmails);
  *
+ * @license MIT
+ * @copyright (C) 2015 Oasis Work
  * @author Yannick Huerre <dev@sheoak.fr>
  */
 

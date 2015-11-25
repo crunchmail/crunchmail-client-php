@@ -13,6 +13,8 @@
  * // not tested, creates a domain
  * $Client->create($aNewDomain);
  *
+ * @license MIT
+ * @copyright (C) 2015 Oasis Work
  * @author Yannick Huerre <dev@sheoak.fr>
  */
 namespace Crunchmail;
