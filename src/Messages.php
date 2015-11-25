@@ -11,6 +11,9 @@
  */
 namespace Crunchmail;
 
+/**
+ * Crunchmail\Client subclass Messages
+ */
 class Messages extends Client
 {
 

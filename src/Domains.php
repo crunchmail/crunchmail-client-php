@@ -19,6 +19,9 @@
  */
 namespace Crunchmail;
 
+/**
+ * Crunchmail\Client subclass Domains
+ */
 class Domains extends Client
 {
     /**

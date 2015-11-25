@@ -35,7 +35,7 @@
 namespace Crunchmail;
 
 /**
- * Main class
+ * Crunchmail\Client main class
  */
 class Client extends \GuzzleHttp\Client
 {

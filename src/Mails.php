@@ -15,6 +15,9 @@
  */
 namespace Crunchmail;
 
+/**
+ * Crunchmail\Client subclass Mails
+ */
 class Mails extends Client
 {
     /**
