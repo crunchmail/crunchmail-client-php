@@ -254,9 +254,9 @@ class Client extends \GuzzleHttp\Client
      */
     public static function getLastError($showErrorKey=false)
     {
-        $body = self::getLastErrorObject();
+        $body = self::getLastRawError();
 
-        if (false === $body || is_string($body))
+        if (false === $body)
         {
             return $body;
         }
@@ -271,7 +271,7 @@ class Client extends \GuzzleHttp\Client
      */
     public static function getLastErrorCode()
     {
-        return (empty($e) ? -1 : $e->getCode());
+        return (int) (empty(self::$error) ? -1 : self::$error->getCode());
     }
 
     /**
@@ -279,27 +279,32 @@ class Client extends \GuzzleHttp\Client
      *
      * @return stdClass
      */
-    public static function getLastErrorObject()
+    public static function getLastRawError()
     {
         $e = self::$error;
 
-        // in case we have a response, we try to format it as a string
-        if (!empty($e) && $e->hasResponse())
+        // no exception was registered
+        if (empty($e))
         {
-            $Response = $e->getResponse();
-            $code     = $Response->getStatusCode();
-            $body     = json_decode($Response->getBody());
-
-            // if the body is empty, the error is the ReasonPhrase
-            if (empty($body))
-            {
-                $body = $code . ': ' . $Response->getReasonPhrase();
-            }
-
-            return $body;
+            return false;
         }
 
-        return false;
+        // in case we have a response, we try to format it as a string
+        if ($e->hasResponse())
+        {
+            $Response = $e->getResponse();
+            $Body     = $Response->getBody();
+            $msg      = json_decode($Response->getBody());
+        }
+
+        // if body was empty, we need to return the exception message instead
+        if (!isset($msg) || count( (array) $msg ) === 0)
+        {
+            $msg = new \stdClass();
+            $msg->error = $e->getMessage();
+        }
+
+        return $msg;
     }
 
     /**
@@ -314,6 +319,7 @@ class Client extends \GuzzleHttp\Client
             case 'GuzzleHttp\Exception\RequestException':
             case 'GuzzleHttp\Exception\ClientException':
             case 'GuzzleHttp\Exception\ServerException':
+            case 'GuzzleHttp\Exception\ConnectException':
 
                 self::handleGuzzleException($e);
 
@@ -321,7 +327,7 @@ class Client extends \GuzzleHttp\Client
 
             default:
 
-                 throw new \Exception('Unexpected exception!');
+                 throw new \Exception('Unexpected exception! ' . get_class($e));
         }
     }
 
