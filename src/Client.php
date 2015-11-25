@@ -45,7 +45,8 @@ class Client extends \GuzzleHttp\Client
      * Allowed ressources
      * @var array
      */
-    private static $ressources = [ 'domains', 'messages', 'mails' ];
+    private static $ressources = [ 'domains', 'messages', 'mails',
+        'attachments' ];
 
     /**
      * Last exception object

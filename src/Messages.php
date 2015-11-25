@@ -71,6 +71,19 @@ class Messages extends Client
     }
 
     /**
+     * Add an attachment to the given message
+     *
+     * @param string $id Message url id
+     * @param array $post
+     * @return object
+     */
+    public function getAttachments($id)
+    {
+        $url = $id . 'attachments/';
+        return $this->retrieve($url);
+    }
+
+    /**
      * Return true if the message status is message_ok
      *
      * @param object $msg Message
