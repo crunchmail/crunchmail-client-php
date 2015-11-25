@@ -65,6 +65,17 @@ class ClientTest extends PHPUnit_Framework_TestCase
         $client->invalidMethod();
     }
 
+    /**
+     * @expectedException RuntimeException
+     *
+     * @covers ::__call
+     */
+    public function testUnknowPropertyThrowsAnException()
+    {
+        $client = new Crunchmail\Client(['base_uri' => '']);
+        $client->invalidProperty->test();
+    }
+
     public function testApiOfflineThrowsAnException()
     {
     }
@@ -74,6 +85,14 @@ class ClientTest extends PHPUnit_Framework_TestCase
     }
 
     public function testCreateReturnsAValidResponse()
+    {
+    }
+
+    public function testLastErrorIsSaved()
+    {
+    }
+
+    public function testLastErrorCodeIsSaved()
     {
     }
 

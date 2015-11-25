@@ -3,13 +3,7 @@
  *
  * @author Yannick Huerre <dev@sheoak.fr>
  */
-
 namespace Crunchmail;
-
-use Crunchmail\Exception\ApiException;
-
-use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Exception\ClientException;
 
 class Messages extends Client
 {
@@ -19,6 +13,8 @@ class Messages extends Client
      *
      * @param string $id Message url id
      * @return mixed
+     *
+     * @todo create a shortcut for patch
      */
     public function sendMessage($id)
     {
@@ -28,11 +24,11 @@ class Messages extends Client
         }
         catch (ClientException $e)
         {
-            throw new ApiException($e->getMessage(), $e->getCode());
+            self::handleGuzzleException($e);
         }
         catch (RequestException $e)
         {
-            throw new ApiException($e->getMessage(), $e->getCode());
+            self::handleGuzzleException($e);
         }
     }
 
@@ -44,19 +40,8 @@ class Messages extends Client
      */
     public function getPreviewUrl($id)
     {
-        try
-        {
-            $response = $this->retrieve($id);
-            return $response->_links->preview_send->href;
-        }
-        catch (ClientException $e)
-        {
-            throw new ApiException($e->getMessage(), $e->getCode());
-        }
-        catch (RequestException $e)
-        {
-            throw new ApiException($e->getMessage(), $e->getCode());
-        }
+        $response = $this->retrieve($id);
+        return $response->_links->preview_send->href;
     }
 
     /**
@@ -72,19 +57,7 @@ class Messages extends Client
 
         $url = $this->getPreviewUrl($id);
 
-        try
-        {
-            // sending the preview via crunchmail API
-            return $this->post($url, ['json' => ['to' => implode(',', $recipients) ] ]);
-        }
-        catch (ClientException $e)
-        {
-            throw new ApiException($e->getMessage(), $e->getCode());
-        }
-        catch (RequestException $e)
-        {
-            throw new ApiException($e->getMessage(), $e->getCode());
-        }
-
+        // sending the preview via crunchmail API
+        return $this->create(['to' => implode(',', $recipients) ], $url);
     }
 }

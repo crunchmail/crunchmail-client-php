@@ -47,6 +47,70 @@ class MessagesTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::hasBeenSent
+     */
+    public function testMessageHasBeenSent()
+    {
+        $this->markTestIncomplete('Todo');
+    }
+
+    /**
+     * @covers ::isSending
+     */
+    public function testMessageIsSending()
+    {
+        $this->markTestIncomplete('Todo');
+    }
+
+    /**
+     * @covers ::isReady
+     */
+    public function testMessageIsReady()
+    {
+        $this->markTestIncomplete('Todo');
+    }
+
+    /**
+     * @covers ::hasError
+     */
+    public function testMessageHasError()
+    {
+        $this->markTestIncomplete('Todo');
+    }
+
+    /**
+     * @covers ::update
+     */
+    public function testCreateAMessage()
+    {
+        $this->markTestIncomplete('Todo');
+    }
+
+    /**
+     * @covers ::update
+     */
+    public function testUpdateAMessage()
+    {
+        $this->markTestIncomplete('Todo');
+    }
+
+    /**
+     * @covers ::retrieve
+     */
+    public function testRetrieveAMessage()
+    {
+        $this->markTestIncomplete('Todo');
+    }
+
+    /**
+     * @covers ::remove
+     */
+    public function testRemoveAMessage()
+    {
+        $this->markTestIncomplete('Todo');
+    }
+
+    /**
      * Test
      *
      */

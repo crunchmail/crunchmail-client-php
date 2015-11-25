@@ -10,14 +10,6 @@
 
 namespace Crunchmail;
 
-// crunchmail dependencies
-use Crunchmail\Exception\ApiException;
-use Crunchmail\Exception\ApiMailsException;
-
-// guzzle dependencies
-use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Exception\ClientException;
-
 class Mails extends Client
 {
 
@@ -32,6 +24,8 @@ class Mails extends Client
         // modify post, adding base_uri as 'message' key
         $format = [];
 
+        $recipients = is_array($recipients) ? $recipients : [$recipients];
+
         // format recipients for the API POST, waiting for an associative array
         // with to/message keys
         foreach ($recipients as $mail)
@@ -42,66 +36,18 @@ class Mails extends Client
                 ];
         }
 
-        try
-        {
-            // adding recipients on the API
-            return $this->post('', ['json' => $format]);
-        }
-        catch (ClientException $e)
-        {
-            // Client Exception most likely means some emails where invalid
-            // and we need to tell the customer which one(s)
-            $emailErrors = array();
+        // adding recipients on the API
+        $result = $this->create($format);
 
-            // TODO: simplify algo complexity
-            if ($e->hasResponse())
+        $this->invalidRecipients = array();
+
+        // some invalid recipients?
+        if (isset($result->failed))
+        {
+            foreach ($result->failed as $mail => $err)
             {
-                // get the response body as an array
-                $Response = $e->getResponse();
-                $body = json_decode($Response->getBody());
-                $msg = !empty($body) ? $body : [];
-
-                // generate the list of invalid emails: we need to match it
-                // with the list of sended emails, as the API only returns
-                // the indexes, not the emails
-                $out = "";
-                foreach ($msg as $k => $v)
-                {
-                    // no error for this mail index
-                    if (empty($v->to))
-                        continue;
-
-                    // error as a string
-                    $out .= '<p>' . $recipients[$k] . ' : ';
-
-                    foreach ($v as $str)
-                    {
-                        // force array
-                        $str = is_array($str) ? $str : [ $str ];
-
-                        // keep track of invalid emails
-                        $emailErrors[] = $recipients[$k];
-
-                        if (!empty($str))
-                        {
-                            foreach ($str as $s)
-                            {
-                                $out .=  $s . "<br>";
-                            }
-                        }
-                    }
-                    $out .= '</p>';
-                }
-
-                $msg = $out;
+                $this->invalidRecipients[] = $mail;
             }
-
-            self::handleGuzzleException($e, $msg, 'ApiMailsException', $emailErrors);
-        }
-        catch (RequestException $e)
-        {
-            // never happens?
-            self::handleGuzzleException($e, '', 'ApiMailsException', []);
         }
     }
 }

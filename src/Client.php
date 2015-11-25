@@ -32,14 +32,6 @@
  */
 namespace Crunchmail;
 
-// Crunchmail client dependencies
-use Crunchmail\Exception\ApiException;
-use Crunchmail\Exception\ApiMailsException;
-
-// Crunchmail guzzle dependencies
-use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Exception\ClientException;
-
 /**
  * Main class
  */
@@ -50,6 +42,8 @@ class Client extends \GuzzleHttp\Client
      * @var array
      */
     private static $ressources = [ 'domains', 'messages', 'mails' ];
+
+    private static $error = null;
 
     /**
       * Initilialize the client, extends guzzle constructor
@@ -83,107 +77,6 @@ class Client extends \GuzzleHttp\Client
     }
 
     /**
-     * Post or put values
-     *
-     * @param string $method post or put or patch
-     * @param array  $values values to post
-     * @return object
-     */
-    public function createOrUpdate($method, $values)
-    {
-        try
-        {
-            // post or put
-            $result = $this->$method('', [ 'json' => $values ] );
-        }
-        catch (ClientException $e)
-        {
-            if ($e->hasResponse())
-            {
-                $Response = $e->getResponse();
-                $body = json_decode($Response->getBody());
-                $msg = !empty($body) ? $body : [];
-
-                $out = "";
-                foreach ($msg as $k => $v)
-                {
-                    $out .= '<p>' . $k . ' : ';
-                    foreach ($v as $str)
-                    {
-                        $out .=  $str . "<br>";
-                    }
-                    $out .= '</p>';
-                }
-
-                $msg = $out;
-            }
-
-            self::handleGuzzleException($e, $msg);
-        }
-        catch (RequestException $e)
-        {
-            self::handleGuzzleException($e);
-        }
-
-        return json_decode($result->getBody());
-    }
-
-    /**
-     * Create a new record
-     *
-     * @param array $post values
-     * @return object
-     */
-    public function create($post)
-    {
-        return $this->createOrUpdate('post', $post);
-    }
-
-    /**
-     * Update existing record
-     *
-     * @param array $post values
-     * @return object
-     */
-    public function update($post)
-    {
-        return $this->createOrUpdate('put', $post);
-    }
-
-    /**
-     * Retrieve a record
-     *
-     * @param string $url url id
-     * @return object
-     */
-    public function retrieve($url='')
-    {
-        try
-        {
-            $result = $this->get($url);
-        }
-        catch (ClientException $e)
-        {
-            self::handleGuzzleException($e);
-        }
-        catch (RequestException $e)
-        {
-            self::handleGuzzleException($e);
-        }
-
-        return json_decode($result->getBody());
-    }
-
-    /**
-     * Delete a record
-     * @todo
-     */
-    public function remove($post)
-    {
-        die('Not implemented');
-    }
-
-    /**
      * Create an object when accessing a sub-ressource
      *
      * If a specific class exists for this type of ressource (ie: domain)
@@ -201,7 +94,7 @@ class Client extends \GuzzleHttp\Client
     {
         if (!in_array($name, self::$ressources))
         {
-            throw new ApiException('Unknow property: ' . $name);
+            throw new \RuntimeException('Unknow property: ' . $name);
         }
 
         // DO NOT use __CLASS__ because of the recursive use
@@ -213,6 +106,127 @@ class Client extends \GuzzleHttp\Client
         $config['base_uri'] = $this->base_uri . $name . '/';
 
         return new $custom($config);
+    }
+
+    /**
+     * Post or put values
+     *
+     * @param string $method post or put or patch
+     * @param array  $values values to post
+     * @return object
+     */
+    public function createOrUpdate($method, $values, $url='')
+    {
+        try
+        {
+            // post or put
+            $result = $this->$method($url, [ 'json' => $values ] );
+        }
+        catch (\Exception $e)
+        {
+            self::catchGuzzleException($e);
+        }
+
+        return json_decode($result->getBody());
+    }
+
+    /**
+     * Create a new record
+     *
+     * @param array $post values
+     * @return object
+     */
+    public function create($post, $url='')
+    {
+        return $this->createOrUpdate('post', $post, $url);
+    }
+
+    /**
+     * Update existing record
+     *
+     * @param array $post values
+     * @return object
+     */
+    public function update($post, $url='')
+    {
+        return $this->createOrUpdate('put', $post, $url);
+    }
+
+    /**
+     * Retrieve a record
+     *
+     * @param string $url url id
+     * @return object
+     */
+    public function retrieve($url='')
+    {
+        try
+        {
+            $result = $this->get($url);
+        }
+        catch (\Exception $e)
+        {
+            self::catchGuzzleException($e);
+        }
+
+        return json_decode($result->getBody());
+    }
+
+    /**
+     * Delete a record
+     */
+    public function remove($url)
+    {
+        try
+        {
+            $result = $this->delete($url);
+        }
+        catch (\Exception $e)
+        {
+            self::catchGuzzleException($e);
+        }
+
+        return json_decode($result->getBody());
+    }
+
+    /**
+     * Return true if the message status is message_ok
+     *
+     * @param object $msg Message
+     */
+    public static function hasError($msg)
+    {
+        return isset($msg->status) && $msg->status === 'message_issues';
+    }
+
+    /**
+     * Return true if the message status is message_ok
+     *
+     * @param object $msg Message
+     */
+    public static function isReady($msg)
+    {
+        return isset($msg->status) && $msg->status === 'message_ok';
+    }
+
+    /**
+     * Return true if the message is being sent
+     *
+     * @param object $msg Message
+     */
+    public static function isSending($msg)
+    {
+        return isset($msg->status) && $msg->status === 'sending';
+    }
+
+    /**
+     * Return true if the message has been sent
+     *
+     * @param object $msg Message
+     */
+    public static function hasBeenSent($msg)
+    {
+        return isset($msg->status) && $msg->status === 'sent';
     }
 
     /**
@@ -235,37 +249,139 @@ class Client extends \GuzzleHttp\Client
     }
 
     /**
+     * Format a body response as a unique HTML string
+     *
+     * @param object $body Guzzle Response
+     */
+    protected static function formatResponseOutput($body, $showErrorKey=false)
+    {
+        // build a string from the complex response
+        $out = "";
+        foreach ($body as $k => $v)
+        {
+            // list of error fields with error messages
+            if (is_array($v))
+            {
+
+                $out .= '<p>';
+                if ($showErrorKey)
+                {
+                   $out .= $k . ' : ';
+                }
+                foreach ($v as $str)
+                {
+                    $out .=  $str . "<br>";
+                }
+                $out .= '</p>';
+            }
+            // string error
+            else
+            {
+                $out .= '<p>' . $v . '</p>';
+            }
+        }
+
+        $out = empty($out) ? 'Unknow error' : $out;
+
+        return $out;
+    }
+
+
+    /**
+     * Return the last error as an html string
+     *
+     * @param boolean $showErrorKey Show the key of each error
+     * @return string
+     */
+    public static function getLastError($showErrorKey=false)
+    {
+        $body = self::getLastErrorObject();
+
+        if (false === $body || is_string($body))
+        {
+            return $body;
+        }
+
+        return self::formatResponseOutput($body, $showErrorKey);
+    }
+
+    /**
+     * Return the last error code
+     *
+     * @return int
+     */
+    public static function getLastErrorCode()
+    {
+        return (empty($e) ? -1 : $e->getCode());
+    }
+
+    /**
+     * Return the last error object or string
+     *
+     * @return mixed
+     */
+    public static function getLastErrorObject()
+    {
+        $e = self::$error;
+
+        // in case we have a response, we try to format it as a string
+        if (!empty($e) && $e->hasResponse())
+        {
+            $Response = $e->getResponse();
+            $code     = $Response->getStatusCode();
+            $body     = json_decode($Response->getBody());
+
+            // if the body is empty, the error is the ReasonPhrase
+            if (empty($body))
+            {
+                $body = $code . ': ' . $Response->getReasonPhrase();
+            }
+
+            return $body;
+        }
+
+        return false;
+    }
+
+    protected static function catchGuzzleException($e)
+    {
+        switch (get_class($e))
+        {
+            case 'GuzzleHttp\Exception\RequestException':
+            case 'GuzzleHttp\Exception\ClientException':
+            case 'GuzzleHttp\Exception\ServerException':
+
+                self::handleGuzzleException($e);
+
+                break;
+
+            default:
+
+                 throw new \Exception('Unexpected exception!');
+        }
+    }
+
+    /**
      * Simplify the handling of guzzle exceptions
      *
-     * @param mixed $e Exception
-     * @param string $msg overwrite message, if needed
+     * @param object $e Exception
      */
-    protected static function handleGuzzleException($e, $forceMsg=null, $className='ApiException')
+    protected static function handleGuzzleException($e)
     {
-        $code = -1;
-        $msg = 'Unexpected API exception. (this might be bug).';
+        $code = 500;
+        $msg = 'API Request failed';
 
+        // in case we have a response, we try to format it as a string
         if ($e->hasResponse())
         {
             $Response = $e->getResponse();
-            $code = $Response->getStatusCode();
-            $body = json_decode($Response->getBody());
-            $msg = !empty($body) ? $body : $msg . ' ' . $code . ': ' . $Response->getReasonPhrase();
+            $code     = $Response->getStatusCode();
         }
 
-        $msg = empty($forceMsg) ? $msg : $forceMsg;
+        // save last error
+        self::$error = $e;
 
-        // arguments unpacking is only from PHP 5.6!
-        // so we use Reflection class to pass an unknow number of args
-        $args = array($msg, $code);
-        $funcargs = func_get_args();
-
-        // remove 3 1st arguments, we just want the additionnal ones
-        $params = $args + array_splice($funcargs, -3);
-
-        // throw the requested exception
-        $r = new \ReflectionClass(__NAMESPACE__ . '\\Exception\\' . $className);
-        throw $r->newInstanceArgs($params);
+        throw new Exception\ApiException($msg, $code);
     }
 }
 
