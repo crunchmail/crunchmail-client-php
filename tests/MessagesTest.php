@@ -47,6 +47,16 @@ class MessagesTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::hasBeenSent
+     * @expectedExceptionCode 0
+     * @expectedException \RuntimeException
+     */
+    public function testMessageHasBeenSentThrowsAnException()
+    {
+        Crunchmail\Messages::hasBeenSent('error');
+    }
+
+    /**
      * @covers ::isSending
      */
     public function testMessageIsSending()
@@ -56,6 +66,16 @@ class MessagesTest extends PHPUnit_Framework_TestCase
         $this->assertFalse(Crunchmail\Messages::hasIssue($msg));
         $this->assertFalse(Crunchmail\Messages::hasBeenSent($msg));
         $this->assertFalse(Crunchmail\Messages::isReady($msg));
+    }
+
+    /**
+     * @covers ::isSending
+     * @expectedExceptionCode 0
+     * @expectedException \RuntimeException
+     */
+    public function testMessageIsSendingThrowsAnException()
+    {
+        Crunchmail\Messages::isSending('error');
     }
 
     /**
@@ -71,6 +91,16 @@ class MessagesTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::isReady
+     * @expectedExceptionCode 0
+     * @expectedException \RuntimeException
+     */
+    public function testMessageIsReadyThrowsAnException()
+    {
+        Crunchmail\Messages::isReady('error');
+    }
+
+    /**
      * @covers ::hasIssue
      */
     public function testMessageHasError()
@@ -80,6 +110,16 @@ class MessagesTest extends PHPUnit_Framework_TestCase
         $this->assertFalse(Crunchmail\Messages::isSending($msg));
         $this->assertFalse(Crunchmail\Messages::hasBeenSent($msg));
         $this->assertFalse(Crunchmail\Messages::isReady($msg));
+    }
+
+    /**
+     * @covers ::hasIssue
+     * @expectedExceptionCode 0
+     * @expectedException \RuntimeException
+     */
+    public function testMessageHasIssueThrowsAnException()
+    {
+        Crunchmail\Messages::hasIssue('error');
     }
 
     /**
