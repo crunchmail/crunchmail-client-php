@@ -9,6 +9,9 @@
  * @license MIT
  * @copyright (C) 2015 Oasis Work
  * @author Yannick Huerre <dev@sheoak.fr>
+ *
+ * @link https://github.com/crunchmail/crunchmail-client-php
+ * @link http://docs.guzzlephp.org/en/latest/
  */
 namespace Crunchmail;
 

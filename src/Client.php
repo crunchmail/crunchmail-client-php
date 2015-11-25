@@ -7,17 +7,16 @@
  * $Client = new Client($dbConfig);
  * $object = $Client->retrieve($url_ressource);
  *
- * // not tested:
  * $result = $Client->remove($url_ressource);
  *
- * You can use get/post/put/delete, but in that case you will handle 
- * directly the Guzzle Client, with a more complex format. You should 
+ * You can use get/post/put/delete, but in that case you will handle
+ * directly the Guzzle Client, with a more complex format. You should
  * probably only use the custom crunchmail methods:
  *
  * for get:     retrieve($url)
  * for post:    create($values)
  * for put:     update($url, $values)
- * for delete:  remove($url)   // untested
+ * for delete:  remove($url)
  *
  * You can use create() on ressources properties and avoid using an url:
  *
@@ -26,12 +25,13 @@
  * $Client->mails->push($url, $emails);
  *
  * @author Yannick Huerre <dev@sheoak.fr>
- * @version 0.1.1
  *
+ * @link https://github.com/crunchmail/crunchmail-client-php
  * @link http://docs.guzzlephp.org/en/latest/
  *
  * @todo propagation of guzzle exceptions?
  */
+
 namespace Crunchmail;
 
 /**
@@ -45,6 +45,10 @@ class Client extends \GuzzleHttp\Client
      */
     private static $ressources = [ 'domains', 'messages', 'mails' ];
 
+    /**
+     * Last exception object
+     * @var Mixed
+     */
     private static $error = null;
 
     /**
@@ -112,6 +116,7 @@ class Client extends \GuzzleHttp\Client
      *
      * @param string $method post or put or patch
      * @param array  $values values to post
+     * @param string $url resource id
      * @return stdClass result
      */
     public function createOrUpdate($method, $values, $url='')
@@ -133,6 +138,7 @@ class Client extends \GuzzleHttp\Client
      * Create a new record
      *
      * @param array $post values
+     * @param string $url resource id
      * @return stdClass result
      */
     public function create($post, $url='')
@@ -144,6 +150,7 @@ class Client extends \GuzzleHttp\Client
      * Update existing record
      *
      * @param array $post values
+     * @param string $url resource id
      * @return stdClass result
      */
     public function update($post, $url='')
@@ -214,6 +221,8 @@ class Client extends \GuzzleHttp\Client
      * Format a body response as a unique HTML string
      *
      * @param object $body Guzzle Response
+     * @param boolean $showErrorKey show error keys in output
+     * @return string
      */
     protected static function formatResponseOutput($body, $showErrorKey=false)
     {
