@@ -219,37 +219,37 @@ class Client extends \GuzzleHttp\Client
 
     /**
      * Format a body response as a unique HTML string
+     * This is mainly a debugging function, you should probably generate your
+     * own HTML output.
      *
      * @param object $body Guzzle Response
      * @param boolean $showErrorKey show error keys in output
      * @return string
+     *
+     * @todo add string sanitize
      */
     protected static function formatResponseOutput($body, $showErrorKey=false)
     {
+        if (get_class($body) !== 'stdClass')
+        {
+            throw new \RuntimeException('Invalid error format');
+        }
+
         // build a string from the complex response
         $out = "";
-        foreach ($body as $k => $v)
+        foreach ((array) $body as $k => $v)
         {
             // list of error fields with error messages
-            if (is_array($v))
+            $out .= '<p>';
+            if ($showErrorKey)
             {
-
-                $out .= '<p>';
-                if ($showErrorKey)
-                {
-                   $out .= $k . ' : ';
-                }
-                foreach ($v as $str)
-                {
-                    $out .= htmlentities($str) . "<br>";
-                }
-                $out .= '</p>';
+               $out .= $k . ' : ';
             }
-            // string error
-            else
+            foreach ($v as $str)
             {
-                $out .= '<p>' . htmlentities($v) . '</p>';
+                $out .= htmlentities($str) . "<br>";
             }
+            $out .= '</p>';
         }
 
         $out = empty($out) ? 'Unknow error' : $out;
@@ -264,9 +264,9 @@ class Client extends \GuzzleHttp\Client
      * @param boolean $showErrorKey Show the key of each error
      * @return string
      */
-    public static function getLastError($showErrorKey=false)
+    public static function getLastErrorHTML($showErrorKey=false)
     {
-        $body = self::getLastRawError();
+        $body = self::getLastError();
 
         if (false === $body)
         {
@@ -291,7 +291,7 @@ class Client extends \GuzzleHttp\Client
      *
      * @return stdClass
      */
-    public static function getLastRawError()
+    public static function getLastError()
     {
         $e = self::$error;
 
@@ -313,7 +313,7 @@ class Client extends \GuzzleHttp\Client
         if (!isset($msg) || count( (array) $msg ) === 0)
         {
             $msg = new \stdClass();
-            $msg->error = $e->getMessage();
+            $msg->error = [$e->getMessage()];
         }
 
         return $msg;

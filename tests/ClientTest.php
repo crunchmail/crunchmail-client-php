@@ -104,29 +104,6 @@ class ClientTest extends PHPUnit_Framework_TestCase
      */
 
     /**
-     * Check that last 404 error is saved
-     *
-     * @covers ::getLastError
-     * @covers ::getLastErrorCode
-     * @covers ::handleGuzzleException
-     * @covers ::catchGuzzleException
-     */
-    public function testLastErrorIsSaved()
-    {
-        $client = cm_mock_client(404, 'empty');
-
-        try
-        {
-            $client->retrieve('/fake');
-        }
-        catch (\Exception $e)
-        {
-            $this->assertEquals(404, Crunchmail\Client::getLastErrorCode());
-            $this->assertContains('404', Crunchmail\Client::getLastError());
-        }
-    }
-
-    /**
      * @testdox retrieve() throws an exception on error 500
      * @covers ::retrieve
      * @covers ::handleGuzzleException
@@ -192,10 +169,34 @@ class ClientTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @testdox getLastRawError returns the last exception
-     * @covers ::getLastRawError
+     * Check that last 404 error is saved
+     *
+     * @covers ::getLastError
+     * @covers ::getLastErrorCode
+     * @covers ::handleGuzzleException
+     * @covers ::catchGuzzleException
      */
-    public function testGetLatRawError()
+    public function testLastErrorIsSaved()
+    {
+        $client = cm_mock_client(404, 'empty');
+
+        try
+        {
+            $client->retrieve('/fake');
+        }
+        catch (\Exception $e)
+        {
+            $this->assertEquals(404, Crunchmail\Client::getLastErrorCode());
+            $this->assertContains('404', Crunchmail\Client::getLastErrorHTML());
+        }
+    }
+
+    /**
+     * @testdox getLastError returns the last exception
+     * @covers ::getLastError
+     * @todo check error message matches
+     */
+    public function testGetLastError()
     {
         try
         {
@@ -203,7 +204,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
         }
         catch (\Exception $e)
         {
-            $err  = Crunchmail\Client::getLastRawError();
+            $err = Crunchmail\Client::getLastError();
         }
 
         $this->assertInstanceOf('\stdClass', $err);
@@ -215,7 +216,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
      * @covers ::handleGuzzleException
      * @covers ::catchGuzzleException
      */
-    public function testGetLastError()
+    public function testGetLastErrorHTML()
     {
         try
         {
@@ -223,7 +224,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
         }
         catch (\Exception $e)
         {
-            $err  = Crunchmail\Client::getLastError();
+            $err  = Crunchmail\Client::getLastErrorHTML();
             $code = Crunchmail\Client::getLastErrorCode();
         }
 
