@@ -241,14 +241,14 @@ class Client extends \GuzzleHttp\Client
                 }
                 foreach ($v as $str)
                 {
-                    $out .=  $str . "<br>";
+                    $out .= htmlentities($str) . "<br>";
                 }
                 $out .= '</p>';
             }
             // string error
             else
             {
-                $out .= '<p>' . $v . '</p>';
+                $out .= '<p>' . htmlentities($v) . '</p>';
             }
         }
 
