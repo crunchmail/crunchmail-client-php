@@ -15,14 +15,8 @@ Or with testdox format:
     phpunit --testdox
 
 
-## Generate code coverage
+This will also generate code coverage and agile testdox in docs/ directory.
 
-    phpunit --coverage-text="docs/coverage.txt"
-
-
-## Generate agile documentation
-
-    phpunit --testdox-text="docs/tests-results.txt"
 
 See [documentation](--coverage-text=coverage.txt) for more information about
 how it works.
