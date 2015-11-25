@@ -122,7 +122,7 @@ class Client extends \GuzzleHttp\Client
      * @param string $url resource id
      * @return stdClass result
      */
-    public function createOrUpdate($method, $values, $url='')
+    public function createOrUpdate($method, array $values, $url='')
     {
         try
         {
@@ -144,7 +144,7 @@ class Client extends \GuzzleHttp\Client
      * @param string $url resource id
      * @return stdClass result
      */
-    public function create($post, $url='')
+    public function create(array $post, $url='')
     {
         return $this->createOrUpdate('post', $post, $url);
     }
@@ -156,7 +156,7 @@ class Client extends \GuzzleHttp\Client
      * @param string $url resource id
      * @return stdClass result
      */
-    public function update($post, $url='')
+    public function update(array $post, $url='')
     {
         return $this->createOrUpdate('put', $post, $url);
     }
