@@ -127,7 +127,8 @@ try
 }
 catch (Crunchmail\Exception\ApiException $e)
 {
-    echo '<h4>Error <em>' . Crunchmail\Client::getLastErrorCode() . '</em></h4>';
+    echo '<h4>Error <em>' . Crunchmail\Client::getLastErrorCode() .
+        '</em></h4>';
     // this is for debug usage
     echo Crunchmail\Client::getLastErrorHTML();
     // this is for development
@@ -150,7 +151,8 @@ try
 }
 catch (Crunchmail\Exception\ApiException $e)
 {
-    echo '<h4>Error <em>' . Crunchmail\Client::getLastErrorCode() . '</em></h4>';
+    echo '<h4>Error <em>' . Crunchmail\Client::getLastErrorCode() .
+        '</em></h4>';
     // this is for debug usage
     echo Crunchmail\Client::getLastErrorHTML();
     // this is for development
@@ -172,7 +174,8 @@ try
 }
 catch (Crunchmail\Exception\ApiException $e)
 {
-    echo '<h4>Error <em>' . Crunchmail\Client::getLastErrorCode() . '</em></h4>';
+    echo '<h4>Error <em>' . Crunchmail\Client::getLastErrorCode() .
+        '</em></h4>';
     // this is for debug usage
     echo Crunchmail\Client::getLastErrorHTML();
     // this is for development
@@ -207,8 +210,10 @@ foreach ($list->results as $email)
 {
     echo '<li>';
     echo '<h3>' . $email->name . '</h3>';
-    echo '<p class="cm-status">' . Crunchmail\Client::readableMessageStatus($email->status) . '</p>';
-    echo '<p>PREVIEW= ' . $Client->messages->getPreviewUrl($email->url) . '</p>';
+    echo '<p class="cm-status">' . 
+        Crunchmail\Client::readableMessageStatus($email->status) . '</p>';
+    echo '<p>PREVIEW= ' . $Client->messages->getPreviewUrl($email->url) .
+        '</p>';
     echo '</li>';
 }
 echo '</ul>';
