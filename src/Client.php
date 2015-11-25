@@ -267,7 +267,7 @@ class Client extends \GuzzleHttp\Client
      * @param boolean $showErrorKey Show the key of each error
      * @return string
      */
-    public static function getLastErrorHTML($showErrorKey=false)
+    public static function getLastErrorHTML($showErrorKey=true)
     {
         $body = self::getLastError();
 
