@@ -1,17 +1,14 @@
 <?php
 /**
- * Domains ressources for Crunchmail API
+ * Domains subclass for Crunchmail API
  *
  * Usage:
  *
  * // check a domain is configured:
- * $boolean = $Client->Domains->verify($myDomain);
+ * $boolean = $Client->domains->verify($myDomain);
  *
  * // list domain matching $mySearch:
- * $list    = $Client->Domains->search($mySearch);
- *
- * // not tested, creates a domain
- * $Client->create($aNewDomain);
+ * $list    = $Client->domains->search($mySearch);
  *
  * @license MIT
  * @copyright (C) 2015 Oasis Work
@@ -23,13 +20,10 @@ class Domains extends Client
 {
     /**
      * Search domain name
+     * You can pass an email or just the domain
      *
      * @param string $domain domain to search
-     *
      * @return array
-     *
-     * @todo implement pagination (currently page 1)
-     * @todo handle errors better
      */
     public function search($email)
     {
@@ -52,7 +46,6 @@ class Domains extends Client
      * Check if domains is validated
      *
      * @param string $domain domain to verify
-     *
      * @return boolean
      */
     public function verify($domain)

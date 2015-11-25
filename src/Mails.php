@@ -1,25 +1,25 @@
 <?php
 /**
- * Mail ressources for Crunchmail API
+ * Mail subclass for Crunchmail API
  *
  * Usage:
- * $Client->Mails->push($url, $listOfEmails);
+ * $result = $Client->mails->push($url, $arrayEmails);
+ * $result = $Client->mails->push($url, $stringEmail);
  *
  * @license MIT
  * @copyright (C) 2015 Oasis Work
  * @author Yannick Huerre <dev@sheoak.fr>
  */
-
 namespace Crunchmail;
 
 class Mails extends Client
 {
-
     /**
-     * Add recipients to a message
-     * Handle errors as custom exceptions
+     * Add one or several recipients to a message
      *
-     * @todo Simplify, avoid imbricated foreach
+     * @param string $url message id
+     * @param mixed recipients, string or array
+     * @return stdClass Response with invalid recipients in failed property
      */
     public function push($url, $recipients)
     {

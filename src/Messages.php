@@ -1,5 +1,6 @@
 <?php
 /**
+ * Messages subclass for Crunchmail API
  *
  * @license MIT
  * @copyright (C) 2015 Oasis Work

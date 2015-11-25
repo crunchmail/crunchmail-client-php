@@ -112,7 +112,7 @@ class Client extends \GuzzleHttp\Client
      *
      * @param string $method post or put or patch
      * @param array  $values values to post
-     * @return object
+     * @return stdClass result
      */
     public function createOrUpdate($method, $values, $url='')
     {
@@ -133,7 +133,7 @@ class Client extends \GuzzleHttp\Client
      * Create a new record
      *
      * @param array $post values
-     * @return object
+     * @return stdClass result
      */
     public function create($post, $url='')
     {
@@ -144,7 +144,7 @@ class Client extends \GuzzleHttp\Client
      * Update existing record
      *
      * @param array $post values
-     * @return object
+     * @return stdClass result
      */
     public function update($post, $url='')
     {
@@ -155,7 +155,7 @@ class Client extends \GuzzleHttp\Client
      * Retrieve a record
      *
      * @param string $url url id
-     * @return object
+     * @return stdClass result
      */
     public function retrieve($url='')
     {
@@ -173,6 +173,9 @@ class Client extends \GuzzleHttp\Client
 
     /**
      * Delete a record
+     *
+     * @param string $url resource id
+     * @return stdClass result
      */
     public function remove($url)
     {
