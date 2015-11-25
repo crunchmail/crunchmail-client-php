@@ -1,5 +1,7 @@
 <?php
 /**
+ * Test class for Crunchmail\Mails
+ *
  * @author Yannick Huerre <dev@sheoak.fr>
  *
  * @coversDefaultClass \Crunchmail\Mails

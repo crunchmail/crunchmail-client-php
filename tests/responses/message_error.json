@@ -1,0 +1,54 @@
+{
+    "_links": {
+        "archive_url": {
+            "href": "https://api.crunchmail.me/hosted/message/878bf8e5-169c-45cc-9b4c-c9b815a420bb/"
+        },
+        "bounces": {
+            "href": "https://api.crunchmail.me/v1/messages/601/bounces/"
+        },
+        "mails": {
+            "href": "https://api.crunchmail.me/v1/messages/601/mails/"
+        },
+        "opt_outs": {
+            "href": "https://api.crunchmail.me/v1/messages/601/opt_outs/"
+        },
+        "preview": {
+            "href": "https://api.crunchmail.me/v1/messages/601/preview/"
+        },
+        "preview.html": {
+            "href": "https://api.crunchmail.me/v1/messages/601/preview.html"
+        },
+        "preview.txt": {
+            "href": "https://api.crunchmail.me/v1/messages/601/preview.txt"
+        },
+        "preview_send": {
+            "href": "https://api.crunchmail.me/v1/messages/601/preview_send/"
+        },
+        "spam_details": {
+            "href": "https://api.crunchmail.me/v1/messages/601/spam_details/"
+        },
+        "stats": {
+            "href": "https://api.crunchmail.me/v1/messages/601/stats/"
+        }
+    },
+    "category": null,
+    "completion_date": null,
+    "creation_date": "2015-11-25T14:17:56.911Z",
+    "detach_images": false,
+    "external_optout": false,
+    "html": "",
+    "is_spam": false,
+    "mail_count": 0,
+    "msg_issue": "Pas de corps de message HTML d\u00e9fini",
+    "name": "test",
+    "properties": null,
+    "send_date": null,
+    "sender_email": "sender@oasiswork.fr",
+    "sender_name": "test sender",
+    "spam_score": null,
+    "status": "message_issues",
+    "subject": "test subject",
+    "track_clicks": true,
+    "track_open": true,
+    "url": "https://api.crunchmail.me/v1/messages/601/"
+}

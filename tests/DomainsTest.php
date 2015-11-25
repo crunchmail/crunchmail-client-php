@@ -1,7 +1,6 @@
 <?php
 /**
- * TODO: Test Exception result for unexpected errors
- * TODO: Test Exception result for API errors
+ * Test class for Crunchmail\Domains
  *
  * @author Yannick Huerre <dev@sheoak.fr>
  *

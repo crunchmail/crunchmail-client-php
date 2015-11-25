@@ -1,18 +1,15 @@
 <?php
 /**
- * TODO: Test Exception result for unexpected errors
- * TODO: Test Exception result for API errors
- * TODO: Test empty base_uri / invalid conifguration
- * TODO: Test invalid auth
+ * Test class for Crunchmail\Client
  *
+ * @license MIT
+ * @copyright (C) 2015 Oasis Work
  * @author Yannick Huerre <dev@sheoak.fr>
  *
  * @coversDefaultClass \Crunchmail\Client
  */
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Psr7\Request;
+
+require_once('helpers/cm_mock.php');
 
 class ClientTest extends PHPUnit_Framework_TestCase
 {
@@ -22,32 +19,15 @@ class ClientTest extends PHPUnit_Framework_TestCase
 
     /**
      * -----------------------------------------------------------------------
-     * Helpers
-     * -----------------------------------------------------------------------
-     */
-
-    private function prepareTestException($code)
-    {
-        // Create a mock and queue two responses.
-        $mock = new MockHandler([ new Response($code, []) ]);
-
-        $handler = HandlerStack::create($mock);
-        $client = new Crunchmail\Client(['base_uri' => '', 'handler' =>
-            $handler]);
-
-        return $client;
-    }
-
-    /**
-     * -----------------------------------------------------------------------
      * Tests
      * -----------------------------------------------------------------------
      */
 
     /**
-     * @expectedException RuntimeException
-     *
      * @covers ::__construct
+     * @covers ::handleGuzzleException
+     * @covers ::catchGuzzleException
+     * @expectedException RuntimeException
      */
     public function testInvalidConfigurationThrowsAnException()
     {
@@ -55,9 +35,22 @@ class ClientTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException GuzzleHttp\Exception\RequestException
-     *
+     * @covers ::handleGuzzleException
+     * @covers ::catchGuzzleException
+     * @expectedException Crunchmail\Exception\ApiException
+     * @expectedExceptionCode 401
+     */
+    public function testInvalidAuthThrowsAnException()
+    {
+        $msg = cm_get_message('auth_error', 401);
+    }
+
+    /**
      * @covers ::__call
+     * @covers ::handleGuzzleException
+     * @covers ::catchGuzzleException
+     * @expectedException GuzzleHttp\Exception\RequestException
+     * @expectedExceptionCode 0
      */
     public function testInvalidMethodThrowsAnException()
     {
@@ -66,9 +59,11 @@ class ClientTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException RuntimeException
-     *
      * @covers ::__call
+     * @covers ::handleGuzzleException
+     * @covers ::catchGuzzleException
+     * @expectedException RuntimeException
+     * @expectedExceptionCode 0
      */
     public function testUnknowPropertyThrowsAnException()
     {
@@ -76,86 +71,169 @@ class ClientTest extends PHPUnit_Framework_TestCase
         $client->invalidProperty->test();
     }
 
+    /**
+     * @covers ::handleGuzzleException
+     * @covers ::catchGuzzleException
+     * @expectedException Crunchmail\Exception\ApiException
+     * @expectedExceptionCode 500
+     */
     public function testApiOfflineThrowsAnException()
     {
+        // no mocking (Connection exception)
+        $client = new Crunchmail\Client(['base_uri' => '']);
+        $client->retrieve('/fake');
     }
 
+    /*
     public function testApiTimeoutThrowsAnException()
-    {
-    }
-
-    public function testCreateReturnsAValidResponse()
-    {
-    }
-
-    public function testLastErrorIsSaved()
-    {
-    }
-
-    public function testLastErrorCodeIsSaved()
-    {
-    }
-
-    /**
-     * @covers ::createOrUpdate
-     * @todo rename
-     */
-    public function testCreateOrUpdate()
     {
         $this->markTestIncomplete('Todo');
     }
+     */
 
     /**
-     * @expectedException Crunchmail\Exception\ApiException
+     * Check that last 404 error is saved
+     *
+     * @covers ::getLastError
+     * @covers ::getLastErrorCode
+     * @covers ::handleGuzzleException
+     * @covers ::catchGuzzleException
+     */
+    public function testLastErrorIsSaved()
+    {
+        $client = cm_mock_client(404, 'empty');
+
+        try
+        {
+            $client->retrieve('/fake');
+        }
+        catch (\Exception $e)
+        {
+            $this->assertEquals(404, Crunchmail\Client::getLastErrorCode());
+            $this->assertContains('404', Crunchmail\Client::getLastError());
+        }
+    }
+
+    /**
+     * @testdox createOrUpdate() returns a valid result
+     * @covers ::createOrUpdate
+     * @covers ::create
+     *
+     * @todo spy that client call get method on guzzle
+     */
+    public function testCreateOrUpdate()
+    {
+        $msg = cm_get_message('message_ok');
+        $this->assertObjectHasAttribute('_links', $msg);
+        $this->assertInternalType('boolean', $msg->track_clicks);
+        $this->assertEquals('message_ok', $msg->status);
+    }
+
+    /**
+     * @testdox retrieve() throws an exception on error 500
      * @covers ::retrieve
+     * @covers ::handleGuzzleException
+     * @covers ::catchGuzzleException
+     * @expectedException Crunchmail\Exception\ApiException
+     * @expectedExceptionCode 500
      */
     public function testRetrieveInternalServerError()
     {
-        $client = $this->prepareTestException(500);
-        $res = $client->retrieve('/fake');
+        cm_mock_client(500)->retrieve('/fake');
     }
 
     /**
-     * @expectedException Crunchmail\Exception\ApiException
+     * @testdox retrieve() throws an exception on error 400
      * @covers ::retrieve
+     * @covers ::handleGuzzleException
+     * @covers ::catchGuzzleException
+     * @expectedException Crunchmail\Exception\ApiException
+     * @expectedExceptionCode 404
      */
     public function testRetrieve404Error()
     {
-        $client = $this->prepareTestException(404);
-        $res = $client->retrieve('/fake');
+        cm_mock_client(404)->retrieve('/fake');
     }
 
     /**
-     * @expectedException Crunchmail\Exception\ApiException
+     * @testdox udpate() throws an exception on error 500
      * @covers ::update
+     * @covers ::handleGuzzleException
+     * @covers ::catchGuzzleException
+     * @expectedException Crunchmail\Exception\ApiException
+     * @expectedExceptionCode 500
      */
     public function testUpdateInternalServerError()
     {
-        $client = $this->prepareTestException(500);
-        $res = $client->update('/fake');
+        cm_mock_client(500)->update('/fake');
     }
 
     /**
-     * @expectedException Crunchmail\Exception\ApiException
+     * @testdox create() throws an exception on error 500
      * @covers ::create
+     * @covers ::handleGuzzleException
+     * @covers ::catchGuzzleException
+     * @expectedException Crunchmail\Exception\ApiException
+     * @expectedExceptionCode 500
      */
     public function testCreateInternalServerError()
     {
-        $client = $this->prepareTestException(500);
-        $res = $client->create('/fake');
+        cm_mock_client(500)->create('/fake');
     }
 
     /**
-     * @expectedException Crunchmail\Exception\ApiException
+     * @testdox remove() throws an exception on error 500
      * @covers ::remove
+     * @covers ::handleGuzzleException
+     * @covers ::catchGuzzleException
+     * @expectedException Crunchmail\Exception\ApiException
+     * @expectedExceptionCode 500
      */
-    /*
     public function testRemoveInternalServerError()
     {
-        $client = $this->prepareTestException('Crunchmail\Exception\ApiException');
-        $res = $client->remove('/fake');
+        cm_mock_client(500)->remove('/fake');
     }
-    */
+
+    /**
+     * @testdox getLastRawError returns the last exception
+     * @covers ::getLastRawError
+     */
+    public function testGetLatRawError()
+    {
+        try
+        {
+            cm_mock_client(404, 'message_error')->remove('/fake');
+        }
+        catch (\Exception $e)
+        {
+            $err  = Crunchmail\Client::getLastRawError();
+        }
+
+        $this->assertInstanceOf('\stdClass', $err);
+    }
+    /**
+     * @testdox Exception generates a proper error message and error code
+     * @covers ::getLastError
+     * @covers ::getLastErrorCode
+     * @covers ::handleGuzzleException
+     * @covers ::catchGuzzleException
+     */
+    public function testGetLastError()
+    {
+        try
+        {
+            cm_mock_client(500)->remove('/fake');
+        }
+        catch (\Exception $e)
+        {
+            $err  = Crunchmail\Client::getLastError();
+            $code = Crunchmail\Client::getLastErrorCode();
+        }
+
+        $this->assertInternalType('string', $err);
+        $this->assertTrue($err !== '');
+        $this->assertEquals(500, $code);
+    }
 
     /**
      * Invalid status should return the translated string

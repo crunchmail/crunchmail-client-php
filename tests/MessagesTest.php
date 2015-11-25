@@ -1,7 +1,6 @@
 <?php
 /**
- * TODO: Test Exception result for unexpected errors
- * TODO: Test Exception result for API errors
+ * Test class for Crunchmail\Messages
  *
  * @author Yannick Huerre <dev@sheoak.fr>
  *
@@ -13,6 +12,8 @@ use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Middleware;
 
+require_once('helpers/cm_mock.php');
+
 class MessagesTest extends PHPUnit_Framework_TestCase
 {
     protected function setUp()
@@ -20,29 +21,16 @@ class MessagesTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Helpers
+     * Create a mocked client and execute requested method
      *
-     * @TODO: helper factorize
+     * @param string $method    method to test
+     * @param string $tpl       template name
+     * @param string $param     method param
+     * @param int    $code      http status code of response
      */
-    private function prepareTestException($code)
-    {
-        // Create a mock and queue two responses.
-        $mock = new MockHandler([ new Response($code, ['X-Foo' => 'Bar']) ]);
-
-        $handler = HandlerStack::create($mock);
-        $client = new Crunchmail\Client(['base_uri' => '', 'handler' => $handler]);
-
-        return $client;
-    }
-
     protected function prepareCheck($method, $tpl, $param, $code=200)
     {
-        $body = file_get_contents(__DIR__ . '/responses/' . $tpl . '.json');
-
-        $mock = new MockHandler([ new Response($code, [], $body) ]);
-        $handler = HandlerStack::create($mock);
-
-        $client = new Crunchmail\Client(['base_uri' => '', 'handler' => $handler]);
+        $client = cm_mock_client($code, $tpl);
         return $client->messages->$method($param);
     }
 
@@ -51,7 +39,11 @@ class MessagesTest extends PHPUnit_Framework_TestCase
      */
     public function testMessageHasBeenSent()
     {
-        $this->markTestIncomplete('Todo');
+        $msg = cm_get_message('message_sent');
+        $this->assertTrue(Crunchmail\Messages::hasBeenSent($msg));
+        $this->assertFalse(Crunchmail\Messages::isSending($msg));
+        $this->assertFalse(Crunchmail\Messages::hasIssue($msg));
+        $this->assertFalse(Crunchmail\Messages::isReady($msg));
     }
 
     /**
@@ -59,7 +51,11 @@ class MessagesTest extends PHPUnit_Framework_TestCase
      */
     public function testMessageIsSending()
     {
-        $this->markTestIncomplete('Todo');
+        $msg = cm_get_message('message_sending');
+        $this->assertTrue(Crunchmail\Messages::isSending($msg));
+        $this->assertFalse(Crunchmail\Messages::hasIssue($msg));
+        $this->assertFalse(Crunchmail\Messages::hasBeenSent($msg));
+        $this->assertFalse(Crunchmail\Messages::isReady($msg));
     }
 
     /**
@@ -67,21 +63,38 @@ class MessagesTest extends PHPUnit_Framework_TestCase
      */
     public function testMessageIsReady()
     {
-        $this->markTestIncomplete('Todo');
+        $msg = cm_get_message('message_ok');
+        $this->assertTrue(Crunchmail\Messages::isReady($msg));
+        $this->assertFalse(Crunchmail\Messages::isSending($msg));
+        $this->assertFalse(Crunchmail\Messages::hasBeenSent($msg));
+        $this->assertFalse(Crunchmail\Messages::hasIssue($msg));
     }
 
     /**
-     * @covers ::hasError
+     * @covers ::hasIssue
+     * @todo better message_issues
      */
     public function testMessageHasError()
+    {
+        $msg = cm_get_message('message_error');
+        $this->assertTrue(Crunchmail\Messages::hasIssue($msg));
+        $this->assertFalse(Crunchmail\Messages::isSending($msg));
+        $this->assertFalse(Crunchmail\Messages::hasBeenSent($msg));
+        $this->assertFalse(Crunchmail\Messages::isReady($msg));
+    }
+
+    /**
+     * @covers ::create
+     */
+    public function testCreateAMessage()
     {
         $this->markTestIncomplete('Todo');
     }
 
     /**
-     * @covers ::update
+     * @covers ::create
      */
-    public function testCreateAMessage()
+    public function testCreateWithInvalidDomain()
     {
         $this->markTestIncomplete('Todo');
     }

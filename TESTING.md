@@ -10,6 +10,10 @@ To run the Test suite, you will need PHP 5.6+.
     cd /root/of/project
     phpunit
 
+Or with testdox format:
+
+    phpunit --testdox
+
 
 ## Generate code coverage
 

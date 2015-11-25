@@ -1,0 +1,54 @@
+{
+    "_links": {
+        "archive_url": {
+            "href": "https://api.crunchmail.me/hosted/message/b10409c3-34e7-4d1c-b67a-754290bc00a5/"
+        },
+        "bounces": {
+            "href": "https://api.crunchmail.me/v1/messages/594/bounces/"
+        },
+        "mails": {
+            "href": "https://api.crunchmail.me/v1/messages/594/mails/"
+        },
+        "opt_outs": {
+            "href": "https://api.crunchmail.me/v1/messages/594/opt_outs/"
+        },
+        "preview": {
+            "href": "https://api.crunchmail.me/v1/messages/594/preview/"
+        },
+        "preview.html": {
+            "href": "https://api.crunchmail.me/v1/messages/594/preview.html"
+        },
+        "preview.txt": {
+            "href": "https://api.crunchmail.me/v1/messages/594/preview.txt"
+        },
+        "preview_send": {
+            "href": "https://api.crunchmail.me/v1/messages/594/preview_send/"
+        },
+        "spam_details": {
+            "href": "https://api.crunchmail.me/v1/messages/594/spam_details/"
+        },
+        "stats": {
+            "href": "https://api.crunchmail.me/v1/messages/594/stats/"
+        }
+    },
+    "category": null,
+    "completion_date": null,
+    "creation_date": "2015-11-24T12:03:43.093Z",
+    "detach_images": false,
+    "external_optout": false,
+    "html": "A new test PHP5.4",
+    "is_spam": false,
+    "mail_count": 3,
+    "msg_issue": "",
+    "name": "A new test PHP5.4Fake title",
+    "properties": null,
+    "send_date": null,
+    "sender_email": "fakeuser@oasiswork.fr",
+    "sender_name": "A new test PHP5.4",
+    "spam_score": null,
+    "status": "sent",
+    "subject": "A new test PHP5.4",
+    "track_clicks": false,
+    "track_open": false,
+    "url": "https://api.crunchmail.me/v1/messages/594/"
+}
