@@ -15,6 +15,21 @@ require_once('helpers/cm_mock.php');
  */
 class AttachmentsTest extends PHPUnit_Framework_TestCase
 {
+    private $fileUnreadable;
+
+    protected function setUp()
+    {
+        // this file must be unreadable for tests
+        $this->fileUnreadable = realpath(__DIR__ . '/files/unreadable.svg');
+        chmod($this->fileUnreadable, 0000);
+    }
+
+    protected function tearDown()
+    {
+        // restore file permissions for git
+        chmod($this->fileUnreadable, 0664);
+    }
+
     /**
      * Check adding a file
      *
@@ -68,7 +83,7 @@ class AttachmentsTest extends PHPUnit_Framework_TestCase
     public function testAddingAUnreadableFileThrowsAnException()
     {
         $client = cm_mock_client(200, 'empty');
-        $filepath=realpath(__DIR__ . '/files/unreadable.svg');
+        $filepath=$this->fileUnreadable;
 
         // check file is not readable first
         if (!file_exists($filepath) || is_readable($filepath))
