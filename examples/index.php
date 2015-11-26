@@ -17,14 +17,6 @@ error_reporting(E_ALL);
 // require composer deps
 require 'vendor/autoload.php';
 
-// for testing sending / preview
-$yourmail = 'gomunochikin@gmail.com';
-
-if (empty($yourmail))
-{
-    throw new Exception('Please configure your email in <em>$youremail</em> var.');
-}
-
 // Crunchmail configuration
 $config = array(
     'base_uri'    => 'https://api.crunchmail.me/v1/',
@@ -56,20 +48,24 @@ $Client = new Crunchmail\Client($config);
  * for easy reading:
  *****************************************************************************/
 
+/*
 // Send a message to yourself as a preview
-$message = $Client->messages->create($post);
-echo '<hr>';
-$Client->messages->sendPreview($message->url, $yourmail);
+// for testing sending / preview
+$yourmail = '';
 
-echo '<hr>';
+if (empty($yourmail))
+{
+    throw new Exception('Please configure your email in <em>$youremail</em> var.');
+}
+
+$message = $Client->messages->create($post);
+$Client->messages->sendPreview($message->url, $yourmail);
 
 // Confirm sending
 $Client->mails->push($message->url, $yourmail);
-echo '<hr>';
-echo '<hr>';
 $Client->messages->sendMessage($message->url);
 
-exit;
+*/
 
 echo '<h2>Messages</h2>';
 
