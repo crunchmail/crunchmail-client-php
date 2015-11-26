@@ -65,6 +65,9 @@ class Messages extends Client
      * @param string $id Message url id
      * @param array $post
      * @return object
+     *
+     * @codeCoverageIgnore
+     * @fixme waiting for API Fix
      */
     public function getAttachments($id)
     {

@@ -24,7 +24,8 @@ class Attachments extends Client
      * Add an attachment to the given message
      *
      * @param string $id Message url id
-     * @param array $post
+     * @param string $path File path
+     * @return stdClass
      */
     public function upload($id, $path)
     {
@@ -42,18 +43,10 @@ class Attachments extends Client
         {
             $body = fopen($path, 'r');
 
-            $response = $this->request('POST', '', [
-                'multipart' => [
-                    [
-                        'name'     => 'file',
-                        'contents' => $body
-                    ],
-                    [
-                        'name'     => 'message',
-                        'contents' => $id
-                    ]
-                ]
-            ]);
+            $response=$this->request('POST','', ['multipart'=> [
+                    ['name'=>'file','contents'=>$body],
+                    ['name'=>'message','contents'=>$id]
+            ]]);
 
             return json_decode($response->getBody());
         }
@@ -61,7 +54,9 @@ class Attachments extends Client
         {
             $this->catchGuzzleException($e);
         }
-
+    // @codeCoverageIgnoreStart
     }
-
+    // @codeCoverageIgnoreEnd
 }
+
+

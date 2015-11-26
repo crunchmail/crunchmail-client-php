@@ -11,6 +11,8 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Middleware;
+
 
 /**
  * Return a mocked client
@@ -19,7 +21,7 @@ use GuzzleHttp\Psr7\Request;
  * @param array $body body response
  * @return Crunchmail\Client
  */
-function cm_mock_client($code, $tpl=['empty'])
+function cm_mock_client($code, $tpl=['empty'], &$container=null)
 {
     $tpl = is_array($tpl) ? $tpl : [$tpl];
     $responses = [];
@@ -34,6 +36,17 @@ function cm_mock_client($code, $tpl=['empty'])
     $mock = new MockHandler($responses);
 
     $handler = HandlerStack::create($mock);
+
+    // keep history of requests
+    if (isset($container))
+    {
+        $container = [];
+        $history = Middleware::history($container);
+
+        // Add the history middleware to the handler stack.
+        $handler->push($history);
+    }
+
     $client = new Crunchmail\Client(['base_uri' => '', 'handler' => $handler]);
 
     return $client;

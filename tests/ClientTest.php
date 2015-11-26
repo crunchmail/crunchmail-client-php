@@ -9,6 +9,11 @@
 
 require_once('helpers/cm_mock.php');
 
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\Request;
+
 /**
  * Test class
  *
@@ -85,6 +90,24 @@ class ClientTest extends PHPUnit_Framework_TestCase
     {
         $client = new Crunchmail\Client(['base_uri' => '']);
         $client->invalidProperty->test();
+    }
+
+    /**
+     * @covers ::catchGuzzleException
+     *
+     * @expectedExceptionCode 0
+     * @expectedException \RuntimeException
+     */
+    public function testUnexpectedErrors()
+    {
+        $responses = [ new MockHandler([ new RuntimeException('Oops!') ]) ];
+
+        // Create a mock and queue responses.
+        $mock = new MockHandler($responses);
+        $handler = HandlerStack::create($mock);
+        $client = new Crunchmail\Client(['base_uri' => '', 'handler' => $handler]);
+
+        $client->retrieve('fake');
     }
 
     /**

@@ -8,12 +8,6 @@
  */
 require_once('helpers/cm_mock.php');
 
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Middleware;
-
 /**
  * Test class
  *
@@ -201,6 +195,7 @@ class MessagesTest extends PHPUnit_Framework_TestCase
         $client = cm_mock_client(200, 'message_ok');
         $res = $client->messages->getPreviewUrl('fakeid');
         $this->assertStringStartsWith('http', $res);
+        $this->assertStringEndsWith('preview_send/', $res);
     }
 
     /**
@@ -208,10 +203,29 @@ class MessagesTest extends PHPUnit_Framework_TestCase
      */
     public function testSendingPreviewReturnsAValidResponse()
     {
-        $client = cm_mock_client(200, ['message_ok', 'message_ok']);
-        $res = $client->messages->sendPreview('fakeid', 'fakeemail@fake.fr');
+        $container = [];
+        $client = cm_mock_client(200, ['message_ok', 'message_ok'],
+            $container);
+
+        $res = $client->messages->sendPreview('https://testid', 'f@fake.fr');
 
         $this->assertTrue(\Crunchmail\Messages::isReady($res));
+
+        // checking requests
+        $this->assertEquals(2, count($container));
+
+        // checking getPreviw request
+        $reqUrl = $container[0]['request'];
+        $this->assertEquals('GET', $reqUrl->getMethod());
+        $this->assertEquals('https://testid', (string) $reqUrl->getUri());
+
+        // checking sending preview request
+        $reqSend = $container[1]['request'];
+        $this->assertEquals('POST', $reqSend->getMethod());
+
+        // check that the preview url has been used
+        $this->assertStringEndsWith('preview_send/', (string)
+            $reqSend->getUri());
     }
 
     /**
@@ -219,59 +233,30 @@ class MessagesTest extends PHPUnit_Framework_TestCase
      */
     public function testSendingAMessageReturnsAValidResponse()
     {
-        $tpl = 'message_sending';
-        $body = file_get_contents(__DIR__ . '/responses/' . $tpl . '.json');
-
-        // Create a mock and queue two responses.
-        $mock = new MockHandler([ new Response('200', [], $body) ]);
-        $stack = HandlerStack::create($mock);
-
         $container = [];
-        $history = Middleware::history($container);
+        $client = cm_mock_client(200, ['message_sending'], $container);
 
-        // Add the history middleware to the handler stack.
-        $stack->push($history);
-
-        $client = new Crunchmail\Client(['base_uri' => '', 'handler' => $stack]);
-        $res = $client->messages->sendMessage('fakeid');
+        $res = $client->messages->sendMessage('https://testid');
 
         $this->assertInstanceOf('stdClass', $res);
         $this->assertTrue(\Crunchmail\Messages::isSending($res));
 
-        // TODO: test post request?
-        // Iterate over the requests and responses
-        /*
-        foreach ($container as $transaction) {
-            echo $transaction['request']->getMethod();
-            //> GET, HEAD
-            if ($transaction['response']) {
-                echo $transaction['response']->getStatusCode();
-                //> 200, 200
-            } elseif ($transaction['error']) {
-                echo $transaction['error'];
-                //> exception
-            }
-            var_dump($transaction['options']);
-            //> dumps the request options of the sent request.
-        }
-         */
+        $req = $container[0]['request'];
+        $this->assertEquals(1, count($container));
+        $this->assertEquals('PATCH', $req->getMethod());
+        $this->assertEquals('https://testid', (string) $req->getUri());
     }
 
     /**
      * @covers ::sendPreview
-     * FIXME
+     *
+     * @expectedExceptionCode 500
+     * @expectedException Crunchmail\Exception\ApiException
      */
-    /**
      public function testGetPreviewUrlError()
      {
-         $tpl = 'empty';
-         $res = $this->prepareCheck('getPreviewUrl', $tpl, 'fakeid', 400);
-         $this->assertFalse($res);
-
-         $this->markTestIncomplete(
-             'This test has not been implemented yet.'
-         );
+        $client = cm_mock_client(500, ['message_error', 'message_error']);
+        $res = $client->messages->sendPreview('https://testid', 'f@fake.fr');
      }
-     */
 
 }

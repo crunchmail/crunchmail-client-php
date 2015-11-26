@@ -60,52 +60,45 @@ class ApiExceptionTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @testdox toHtml() method returns a proper string and code (404)
+     * @testdox toHtml() method returns a proper string and code (400)
      *
      * @covers ::toHtml
      * @covers ::getCode
      */
-    public function testExceptionToHtmlFor404()
+    public function testExceptionToHtmlFor400()
     {
         try
         {
-            $client = cm_mock_client(404);
-            $client->remove('/fake');
+            $client = cm_mock_client(400, 'message_invalid');
+            $client->create([]);
         }
         catch (Crunchmail\Exception\ApiException $e)
         {
-            $err  = $e->toHtml();
             $code = $e->getCode();
+            $err  = $e->toHtml();
         }
 
-        $this->assertInternalType('string', $err);
-        $this->assertContains('404 Not Found', $err);
-        $this->assertEquals(404, $code);
-    }
-
-    /**
-     * @testdox toHtml hides error key if asked to
-     *
-     * @covers ::formatResponseOutput
-     */
-    public function testToHtmlHidesErrorKey()
-    {
-        $this->markTestIncomplete('todo');
-
-        //$this->assertNotContains('keyone', $out);
+        $this->assertContains('sender_email', $err);
+        $this->assertEquals(400, $code);
     }
 
     /**
      * @testdox Receiving an invalid error does not breaks formatting
      *
-     * @expectedException Crunchmail\Exception\ApiException
-     * @expectedExceptionCode 400
-     *
      * @group bug-2030
      */
     public function testReceivingAnInvalidError()
     {
-        cm_mock_client(400, 'invalid_error')->create([]);
+        try
+        {
+            cm_mock_client(400, 'message_invalid')->create([]);
+        }
+        catch (Crunchmail\Exception\ApiException $e)
+        {
+            $err  = $e->toHtml(false);
+        }
+
+        $this->assertNotContains('sender_email', $err);
     }
 
 }
