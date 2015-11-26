@@ -16,9 +16,6 @@ use GuzzleHttp\Middleware;
 
 require_once('helpers/cm_mock.php');
 
-/**
- * Test class
- */
 class MailsTest extends PHPUnit_Framework_TestCase
 {
     /**
@@ -26,7 +23,7 @@ class MailsTest extends PHPUnit_Framework_TestCase
      *
      * @todo verify API is working (404)
      *
-     * @covers \Crunchmail\Mails::push
+     * @covers ::push
      */
     /*
     public function testInvalidPush()
@@ -49,7 +46,7 @@ class MailsTest extends PHPUnit_Framework_TestCase
     /**
      * Test adding invalid recipients
      *
-     * @covers \Crunchmail\Mails::push
+     * @covers ::push
      */
     public function testAddingInvalidEmailReturnsFailure()
     {
@@ -68,7 +65,7 @@ class MailsTest extends PHPUnit_Framework_TestCase
     /**
      * Test adding a proper recipient
      *
-     * @covers \Crunchmail\Mails::push
+     * @covers ::push
      */
     public function testAddingValidEmailReturnsProperCount()
     {
@@ -82,7 +79,7 @@ class MailsTest extends PHPUnit_Framework_TestCase
     /**
      * Test adding a proper recipient list
      *
-     * @covers \Crunchmail\Mails::push
+     * @covers ::push
      */
     public function testAddingValidEmailListReturnsProperCount()
     {

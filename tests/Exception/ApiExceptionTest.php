@@ -95,10 +95,6 @@ class ApiExceptionTest extends PHPUnit_Framework_TestCase
     /**
      * @testdox Receiving an invalid error does not breaks formatting
      *
-     * @covers ::formatResponseOutput
-     * @covers ::handleGuzzleException
-     * @covers ::catchGuzzleException
-     *
      * @expectedException Crunchmail\Exception\ApiException
      * @expectedExceptionCode 400
      *

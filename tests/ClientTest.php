@@ -36,7 +36,6 @@ class ClientTest extends PHPUnit_Framework_TestCase
 
     /**
      * @covers ::__construct
-     * @covers ::handleGuzzleException
      * @covers ::catchGuzzleException
      *
      * @expectedException RuntimeException
@@ -48,7 +47,6 @@ class ClientTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::handleGuzzleException
      * @covers ::catchGuzzleException
      *
      * @expectedException Crunchmail\Exception\ApiException
@@ -61,7 +59,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
 
     /**
      * @covers ::__call
-     * @covers ::handleGuzzleException
+     * @covers ::__construct
      * @covers ::catchGuzzleException
      *
      * @expectedException GuzzleHttp\Exception\RequestException
@@ -75,7 +73,6 @@ class ClientTest extends PHPUnit_Framework_TestCase
 
     /**
      * @covers ::__call
-     * @covers ::handleGuzzleException
      * @covers ::catchGuzzleException
      *
      * @expectedException RuntimeException
@@ -88,7 +85,6 @@ class ClientTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::handleGuzzleException
      * @covers ::catchGuzzleException
      *
      * @expectedException Crunchmail\Exception\ApiException
@@ -112,7 +108,6 @@ class ClientTest extends PHPUnit_Framework_TestCase
      * @testdox retrieve() throws an exception on error 500
      *
      * @covers ::retrieve
-     * @covers ::handleGuzzleException
      * @covers ::catchGuzzleException
      *
      * @expectedException Crunchmail\Exception\ApiException
@@ -127,7 +122,6 @@ class ClientTest extends PHPUnit_Framework_TestCase
      * @testdox retrieve() throws an exception on error 400
      *
      * @covers ::retrieve
-     * @covers ::handleGuzzleException
      * @covers ::catchGuzzleException
      *
      * @expectedException Crunchmail\Exception\ApiException
@@ -142,7 +136,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
      * @testdox udpate() throws an exception on error 500
      *
      * @covers ::update
-     * @covers ::handleGuzzleException
+     * @covers ::apiRequest
      * @covers ::catchGuzzleException
      *
      * @expectedException Crunchmail\Exception\ApiException
@@ -157,7 +151,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
      * @testdox create() throws an exception on error 500
      *
      * @covers ::create
-     * @covers ::handleGuzzleException
+     * @covers ::apiRequest
      * @covers ::catchGuzzleException
      * 
      * @expectedException Crunchmail\Exception\ApiException
@@ -170,8 +164,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
 
     /**
      * @covers ::create
-     * @covers ::formatResponseOutput
-     * @covers ::handleGuzzleException
+     * @covers ::apiRequest
      * @covers ::catchGuzzleException
      *
      * @expectedException Crunchmail\Exception\ApiException
@@ -189,7 +182,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
      * @testdox remove() throws an exception on error 500
      *
      * @covers ::remove
-     * @covers ::handleGuzzleException
+     * @covers ::apiRequest
      * @covers ::catchGuzzleException
      *
      * @expectedException Crunchmail\Exception\ApiException
@@ -207,15 +200,29 @@ class ClientTest extends PHPUnit_Framework_TestCase
     {
         $client = cm_mock_client(200);
         $client->messages->newprop = 1;
+        $client->messages->otherprop= 2;
 
         $this->assertEquals(1, $client->messages->newprop);
+        $this->assertEquals(2, $client->messages->otherprop);
+    }
+
+    /**
+     * @covers ::__get
+     *
+     * @expectedExceptionCode 0
+     * @expectedException \RuntimeException
+     */
+    public function testAccessingUnknowPropertyThrowsAnException()
+    {
+        $client = cm_mock_client(200);
+        $client->invalid->test = 1;
     }
 
     /**
      * @testdox create() returns a valid result
      *
-     * @covers ::createOrUpdate
      * @covers ::create
+     * @covers ::apiRequest
      *
      * @todo spy that client call get method on guzzle
      */
@@ -229,8 +236,8 @@ class ClientTest extends PHPUnit_Framework_TestCase
     /**
      * @testdox update() returns a valid result
      *
-     * @covers ::createOrUpdate
      * @covers ::update
+     * @covers ::apiRequest
      *
      * @todo spy that client call get method on guzzle
      */
@@ -242,10 +249,10 @@ class ClientTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @testdox createOrUpdate() returns a valid result
+     * @testdox create() returns a valid result
      *
-     * @covers ::createOrUpdate
      * @covers ::create
+     * @covers ::apiRequest
      *
      * @todo spy that client call get method on guzzle
      */

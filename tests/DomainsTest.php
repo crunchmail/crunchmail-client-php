@@ -7,13 +7,9 @@
  * @author Yannick Huerre <dev@sheoak.fr>
  *
  * @coversDefaultClass \Crunchmail\Domains
- * @fixme PHPUnit does not understand coversDefaultClass comment correctly
  */
 require_once('helpers/cm_mock.php');
 
-/**
- * Test class
- */
 class DomainsTest extends PHPUnit_Framework_TestCase
 {
     protected function setUp()
@@ -38,7 +34,7 @@ class DomainsTest extends PHPUnit_Framework_TestCase
      */
 
     /**
-     * @covers \Crunchmail\Domains::verify
+     * @covers ::verify
      *
      * @expectedException Crunchmail\Exception\ApiException
      * @expectedExceptionCode 500
@@ -50,7 +46,7 @@ class DomainsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Crunchmail\Domains::search
+     * @covers ::search
      *
      * @expectedException Crunchmail\Exception\ApiException
      * @expectedExceptionCode 500
@@ -64,7 +60,7 @@ class DomainsTest extends PHPUnit_Framework_TestCase
     /**
      * @testdox Searching a valid domain returns an array
      *
-     * @covers \Crunchmail\Domains::search
+     * @covers ::search
      */
     public function testSearchDomainReturnsAnArray()
     {
@@ -75,7 +71,7 @@ class DomainsTest extends PHPUnit_Framework_TestCase
     /**
      * @testdox Searching a invalid domain returns an empty array
      *
-     * @covers \Crunchmail\Domains::search
+     * @covers ::search
      */
     public function testSearchUnknowDomainReturnsAnEmptyArray()
     {
@@ -88,7 +84,7 @@ class DomainsTest extends PHPUnit_Framework_TestCase
     /**
      * @testdox Verifying a valid domain returns true
      *
-     * @covers \Crunchmail\Domains::verify
+     * @covers ::verify
      *
      * @todo check call to post, with domain and email as parameter
      */
@@ -101,7 +97,7 @@ class DomainsTest extends PHPUnit_Framework_TestCase
     /**
      * @testdox Verifying an unknow domain returns false
      *
-     * @covers \Crunchmail\Domains::verify
+     * @covers ::verify
      */
     public function testVerifyInvalidDomainReturnsFalse()
     {
@@ -112,7 +108,7 @@ class DomainsTest extends PHPUnit_Framework_TestCase
     /**
      * @testdox Verifying an invalid existing domain returns false (dkim)
      *
-     * @covers \Crunchmail\Domains::verify
+     * @covers ::verify
      */
     public function testDomainInvalidDkim()
     {
@@ -123,7 +119,7 @@ class DomainsTest extends PHPUnit_Framework_TestCase
     /**
      * @testdox Verifying an invalid existing domain returns false (mx)
      *
-     * @covers \Crunchmail\Domains::verify
+     * @covers ::verify
      */
     public function testDomainInvalidMx()
     {
