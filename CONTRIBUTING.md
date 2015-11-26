@@ -2,6 +2,8 @@
 
 ## Testing
 
+To run the Test suite, you will need PHP 5.6+.
+
     cd /path/to/project
     # run all tests
     make test
