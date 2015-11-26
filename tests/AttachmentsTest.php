@@ -5,18 +5,26 @@
  * @license MIT
  * @copyright (C) 2015 Oasis Work
  * @author Yannick Huerre <dev@sheoak.fr>
- *
- * @coversDefaultClass \Crunchmail\Attachments
  */
+
 require_once('helpers/cm_mock.php');
 
 /**
  * Test class
+ *
+ * @coversDefaultClass \Crunchmail\Attachments
  */
 class AttachmentsTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * File to test error about unreadable files
+     * @var string
+     */
     private $fileUnreadable;
 
+    /**
+     * Before tests
+     */
     protected function setUp()
     {
         // this file must be unreadable for tests
@@ -24,6 +32,9 @@ class AttachmentsTest extends PHPUnit_Framework_TestCase
         chmod($this->fileUnreadable, 0000);
     }
 
+    /**
+     * After tests
+     */
     protected function tearDown()
     {
         // restore file permissions for git
@@ -31,20 +42,20 @@ class AttachmentsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::join
+     * @covers ::upload
      */
     public function testAddingAFileReturnsAProperResult()
     {
         $client = cm_mock_client(200, 'file_ok');
         $filepath= realpath(__DIR__ . '/files/test.svg');
-        $result = $client->attachments->join('fakeid', $filepath);
+        $result = $client->attachments->upload('fakeid', $filepath);
 
         $this->assertInstanceOf('stdClass', $result);
         $this->assertInternalType('string', $result->file);
     }
 
     /**
-     * @covers ::join
+     * @covers ::upload
      *
      * @expectedException Crunchmail\Exception\ApiException
      * @expectedExceptionCode 400
@@ -53,27 +64,27 @@ class AttachmentsTest extends PHPUnit_Framework_TestCase
     {
         $client = cm_mock_client(400, 'file_error');
         $filepath= realpath(__DIR__ . '/files/test.svg');
-        $result = $client->attachments->join('fakeid', $filepath);
+        $result = $client->attachments->upload('fakeid', $filepath);
     }
 
     /**
-     * @covers ::join
+     * @covers ::upload
      *
-     * @expectedExceptionCode 0
      * @expectedException \RuntimeException
+     * @expectedExceptionCode 0
      */
     public function testAddingAMissingFileThrowsAnException()
     {
         $client = cm_mock_client(200, 'empty');
         $filepath='missing_file.svg';
-        $result = $client->attachments->join('fakeid', $filepath);
+        $result = $client->attachments->upload('fakeid', $filepath);
     }
 
     /**
-     * @covers ::join
+     * @covers ::upload
      *
-     * @expectedExceptionCode 0
      * @expectedException \RuntimeException
+     * @expectedExceptionCode 0
      */
     public function testAddingAnUnreadableFileThrowsAnException()
     {
@@ -87,6 +98,6 @@ class AttachmentsTest extends PHPUnit_Framework_TestCase
              readable');
         }
 
-        $result = $client->attachments->join('fakeid', $filepath);
+        $result = $client->attachments->upload('fakeid', $filepath);
     }
 }

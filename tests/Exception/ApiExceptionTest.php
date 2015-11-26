@@ -5,12 +5,15 @@
  * @license MIT
  * @copyright (C) 2015 Oasis Work
  * @author Yannick Huerre <dev@sheoak.fr>
- *
- * @coversDefaultClass \Crunchmail\Exception\ApiException
  */
 
 require_once( __DIR__ . '/../helpers/cm_mock.php');
 
+/**
+ * Test class
+ *
+ * @coversDefaultClass \Crunchmail\Exception\ApiException
+ */
 class ApiExceptionTest extends PHPUnit_Framework_TestCase
 {
     /**

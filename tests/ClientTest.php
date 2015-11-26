@@ -5,12 +5,15 @@
  * @license MIT
  * @copyright (C) 2015 Oasis Work
  * @author Yannick Huerre <dev@sheoak.fr>
- *
- * @coversDefaultClass \Crunchmail\Client
  */
 
 require_once('helpers/cm_mock.php');
 
+/**
+ * Test class
+ *
+ * @coversDefaultClass \Crunchmail\Client
+ */
 class ClientTest extends PHPUnit_Framework_TestCase
 {
     protected function setUp()

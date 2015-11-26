@@ -27,14 +27,7 @@ class Messages extends Client
      */
     public function sendMessage($id)
     {
-        try
-        {
-            return $this->patch($id, ['json' => ['status' => 'sending' ] ] );
-        }
-        catch (Exception $e)
-        {
-            $this->catchGuzzleException($e);
-        }
+        return $this->apiRequest('patch', $id, ['status' => 'sending'] );
     }
 
     /**

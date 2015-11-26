@@ -19,20 +19,22 @@ use GuzzleHttp\Psr7\Request;
  * @param array $body body response
  * @return Crunchmail\Client
  */
-function cm_mock_client($code, $tpl=null)
+function cm_mock_client($code, $tpl=['empty'])
 {
-    $body = '';
-    if (!empty($tpl))
+    $tpl = is_array($tpl) ? $tpl : [$tpl];
+    $responses = [];
+
+    foreach ($tpl as $t)
     {
-        $body = file_get_contents(__DIR__ . '/../responses/' . $tpl . '.json');
+        $body = file_get_contents(__DIR__ . '/../responses/' . $t . '.json');
+        $responses[] = new MockHandler([ new Response($code, [], $body) ]);
     }
 
-    // Create a mock and queue two responses.
-    $mock = new MockHandler([ new Response($code, [], $body) ]);
+    // Create a mock and queue responses.
+    $mock = new MockHandler($responses);
 
     $handler = HandlerStack::create($mock);
-    $client = new Crunchmail\Client(['base_uri' => '', 'handler' =>
-        $handler]);
+    $client = new Crunchmail\Client(['base_uri' => '', 'handler' => $handler]);
 
     return $client;
 }

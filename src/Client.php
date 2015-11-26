@@ -81,7 +81,7 @@ class Client extends \GuzzleHttp\Client
      * Create an object when accessing a sub-ressource
      *
      * If a specific class exists for this type of ressource (ie: domain)
-     * then it will be used instead of crunchmailClient
+     * then it will be instanciated and stored instead of crunchmailClient
      *
      * If an object is created, it will be returned
      *

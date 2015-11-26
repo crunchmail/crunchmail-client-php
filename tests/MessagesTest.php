@@ -5,8 +5,6 @@
  * @license MIT
  * @copyright (C) 2015 Oasis Work
  * @author Yannick Huerre <dev@sheoak.fr>
- *
- * @coversDefaultClass \Crunchmail\Messages
  */
 require_once('helpers/cm_mock.php');
 
@@ -16,6 +14,11 @@ use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Middleware;
 
+/**
+ * Test class
+ *
+ * @coversDefaultClass \Crunchmail\Messages
+ */
 class MessagesTest extends PHPUnit_Framework_TestCase
 {
     protected function setUp()
@@ -64,6 +67,7 @@ class MessagesTest extends PHPUnit_Framework_TestCase
      * @testdox Method hasBeenSent() works properly
      *
      * @covers ::hasBeenSent
+     * @covers ::checkMessage
      */
     public function testMessageHasBeenSent()
     {
@@ -78,6 +82,7 @@ class MessagesTest extends PHPUnit_Framework_TestCase
      * @testdox Method isSending() works properly
      *
      * @covers ::isSending
+     * @covers ::checkMessage
      */
     public function testMessageIsSending()
     {
@@ -92,6 +97,7 @@ class MessagesTest extends PHPUnit_Framework_TestCase
      * @testdox Method isReady() works properly
      *
      * @covers ::isReady
+     * @covers ::checkMessage
      */
     public function testIsReady()
     {
@@ -106,6 +112,7 @@ class MessagesTest extends PHPUnit_Framework_TestCase
      * @testdox Method hasError() works properly
      *
      * @covers ::hasIssue
+     * @covers ::checkMessage
      */
     public function testMessageHasError()
     {
@@ -120,6 +127,7 @@ class MessagesTest extends PHPUnit_Framework_TestCase
      * @testdox Method hasBeenSent() throws an exception on invalid parameter
      *
      * @covers ::hasBeenSent
+     * @covers ::checkMessage
      *
      * @expectedExceptionCode 0
      * @expectedException \RuntimeException
@@ -133,6 +141,7 @@ class MessagesTest extends PHPUnit_Framework_TestCase
      * @testdox Method isSending() throws an exception on invalid parameter
      *
      * @covers ::isSending
+     * @covers ::checkMessage
      *
      * @expectedExceptionCode 0
      * @expectedException \RuntimeException
@@ -146,6 +155,7 @@ class MessagesTest extends PHPUnit_Framework_TestCase
      * @testdox Method isReady() throws an exception on invalid parameter
      *
      * @covers ::isReady
+     * @covers ::checkMessage
      *
      * @expectedExceptionCode 0
      * @expectedException \RuntimeException
@@ -159,6 +169,7 @@ class MessagesTest extends PHPUnit_Framework_TestCase
      * @testdox Method hasIssue() throws an exception on invalid parameter
      *
      * @covers ::hasIssue
+     * @covers ::checkMessage
      *
      * @expectedExceptionCode 0
      * @expectedException \RuntimeException
@@ -197,18 +208,18 @@ class MessagesTest extends PHPUnit_Framework_TestCase
      */
     public function testSendingPreviewReturnsAValidResponse()
     {
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $client = cm_mock_client(200, ['message_ok', 'message_ok']);
+        $res = $client->messages->sendPreview('fakeid', 'fakeemail@fake.fr');
+
+        $this->assertTrue(\Crunchmail\Messages::isReady($res));
     }
 
     /**
      * @covers ::sendMessage
-     * @todo: result testing?
      */
     public function testSendingAMessageReturnsAValidResponse()
     {
-        $tpl = 'message_ok';
+        $tpl = 'message_sending';
         $body = file_get_contents(__DIR__ . '/responses/' . $tpl . '.json');
 
         // Create a mock and queue two responses.
@@ -224,11 +235,8 @@ class MessagesTest extends PHPUnit_Framework_TestCase
         $client = new Crunchmail\Client(['base_uri' => '', 'handler' => $stack]);
         $res = $client->messages->sendMessage('fakeid');
 
-        $this->assertInstanceOf('GuzzleHttp\Psr7\Response', $res);
-
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->assertInstanceOf('stdClass', $res);
+        $this->assertTrue(\Crunchmail\Messages::isSending($res));
 
         // TODO: test post request?
         // Iterate over the requests and responses

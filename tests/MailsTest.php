@@ -5,8 +5,6 @@
  * @license MIT
  * @copyright (C) 2015 Oasis Work
  * @author Yannick Huerre <dev@sheoak.fr>
- *
- * @coversDefaultClass \Crunchmail\Mails
  */
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -16,6 +14,11 @@ use GuzzleHttp\Middleware;
 
 require_once('helpers/cm_mock.php');
 
+/**
+ * Test class
+ *
+ * @coversDefaultClass \Crunchmail\Mails
+ */
 class MailsTest extends PHPUnit_Framework_TestCase
 {
     /**

@@ -5,20 +5,20 @@
  * @license MIT
  * @copyright (C) 2015 Oasis Work
  * @author Yannick Huerre <dev@sheoak.fr>
- *
- * @coversDefaultClass \Crunchmail\Domains
  */
 require_once('helpers/cm_mock.php');
 
+/**
+ * Test class
+ *
+ * @coversDefaultClass \Crunchmail\Domains
+ */
 class DomainsTest extends PHPUnit_Framework_TestCase
 {
-    protected function setUp()
-    {
-    }
 
-    /**
+    /* -----------------------------------------------------------------------
      * Helpers
-     */
+     * --------------------------------------------------------------------- */
 
     /**
      * Create a client and call requested method
@@ -29,9 +29,9 @@ class DomainsTest extends PHPUnit_Framework_TestCase
         return $client->domains->$method($domain);
     }
 
-    /**
+    /* -----------------------------------------------------------------------
      * Test
-     */
+     * --------------------------------------------------------------------- */
 
     /**
      * @covers ::verify

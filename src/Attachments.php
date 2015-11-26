@@ -4,7 +4,7 @@
  *
  * Usage:
  *
- * $Client->attachments->join($id, $path);
+ * $Client->attachments->upload($id, $path);
  *
  * @license MIT
  * @copyright (C) 2015 Oasis Work
@@ -25,10 +25,8 @@ class Attachments extends Client
      *
      * @param string $id Message url id
      * @param array $post
-     *
-     * @todo test file error
      */
-    public function join($id, $path)
+    public function upload($id, $path)
     {
         if (!file_exists($path))
         {

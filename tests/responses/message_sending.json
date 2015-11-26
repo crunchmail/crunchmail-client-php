@@ -1,54 +1,54 @@
 {
     "_links": {
         "archive_url": {
-            "href": "https://api.crunchmail.me/hosted/message/b10409c3-34e7-4d1c-b67a-754290bc00a5/"
+            "href": "https://api.crunchmail.me/hosted/message/72d8f2cf-5e9d-477e-a511-447e1744bed7/"
         },
         "bounces": {
-            "href": "https://api.crunchmail.me/v1/messages/594/bounces/"
+            "href": "https://api.crunchmail.me/v1/messages/695/bounces/"
         },
         "mails": {
-            "href": "https://api.crunchmail.me/v1/messages/594/mails/"
+            "href": "https://api.crunchmail.me/v1/messages/695/mails/"
         },
         "opt_outs": {
-            "href": "https://api.crunchmail.me/v1/messages/594/opt_outs/"
+            "href": "https://api.crunchmail.me/v1/messages/695/opt_outs/"
         },
         "preview": {
-            "href": "https://api.crunchmail.me/v1/messages/594/preview/"
+            "href": "https://api.crunchmail.me/v1/messages/695/preview/"
         },
         "preview.html": {
-            "href": "https://api.crunchmail.me/v1/messages/594/preview.html"
+            "href": "https://api.crunchmail.me/v1/messages/695/preview.html"
         },
         "preview.txt": {
-            "href": "https://api.crunchmail.me/v1/messages/594/preview.txt"
+            "href": "https://api.crunchmail.me/v1/messages/695/preview.txt"
         },
         "preview_send": {
-            "href": "https://api.crunchmail.me/v1/messages/594/preview_send/"
+            "href": "https://api.crunchmail.me/v1/messages/695/preview_send/"
         },
         "spam_details": {
-            "href": "https://api.crunchmail.me/v1/messages/594/spam_details/"
+            "href": "https://api.crunchmail.me/v1/messages/695/spam_details/"
         },
         "stats": {
-            "href": "https://api.crunchmail.me/v1/messages/594/stats/"
+            "href": "https://api.crunchmail.me/v1/messages/695/stats/"
         }
     },
     "category": null,
     "completion_date": null,
-    "creation_date": "2015-11-24T12:03:43.093Z",
+    "creation_date": "2015-11-26T13:01:29.377Z",
     "detach_images": false,
     "external_optout": false,
-    "html": "A new test PHP5.4",
+    "html": "<p>fantastic!</p>",
     "is_spam": false,
-    "mail_count": 3,
+    "mail_count": 1,
     "msg_issue": "",
-    "name": "A new test PHP5.4Fake title",
+    "name": "test",
     "properties": null,
-    "send_date": null,
-    "sender_email": "fakeuser@oasiswork.fr",
-    "sender_name": "A new test PHP5.4",
+    "send_date": "2015-11-26T13:01:30.048834Z",
+    "sender_email": "sender@oasiswork.fr",
+    "sender_name": "test sender",
     "spam_score": null,
     "status": "sending",
-    "subject": "A new test PHP5.4",
-    "track_clicks": false,
-    "track_open": false,
-    "url": "https://api.crunchmail.me/v1/messages/594/"
+    "subject": "test subject",
+    "track_clicks": true,
+    "track_open": true,
+    "url": "https://api.crunchmail.me/v1/messages/695/"
 }

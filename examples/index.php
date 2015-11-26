@@ -17,6 +17,14 @@ error_reporting(E_ALL);
 // require composer deps
 require 'vendor/autoload.php';
 
+// for testing sending / preview
+$yourmail = 'gomunochikin@gmail.com';
+
+if (empty($yourmail))
+{
+    throw new Exception('Please configure your email in <em>$youremail</em> var.');
+}
+
 // Crunchmail configuration
 $config = array(
     'base_uri'    => 'https://api.crunchmail.me/v1/',
@@ -25,6 +33,17 @@ $config = array(
     'verify'      => false,
     // Edit with your Murch API key
     'auth'        => array( 'api', '***REMOVED***' )
+);
+
+// a fake post
+$post = array(
+    'name'          => 'test',
+    'subject'       => 'test subject',
+    'sender_name'   => 'test sender',
+    'sender_email'  => 'sender@oasiswork.fr',
+    'html'          => '<p>fantastic!</p>',
+    'track_open'    => true,
+    'track_clicks'  => true
 );
 
 // create a new client using the config
@@ -37,31 +56,41 @@ $Client = new Crunchmail\Client($config);
  * for easy reading:
  *****************************************************************************/
 
+// Send a message to yourself as a preview
+$message = $Client->messages->create($post);
+echo '<hr>';
+$Client->messages->sendPreview($message->url, $yourmail);
+
+echo '<hr>';
+
+// Confirm sending
+$Client->mails->push($message->url, $yourmail);
+echo '<hr>';
+echo '<hr>';
+$Client->messages->sendMessage($message->url);
+
+exit;
+
 echo '<h2>Messages</h2>';
 
 // create a message
 echo '<h3>Creating…</h3>';
-$post = array(
-    'name'          => 'test',
-    'subject'       => 'test subject',
-    'sender_name'   => 'test sender',
-    'sender_email'  => 'sender@oasiswork.fr',
-    'html'          => '<p>fantastic!</p>',
-    'track_open'    => true,
-    'track_clicks'  => true
-);
 $message = $Client->messages->create($post);
 var_dump($message);
 
 echo '<h3>Attachment…</h3>';
 // add an attachment to it
 $file = realpath(__DIR__ . '/test.png');
-$res = $Client->attachments->join($message->url, $file);
+$res = $Client->attachments->upload($message->url, $file);
 var_dump($res);
 
 echo '<h3>Retrieve…</h3>';
 // retrieve a message
 $other = $Client->retrieve($message->url);
+var_dump($other);
+
+echo '<h3>Verify attachment is there:</h3>';
+$other = $Client->messages->getAttachments($message->url);
 var_dump($other);
 
 echo '<h3>Verify domain…</h3>';
@@ -80,13 +109,13 @@ var_dump($search[0]);
 
 // add a recipient
 echo '<h3>Add a recipient…</h3>';
-$adding = $Client->mails->push($message->url, 'tintin@moulinsart.fr');
+$adding = $Client->mails->push($message->url, 'tintin@moulinsart.fakeext');
 var_dump($adding);
 
 // add several recipients
 $recipients = [
-    'milou@moulinsart.fr',
-    'archibald@moulinsart.fr',
+    'milou@moulinsart.fakeext',
+    'archibald@moulinsart.fakeext',
     'oops!'
     ];
 
@@ -127,12 +156,13 @@ try
 }
 catch (Crunchmail\Exception\ApiException $e)
 {
-    echo '<h4>Error <em>' . Crunchmail\Client::getLastErrorCode() .
-        '</em></h4>';
+    echo '<h4>Error <em>' . $e->getCode() . '</em></h4>';
     // this is for debug usage
-    echo Crunchmail\Client::getLastErrorHTML();
+    echo '<p>Html=</p>' . $e->toHtml();
+    // this is the generic error
+    echo "<p>Message=" . htmlentities($e->getMessage()) . '</p>';
     // this is for development
-    var_dump(Crunchmail\Client::getLastError());
+    var_dump($e->getDetail());
 }
 // this will catch unexpected error or client wrong usage
 catch (Exception $e)
@@ -142,28 +172,28 @@ catch (Exception $e)
 
 /*
  * FIXME: API bugguée, format incorrect
+ */
 echo '<h3>Creation error on domain</h3>';
 // create a message with an invalid domain
 try
 {
-    $post['sender_email'] = 'sender@fake.fr';
-    $Client->messages->create($post);
+    $errPost = $post;
+    $errPost['sender_email'] = 'sender@fake.fakeext';
+    $Client->messages->create($errPost);
 }
 catch (Crunchmail\Exception\ApiException $e)
 {
-    echo '<h4>Error <em>' . Crunchmail\Client::getLastErrorCode() .
-        '</em></h4>';
+    echo '<h4>Error <em>' . $e->getCode() . '</em></h4>';
+    echo "<p>Message=" . htmlentities($e->getMessage()) . '</p>';
     // this is for debug usage
-    echo Crunchmail\Client::getLastErrorHTML();
-    // this is for development
-    var_dump(Crunchmail\Client::getLastError());
+    // FIXME
+    // echo '<p>Html=</p>' . $e->toHtml();
 }
 // this will catch unexpected error or client wrong usage
-catch (Exception $e)
+catch (RuntimeException $e)
 {
     // do smth
 }
- */
 
 echo '<h3>Retrieve error</h3>';
 // create a message with an invalid domain
@@ -174,12 +204,10 @@ try
 }
 catch (Crunchmail\Exception\ApiException $e)
 {
-    echo '<h4>Error <em>' . Crunchmail\Client::getLastErrorCode() .
-        '</em></h4>';
+    echo '<h4>Error <em>' . $e->getCode() . '</em></h4>';
+    echo "<p>Message=" . htmlentities($e->getMessage()) . '</p>';
     // this is for debug usage
-    echo Crunchmail\Client::getLastErrorHTML();
-    // this is for development
-    var_dump(Crunchmail\Client::getLastError());
+    echo '<p>Html=</p>' . $e->toHtml();
 }
 
 // create a message with issues (html is empty)
