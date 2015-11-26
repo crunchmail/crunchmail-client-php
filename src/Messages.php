@@ -31,13 +31,9 @@ class Messages extends Client
         {
             return $this->patch($id, ['json' => ['status' => 'sending' ] ] );
         }
-        catch (ClientException $e)
+        catch (Exception $e)
         {
-            self::handleGuzzleException($e);
-        }
-        catch (RequestException $e)
-        {
-            self::handleGuzzleException($e);
+            $this->catchGuzzleException($e);
         }
     }
 
@@ -83,6 +79,11 @@ class Messages extends Client
         return $this->retrieve($url);
     }
 
+    /**
+     * Check if the givem message is valid, or throw an exception
+     *
+     * @param object $msg
+     */
     protected static function checkMessage($msg)
     {
         if (!isset($msg->status))

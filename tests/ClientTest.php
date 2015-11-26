@@ -92,7 +92,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
      * @covers ::catchGuzzleException
      *
      * @expectedException Crunchmail\Exception\ApiException
-     * @expectedExceptionCode 500
+     * @expectedExceptionCode 0
      */
     public function testApiOfflineThrowsAnException()
     {
@@ -169,45 +169,6 @@ class ClientTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @testdox formatResponseOutput formats output properly
-     *
-     * @covers ::formatResponseOutput
-     */
-    public function testFormatingErrorFormatsProperly()
-    {
-        $body = new stdClass();
-        $body->keyone = [
-            'This is an error',
-            'This is another error'
-            ];
-
-        $out = \Crunchmail\Client::formatResponseOutput($body, true);
-
-        $this->assertContains('keyone', $out);
-        $this->assertContains('This is an error', $out);
-        $this->assertContains('This is another error', $out);
-    }
-
-    /**
-     * @testdox formatResponseOutput hides error key if asked to
-     *
-     * @covers ::formatResponseOutput
-     */
-    public function testFormatingErrorHidesErrorKey()
-    {
-        $body = new stdClass();
-        $body->keyone = [
-            'This is an error',
-            'This is another error'
-            ];
-
-        $out = \Crunchmail\Client::formatResponseOutput($body, false);
-
-        $this->assertNotContains('keyone', $out);
-    }
-
-
-    /**
      * @covers ::create
      * @covers ::formatResponseOutput
      * @covers ::handleGuzzleException
@@ -222,23 +183,6 @@ class ClientTest extends PHPUnit_Framework_TestCase
     public function testCreateOnInvalidDomainsThrowsAnException()
     {
         cm_mock_client(400, 'domain_error')->create([]);
-    }
-
-    /**
-     * @testdox Receiving an invalid error does not breaks formatting
-     *
-     * @covers ::formatResponseOutput
-     * @covers ::handleGuzzleException
-     * @covers ::catchGuzzleException
-     *
-     * @expectedException Crunchmail\Exception\ApiException
-     * @expectedExceptionCode 400
-     *
-     * @group bug-2030
-     */
-    public function testReceivingAnInvalidError()
-    {
-        cm_mock_client(400, 'invalid_error')->create([]);
     }
 
     /**
@@ -257,70 +201,14 @@ class ClientTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::getLastError
-     * @covers ::getLastErrorCode
-     * @covers ::handleGuzzleException
-     * @covers ::catchGuzzleException
+     * @covers ::__get
      */
-    public function testLast404ErrorIsSaved()
+    public function testResourcesAreNotReinstanciated()
     {
-        $client = cm_mock_client(404, 'empty');
+        $client = cm_mock_client(200);
+        $client->messages->newprop = 1;
 
-        try
-        {
-            $client->retrieve('/fake');
-        }
-        catch (\Exception $e)
-        {
-            $this->assertEquals(404, Crunchmail\Client::getLastErrorCode());
-            $this->assertContains('404', Crunchmail\Client::getLastErrorHTML());
-        }
-    }
-
-    /**
-     * @testdox getLastError returns the last exception
-     *
-     * @covers ::getLastError
-     *
-     * @todo check error message matches
-     */
-    public function testGetLastError()
-    {
-        try
-        {
-            cm_mock_client(404, 'message_error')->remove('/fake');
-        }
-        catch (\Exception $e)
-        {
-            $err = Crunchmail\Client::getLastError();
-        }
-
-        $this->assertInstanceOf('\stdClass', $err);
-    }
-
-    /**
-     * @testdox Exception generates a proper error message and error code
-     *
-     * @covers ::getLastError
-     * @covers ::getLastErrorCode
-     * @covers ::handleGuzzleException
-     * @covers ::catchGuzzleException
-     */
-    public function testGetLastErrorHTML()
-    {
-        try
-        {
-            cm_mock_client(500)->remove('/fake');
-        }
-        catch (\Exception $e)
-        {
-            $err  = Crunchmail\Client::getLastErrorHTML();
-            $code = Crunchmail\Client::getLastErrorCode();
-        }
-
-        $this->assertInternalType('string', $err);
-        $this->assertTrue($err !== '');
-        $this->assertEquals(500, $code);
+        $this->assertEquals(1, $client->messages->newprop);
     }
 
     /**

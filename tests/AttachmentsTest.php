@@ -31,7 +31,7 @@ class AttachmentsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Crunchmail\Attachments::join
+     * @covers Crunchmail\Attachments::join
      */
     public function testAddingAFileReturnsAProperResult()
     {
@@ -44,7 +44,7 @@ class AttachmentsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Crunchmail\Attachments::join
+     * @covers Crunchmail\Attachments::join
      *
      * @expectedException Crunchmail\Exception\ApiException
      * @expectedExceptionCode 400
@@ -57,7 +57,7 @@ class AttachmentsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Crunchmail\Attachments::join
+     * @covers Crunchmail\Attachments::join
      *
      * @expectedExceptionCode 0
      * @expectedException \RuntimeException
@@ -70,7 +70,7 @@ class AttachmentsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Crunchmail\Attachments::join
+     * @covers Crunchmail\Attachments::join
      *
      * @expectedExceptionCode 0
      * @expectedException \RuntimeException

@@ -30,8 +30,6 @@
  *
  * @link https://github.com/crunchmail/crunchmail-client-php
  * @link http://docs.guzzlephp.org/en/latest/
- *
- * @todo propagation of guzzle exceptions?
  */
 
 namespace Crunchmail;
@@ -47,12 +45,6 @@ class Client extends \GuzzleHttp\Client
      */
     private static $ressources = [ 'domains', 'messages', 'mails',
         'attachments' ];
-
-    /**
-     * Last exception object
-     * @var Mixed
-     */
-    private static $error = null;
 
     /**
       * Initilialize the client, extends guzzle constructor
@@ -103,6 +95,11 @@ class Client extends \GuzzleHttp\Client
             throw new \RuntimeException('Unknow property: ' . $name);
         }
 
+        if (isset($this->$name))
+        {
+            return $this->$name;
+        }
+
         // DO NOT use __CLASS__ because of the recursive use
         // (we could be in a subclass already)
         $custom    = __NAMESPACE__ . '\\' . ucfirst($name);
@@ -111,29 +108,29 @@ class Client extends \GuzzleHttp\Client
         $config = $this->getConfig();
         $config['base_uri'] = $this->base_uri . $name . '/';
 
-        return new $custom($config);
+        return $this->$name = new $custom($config);
     }
 
     /**
-     * Post or put values
+     * Request the API with the given method and params
      *
-     * @param string $method post or put or patch
-     * @param array  $values values to post
-     * @param string $url resource id
-     * @return stdClass result
+     * @param string $method    method to test
+     * @param string $url       url id
+     * @param array  $values    data
+     * @return stdClass
      */
-    public function createOrUpdate($method, array $values, $url='')
+    public function apiRequest($method, $url='', $values=array())
     {
         try
         {
-            // post or put
             $result = $this->$method($url, [ 'json' => $values ] );
         }
         catch (\Exception $e)
         {
-            self::catchGuzzleException($e);
+            $this->catchGuzzleException($e);
         }
 
+        //echo $result->getBody();
         return json_decode($result->getBody());
     }
 
@@ -146,7 +143,7 @@ class Client extends \GuzzleHttp\Client
      */
     public function create(array $post, $url='')
     {
-        return $this->createOrUpdate('post', $post, $url);
+        return $this->apiRequest('post', $url, $post);
     }
 
     /**
@@ -158,7 +155,7 @@ class Client extends \GuzzleHttp\Client
      */
     public function update(array $post, $url='')
     {
-        return $this->createOrUpdate('put', $post, $url);
+        return $this->apiRequest('put', $url, $post);
     }
 
     /**
@@ -169,16 +166,7 @@ class Client extends \GuzzleHttp\Client
      */
     public function retrieve($url='')
     {
-        try
-        {
-            $result = $this->get($url);
-        }
-        catch (\Exception $e)
-        {
-            self::catchGuzzleException($e);
-        }
-
-        return json_decode($result->getBody());
+        return $this->apiRequest('get', $url);
     }
 
     /**
@@ -189,16 +177,7 @@ class Client extends \GuzzleHttp\Client
      */
     public function remove($url)
     {
-        try
-        {
-            $result = $this->delete($url);
-        }
-        catch (\Exception $e)
-        {
-            self::catchGuzzleException($e);
-        }
-
-        return json_decode($result->getBody());
+        return $this->apiRequest('delete', $url);
     }
 
     /**
@@ -221,152 +200,20 @@ class Client extends \GuzzleHttp\Client
     }
 
     /**
-     * Format a body response as a unique HTML string
-     * This is mainly a debugging function, you should probably generate your
-     * own HTML output.
-     *
-     * @param object $body Guzzle Response
-     * @param boolean $showErrorKey show error keys in output
-     * @return string
-     *
-     * @todo add string sanitize
-     */
-    protected static function formatResponseOutput($body, $showErrorKey=true)
-    {
-        if (!is_object($body) || get_class($body) !== 'stdClass')
-        {
-            throw new \RuntimeException('Invalid error format');
-        }
-
-        // build a string from the complex response
-        $out = "";
-        foreach ((array) $body as $k => $v)
-        {
-            // list of error fields with error messages
-            $out .= '<p>';
-            if ($showErrorKey)
-            {
-               $out .= $k . ' : ';
-            }
-            foreach ($v as $str)
-            {
-                $out .= htmlentities($str) . "<br>";
-            }
-            $out .= '</p>';
-        }
-
-        $out = empty($out) ? 'Unknow error' : $out;
-
-        return $out;
-    }
-
-
-    /**
-     * Return the last error as an html string
-     *
-     * @param boolean $showErrorKey Show the key of each error
-     * @return string
-     */
-    public static function getLastErrorHTML($showErrorKey=true)
-    {
-        $body = self::getLastError();
-
-        if (false === $body)
-        {
-            return $body;
-        }
-
-        return self::formatResponseOutput($body, $showErrorKey);
-    }
-
-    /**
-     * Return the last error code
-     *
-     * @return int
-     */
-    public static function getLastErrorCode()
-    {
-        return (int) (empty(self::$error) ? -1 : self::$error->getCode());
-    }
-
-    /**
-     * Return the last error object or string
-     *
-     * @return stdClass
-     */
-    public static function getLastError()
-    {
-        $e = self::$error;
-
-        // no exception was registered
-        if (empty($e))
-        {
-            return false;
-        }
-
-        // in case we have a response, we try to format it as a string
-        if ($e->hasResponse())
-        {
-            $Response = $e->getResponse();
-            $Body     = $Response->getBody();
-            $msg      = json_decode($Response->getBody());
-        }
-
-        // if body was empty, we need to return the exception message instead
-        if (!isset($msg) || count( (array) $msg ) === 0)
-        {
-            $msg = new \stdClass();
-            $msg->error = [$e->getMessage()];
-        }
-
-        return $msg;
-    }
-
-    /**
      * Catch all guzzle exception types and execute proper action
      *
      * @param mixed $e
      */
-    protected static function catchGuzzleException($e)
+    protected function catchGuzzleException($e)
     {
-        switch (get_class($e))
+        // not a guzzle exception
+        if (strpos(get_class($e), 'GuzzleHttp\\') !== 0)
         {
-            case 'GuzzleHttp\Exception\RequestException':
-            case 'GuzzleHttp\Exception\ClientException':
-            case 'GuzzleHttp\Exception\ServerException':
-            case 'GuzzleHttp\Exception\ConnectException':
-
-                self::handleGuzzleException($e);
-
-                break;
-
-            default:
-
-                 throw new \Exception('Unexpected exception! ' . get_class($e));
-        }
-    }
-
-    /**
-     * Simplify the handling of guzzle exceptions
-     *
-     * @param object $e Exception
-     */
-    protected static function handleGuzzleException($e)
-    {
-        $code = 500;
-        $msg = 'API Request failed';
-
-        // in case we have a response, we try to format it as a string
-        if ($e->hasResponse())
-        {
-            $Response = $e->getResponse();
-            $code     = $Response->getStatusCode();
+            throw $e;
         }
 
-        // save last error
-        self::$error = $e;
-
-        throw new Exception\ApiException($msg, $code);
+        // guzzle exceptions
+        throw new Exception\ApiException($e->getMessage(), $e->getCode(), $e);
     }
 }
 

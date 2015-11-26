@@ -61,7 +61,7 @@ class Attachments extends Client
         }
         catch (\Exception $e)
         {
-            self::catchGuzzleException($e);
+            $this->catchGuzzleException($e);
         }
 
     }
