@@ -8,5 +8,5 @@
 phpdoc -d src -t docs/phpdoc --force
 
 # code coverage and agile documentation
-./vendor/bin/phpunit -v
+./vendor/bin/phpunit -v --coverage-html docs/coverage
 
