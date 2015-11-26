@@ -56,15 +56,8 @@ class Domains extends Client
      */
     public function verify($domain)
     {
-        $list = $this->search($domain);
-
-        if (0 === count($list))
-        {
-            return false;
-        }
-
-        $result = $list[0];
-
-        return ('ok' === $result->mx_status && 'ok' === $result->dkim_status);
+        $l = $this->search($domain);
+        return (count($l) > 0 && ('ok' === $l[0]->mx_status && 'ok' === 
+            $l[0]->dkim_status));
     }
 }

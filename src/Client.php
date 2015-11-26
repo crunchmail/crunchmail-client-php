@@ -95,11 +95,6 @@ class Client extends \GuzzleHttp\Client
             throw new \RuntimeException('Unknow property: ' . $name);
         }
 
-        if (isset($this->$name))
-        {
-            return $this->$name;
-        }
-
         // DO NOT use __CLASS__ because of the recursive use
         // (we could be in a subclass already)
         $custom    = __NAMESPACE__ . '\\' . ucfirst($name);
