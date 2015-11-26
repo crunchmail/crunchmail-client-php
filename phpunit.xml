@@ -28,7 +28,7 @@
     </filter>
 
     <logging>
-        <log type="coverage-html" target="./docs/coverage/"/>
+        <!--<log type="coverage-html" target="./docs/coverage/"/>-->
         <log type="testdox-text" target="./docs/agile-doc.txt"/>
     </logging>
 
