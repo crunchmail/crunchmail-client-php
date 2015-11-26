@@ -64,20 +64,6 @@ class Client extends \GuzzleHttp\Client
     }
 
     /**
-     * Extends guzzle call to add optionnal argument
-     *
-     * @param string $method  method name
-     * @param array  $args    args list
-     * @return mixed
-     */
-    public function __call($method, $args)
-    {
-        // add optionnal url to avoid empty argument
-        $args[0] = !isset($args[0]) ? '' : $args[0];
-        return parent::__call($method, $args);
-    }
-
-    /**
      * Create an object when accessing a sub-ressource
      *
      * If a specific class exists for this type of ressource (ie: domain)

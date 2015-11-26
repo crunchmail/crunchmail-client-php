@@ -66,11 +66,10 @@ class ClientTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::__call
      * @covers ::__construct
      * @covers ::catchGuzzleException
      *
-     * @expectedException GuzzleHttp\Exception\RequestException
+     * @expectedException \InvalidArgumentException
      * @expectedExceptionCode 0
      */
     public function testInvalidMethodThrowsAnException()
@@ -80,7 +79,6 @@ class ClientTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::__call
      * @covers ::catchGuzzleException
      *
      * @expectedException RuntimeException
@@ -122,13 +120,6 @@ class ClientTest extends PHPUnit_Framework_TestCase
         $client = new Crunchmail\Client(['base_uri' => '']);
         $client->retrieve('/fake');
     }
-
-    /*
-    public function testApiTimeoutThrowsAnException()
-    {
-        $this->markTestIncomplete('Todo');
-    }
-     */
 
     /**
      * @testdox retrieve() throws an exception on error 500
@@ -250,7 +241,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
      * @covers ::create
      * @covers ::apiRequest
      *
-     * @todo spy that client call get method on guzzle
+     * @todo spy that client call post method on guzzle
      */
     public function testCreateReturnsAProperResult()
     {
