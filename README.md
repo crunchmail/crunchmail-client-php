@@ -13,21 +13,12 @@ This API is **under development**. Do not use in production!
 
 Crunchmail-client uses [composer](https://getcomposer.org/).
 
-First edit your composer.json config file:
-
-    {
-        "require": {
-            "guzzlehttp/guzzle": "^6.1",
-            "crunchmail/crunchmail-client-php"
-        }
-    }
-
-[Install composer](https://getcomposer.org/doc/00-intro.md) if needed.
+First [install composer](https://getcomposer.org/doc/00-intro.md) if needed.
 
 Then install:
 
     ./composer.phar self-update
-    ./composer.phar install
+    ./composer.phar require crunchmail/crunchmail-client-php
 
 
 # Getting started
