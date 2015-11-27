@@ -16,23 +16,7 @@ error_reporting(E_ALL);
 
 // require composer deps
 require 'vendor/autoload.php';
-
-// Crunchmail configuration
-// You can use any Guzzle configuration
-// @link http://docs.guzzlephp.org/en/latest/request-options.html
-$config = array(
-    'base_uri'    => 'https://api.crunchmail.me/v1/',
-    'client_uri'  => '/customers/***REMOVED***',
-    'connect_timeout' => 10,
-     // 'debug' => true, // enable debug
-    // SSL
-    // 'verify'      => 'certificate.pem',
-    // for the testing, disable the SSL verification
-    // don't do it in production!
-    'verify' => false,
-    // Edit with your Murch API key
-    'auth'        => array( 'api', '***REMOVED***' )
-);
+require 'config.php'
 
 // a fake post
 $post = array(
