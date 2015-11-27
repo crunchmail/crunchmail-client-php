@@ -16,7 +16,9 @@ error_reporting(E_ALL);
 
 // require composer deps
 require 'vendor/autoload.php';
-require 'config.php'
+
+// remember to copy and edit config.example.php
+require 'config.php';
 
 // a fake post
 $post = array(
