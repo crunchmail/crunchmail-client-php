@@ -32,3 +32,6 @@ autoload for you in that case.
 
 See [example script](./examples/index.php) to see how to use the API.
 
+# Contributing
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md).
