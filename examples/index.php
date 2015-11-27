@@ -25,7 +25,7 @@ $post = array(
     'name'          => 'test',
     'subject'       => 'test subject',
     'sender_name'   => 'test sender',
-    'sender_email'  => 'sender@oasiswork.fr',
+    'sender_email'  => 'sender@verifieddomain.fr',
     'html'          => '<p>fantastic!</p>',
     'track_open'    => true,
     'track_clicks'  => true
@@ -86,14 +86,14 @@ echo '<h3>Verify domain…</h3>';
 // verify a domain
 $verify = $Client->domains->verify('fakedomain.com');
 var_dump($verify);
-$verify = $Client->domains->verify('oasiswork.fr');
+$verify = $Client->domains->verify('verifieddomain.fr');
 var_dump($verify);
 
 echo '<h3>Search domain…</h3>';
 // search a domain
 $search = $Client->domains->search('fakedomain.com');
 var_dump($search);
-$search = $Client->domains->search('oasiswork.fr');
+$search = $Client->domains->search('verifieddomain.fr');
 var_dump($search[0]);
 
 // add a recipient
