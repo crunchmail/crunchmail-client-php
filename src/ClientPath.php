@@ -68,35 +68,25 @@ class ClientPath
             $paramPosition = 0;
 
             // request has a different first parameters
-            if ('request' === $name || 'post' === $name || 'put' === $name)
+            if ('request' === $name)
             {
-                $paramPosition = 1;
+                throw new \Exception('Request method not handled');
             }
 
-            // we need the argument to be defined
-            if (!isset($args[$paramPosition]))
+            if (!empty($this->url))
             {
-                $args[$paramPosition] = '';
+                array_unshift($args, $this->url);
             }
-
-            var_dump($name);
-            var_dump($args);
-
-            // absolute paths should not be converted
-            if (strpos($args[$paramPosition], 'http') === false)
+            else
             {
-                if (strpos($this->url, 'http') === 0)
-                {
-                    $args[$paramPosition] = $this->url;
-                }
-                else
-                {
-                    $args[$paramPosition] = $this->path . '/' . $args[$paramPosition];
-                }
+                array_unshift($args, $this->path . '/');
             }
         }
 
-        $result = call_user_func_array(array($this->client, $name), $args);
+        // adding the method as parameter
+        array_unshift($args, $name);
+
+        $result = call_user_func_array(array($this->client, 'apiRequest'), $args);
 
         return $this->handleResult($name, $result);
     }

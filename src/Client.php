@@ -108,7 +108,8 @@ class Client extends \GuzzleHttp\Client
         }
 
         //echo $result->getBody();
-        return json_decode($result->getBody());
+        return $result;
+        //return json_decode($result->getBody());
     }
 
     /**
