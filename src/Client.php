@@ -18,14 +18,14 @@
  * for put:     update($url, $values)
  * for delete:  remove($url)
  *
- * You can use create() on ressources properties and avoid using an url:
+ * You can use create() on collections properties and avoid using an url:
  *
  * $Client->messages->create($values)
  * $bool = $Client->domains->verify($myDomain);
  * $Client->mails->push($url, $emails);
  *
  * @license MIT
- * @copyright (C) 2015 Oasis Work
+ * @copyright (C) 2015 Oasiswork
  * @author Yannick Huerre <dev@sheoak.fr>
  *
  * @link https://github.com/crunchmail/crunchmail-client-php
@@ -40,11 +40,15 @@ namespace Crunchmail;
 class Client extends \GuzzleHttp\Client
 {
     /**
-     * Allowed ressources
+     * Allowed paths
      * @var array
      */
-    private static $ressources = [ 'domains', 'messages', 'mails',
-        'attachments' ];
+    private static $paths = [
+        'domains'     => 'domains',
+        'messages'    => 'messages',
+        'recipients'  => 'mails',
+        'attachments' => 'attachments'
+    ];
 
     /**
       * Initilialize the client, extends guzzle constructor
@@ -59,7 +63,7 @@ class Client extends \GuzzleHttp\Client
             throw new \RuntimeException('base_uri is missing in configuration');
         }
 
-        $this->base_uri = $config['base_uri'];
+        //$this->base_uri = $config['base_uri'];
         return parent::__construct($config);
     }
 
@@ -76,20 +80,12 @@ class Client extends \GuzzleHttp\Client
      */
     public function __get($name)
     {
-        if (!in_array($name, self::$ressources))
+        //echo "Accessing property $name ...\n";
+        if (!in_array($name, self::$paths))
         {
-            throw new \RuntimeException('Unknow property: ' . $name);
+            throw new \RuntimeException('Unknow path: ' . $name);
         }
-
-        // DO NOT use __CLASS__ because of the recursive use
-        // (we could be in a subclass already)
-        $custom    = __NAMESPACE__ . '\\' . ucfirst($name);
-
-        // add ressources to base_uri
-        $config = $this->getConfig();
-        $config['base_uri'] = $this->base_uri . $name . '/';
-
-        return $this->$name = new $custom($config);
+        return new ClientPath($this, self::$paths[$name]);
     }
 
     /**
@@ -159,25 +155,6 @@ class Client extends \GuzzleHttp\Client
     public function remove($url)
     {
         return $this->apiRequest('delete', $url);
-    }
-
-    /**
-     * Return a human readable status from int status
-     *
-     * @param int $status
-     * @return string
-     */
-    public static function readableMessageStatus($status)
-    {
-        $match = [
-
-            'message_ok'      => "En attente d'envoi",
-            'message_issues'  => "Le message contient des erreurs",
-            'sent'            => "Le message a été envoyé",
-            'sending'         => "En cours d'envoi…"
-        ];
-
-        return isset($match[$status]) ? $match[$status] : $status;
     }
 
     /**

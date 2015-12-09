@@ -22,7 +22,7 @@ namespace Crunchmail;
 /**
  * Crunchmail\Client subclass Domains
  */
-class Domains extends Client
+class DomainResource extends GenericResource
 {
     /**
      * Search domain name
@@ -43,7 +43,7 @@ class Domains extends Client
         $domain = substr($email, $pos);
 
         // GET /domains/?name=$domain
-        $list = $this->retrieve('?name=' . $domain);
+        $list = $this->get('?name=' . $domain);
 
         return $list->results;
     }
