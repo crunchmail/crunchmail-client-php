@@ -17,40 +17,6 @@ namespace Crunchmail\Entities;
 class MessageEntity extends \Crunchmail\Entities\GenericEntity
 {
     /**
-     * Add an attachment to the given message
-     *
-     * @param string $id Message url id
-     * @param string $path File path
-     * @return stdClass
-     */
-    public function addAttachment($path)
-    {
-        if (!file_exists($path))
-        {
-            throw new \RuntimeException('File not found');
-        }
-
-        if (!is_readable($path))
-        {
-            throw new \RuntimeException('File not readable');
-        }
-
-        $body = fopen($path, 'r');
-
-        // multipart post (*true* parameter)
-        return $this->attachments->post([
-            [
-                'name' => 'file',
-                'contents' => $body
-            ],
-            [
-                'name' => 'message',
-                'contents' => $this->url
-            ]
-        ], true);
-    }
-
-    /**
      * Return a human readable status from int status
      *
      * @param int $status

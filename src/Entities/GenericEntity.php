@@ -65,13 +65,10 @@ class GenericEntity
         // access to collections
         $map = isset(self::$links[$name]) ? self::$links[$name] : $name;
 
-        echo "map = $map\n";
-
         if (isset($this->body->_links->$map))
         {
             $url = $this->body->_links->$map->href;
-            echo "url = $url\n";
-            return new \Crunchmail\ClientPath($this->client, $name, $url);
+            return $this->client->createResource($name, $url, $this);
         }
 
         // shortcut to body fields
