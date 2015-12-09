@@ -22,7 +22,7 @@ namespace Crunchmail;
 /**
  * Crunchmail\Client subclass Domains
  */
-class DomainResource extends GenericResource
+class DomainEntity extends GenericEntity
 {
     /**
      * Search domain name

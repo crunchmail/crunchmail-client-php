@@ -9,12 +9,12 @@
  * @link https://github.com/crunchmail/crunchmail-client-php
  * @link http://docs.guzzlephp.org/en/latest/
  */
-namespace Crunchmail\Resources;
+namespace Crunchmail\Entities;
 
 /**
  * Crunchmail\Client subclass Messages
  */
-class MessageResource extends \Crunchmail\Resources\GenericResource
+class MessageEntity extends \Crunchmail\Entities\GenericEntity
 {
     /**
      * Add an attachment to the given message
@@ -35,21 +35,19 @@ class MessageResource extends \Crunchmail\Resources\GenericResource
             throw new \RuntimeException('File not readable');
         }
 
-        try
-        {
-            $body = fopen($path, 'r');
+        $body = fopen($path, 'r');
 
-            $response=$this->request('POST','', ['multipart'=> [
-                    ['name'=>'file','contents'=>$body],
-                    ['name'=>'message','contents'=>$this->url]
-            ]]);
-
-            return json_decode($response->getBody());
-        }
-        catch (\Exception $e)
-        {
-            $this->catchGuzzleException($e);
-        }
+        // multipart post (*true* parameter)
+        return $this->attachments->post([
+            [
+                'name' => 'file',
+                'contents' => $body
+            ],
+            [
+                'name' => 'message',
+                'contents' => $this->url
+            ]
+        ], true);
     }
 
     /**
@@ -115,9 +113,9 @@ class MessageResource extends \Crunchmail\Resources\GenericResource
     /**
      * Check if the givem message is valid, or throw an exception
      */
-    protected static function checkMessage()
+    protected function checkMessage()
     {
-        if (!isset($this->status))
+        if (!isset($this->body->status))
         {
             throw new \RuntimeException('Invalid message');
         }
@@ -126,18 +124,18 @@ class MessageResource extends \Crunchmail\Resources\GenericResource
     /**
      * Return true if the message status is message_ok
      */
-    public static function hasIssue()
+    public function hasIssue()
     {
-        self::checkMessage();
+        $this->checkMessage();
         return $this->status === 'message_issues';
     }
 
     /**
      * Return true if the message status is message_ok
      */
-    public static function isReady()
+    public function isReady()
     {
-        self::checkMessage();
+        $this->checkMessage();
         return $this->status === 'message_ok';
     }
 
@@ -146,18 +144,18 @@ class MessageResource extends \Crunchmail\Resources\GenericResource
      *
      * @param object $msg Message
      */
-    public static function isSending()
+    public function isSending()
     {
-        self::checkMessage();
+        $this->checkMessage();
         return $this->status === 'sending';
     }
 
     /**
      * Return true if the message has been sent
      */
-    public static function hasBeenSent()
+    public function hasBeenSent()
     {
-        self::checkMessage();
+        $this->checkMessage();
         return $this->status === 'sent';
     }
 }

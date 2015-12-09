@@ -33,12 +33,10 @@ class GenericCollection
       * @param array $config API configuration
       * @return object
      */
-    public function __construct(\Crunchmail\ClientPath $ClientPath, $result)
+    public function __construct(\Crunchmail\ClientPath $ClientPath, $data)
     {
         $this->clientPath = $ClientPath;
-        $this->guzzleResponse = $result;
-        $this->response   = (array) json_decode($result->getBody());
-
+        $this->response   = $data;
         $this->setCollection();
     }
 
@@ -46,16 +44,20 @@ class GenericCollection
      */
     private function setCollection()
     {
-        if (!isset(self::$resources[$this->clientPath->path]))
+        foreach ($this->response->results as $row)
         {
-            throw new \Exception('No resource class for ' . $this->path .
-                ' collections');
-        }
+            $class = '';
 
-        foreach ($this->response['results'] as $row)
-        {
-            $name = self::$resources[$this->clientPath->path];
-            $class = '\\Crunchmail\\Resources\\' . ucfirst($name) . 'Resource';
+            if (isset(self::$resources[$this->clientPath->path]))
+            {
+                $name = self::$resources[$this->clientPath->path];
+                $class = '\\Crunchmail\\Entities\\' . ucfirst($name) . 'Entity';
+            }
+
+            if (empty($class) || !class_exists($class))
+            {
+                $class = '\\Crunchmail\\Entities\\GenericEntity';
+            }
 
             $this->collection[] = new $class($this->clientPath->client, $row);
         }

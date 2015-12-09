@@ -5,6 +5,16 @@
  * @author Yannick Huerre <dev@sheoak.fr>
  * @copyright (C) 2015 Oasiswork
  * @license MIT
+ *
+ * TODO: ClientPath -> GenericResource, PreviewResource
+ *
+ * $Message->preview->send() : PreviewResource
+ * $Message->attachment->upload($file)
+ * $Message->domains->verify($x)
+ *
+ * extends resource :
+ *
+ * $Message->preview->get() -> forbidden
  */
 
 namespace Crunchmail;
@@ -17,6 +27,14 @@ class ClientPath
     public $client;
     public $path;
     public $url;
+
+    private static $pathEntities = [
+        'categories'  => 'category',
+        'messages'    => 'message',
+        'domains'     => 'domain',
+        'attachments' => 'attachments',
+        'recipients'  => 'recipient'
+    ];
 
     private static $catch = ['get', 'delete', 'head', 'options', 'patch',
         'post', 'put', 'request' ];
@@ -31,63 +49,102 @@ class ClientPath
     /**
      * Return a collection or a resource
      */
-    private function handleResult($type, $result)
+    private function getResultClass($isCollection=true)
     {
-        if ('get' === $type)
+        $classPrefix = '\\Crunchmail\\';
+
+        // collection have a "results" field
+        if ($isCollection)
         {
-            $class = '\\Crunchmail\\Collections\\' . ucfirst($this->path) .
-                'Collection';
-
-            if (!class_exists($class))
-            {
-                $class = '\\Crunchmail\\Collections\\GenericCollection';
-            }
-
-            return new $class($this, $result);
+            $classPrefix .= 'Collections';
+            $classPath    = $this->path;
+            $classType    = 'Collection';
         }
+        // entities otherwise
         else
         {
-            $class = '\\Crunchmail\\Resources\\' . ucfirst($this->path) .
-                'Resource';
+            $classPrefix .= 'Entities';
+            $classPath    = self::$pathEntities[$this->path];
+            $classType    = 'Entity';
+        }
 
-            if (!class_exists($class))
-            {
-                $class = '\\Crunchmail\\Resources\\GenericResource';
-            }
-            $body = json_decode($result->getBody());
-            return new $class($this->client, $body);
+        $classPrefix .= '\\';
+        $className     = ucfirst($classPath) . $classType;
+
+        if (!class_exists($classPrefix . $className))
+        {
+            $className = 'Generic' . $classType;
+        }
+
+        return $classPrefix . $className;
+    }
+
+    private function prepareUrl($url=null)
+    {
+        if (!is_null($url) && strpos($url, 'http') !== 0)
+        {
+            throw new Exception('Only absolute URI are allowed');
+        }
+
+        $result = $this->path . '/';
+
+        if (!is_null($url))
+        {
+            $result = $url;
+        }
+        elseif (!empty($this->url))
+        {
+            $result = $this->url;
+        }
+
+        return $result;
+    }
+
+    private function toEntity($data)
+    {
+        // collection have a "results" field
+        if (isset($data->results))
+        {
+            $class = $this->getResultClass();
+            return new $class($this, $data);
+        }
+        // entities otherwise
+        else
+        {
+            $class = $this->getResultClass(false);
+            return new $class($this->client, $data);
         }
     }
 
-    public function __call($name, $args)
+    public function request($method, $url=null, $values=[])
     {
-        // if the method is found, first parameter is prefix with the
-        // registerd path
-        if (in_array($name, self::$catch))
-        {
-            $paramPosition = 0;
+        $url = $this->prepareUrl($url);
+        echo "prepared url = $url\n";
+        $data = $this->client->apiRequest($method, $url, $values);
 
-            // request has a different first parameters
-            if ('request' === $name)
-            {
-                throw new \Exception('Request method not handled');
-            }
+        var_dump($data);
 
-            if (!empty($this->url))
-            {
-                array_unshift($args, $this->url);
-            }
-            else
-            {
-                array_unshift($args, $this->path . '/');
-            }
-        }
+        return $this->toEntity($data);
+    }
 
-        // adding the method as parameter
-        array_unshift($args, $name);
+    public function get($url=null)
+    {
+        echo "get url = $url\n";
+        return $this->request('get', $url);
+    }
 
-        $result = call_user_func_array(array($this->client, 'apiRequest'), $args);
+    public function put($values)
+    {
+        return $this->request('put', null, $values);
+    }
 
-        return $this->handleResult($name, $result);
+    public function patch($values)
+    {
+        return $this->request('patch', null, $values);
+    }
+
+    public function post($values, $multipart=false)
+    {
+        return $this->request('post', null, $values, $multipart);
     }
 }

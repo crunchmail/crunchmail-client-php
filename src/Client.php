@@ -96,20 +96,22 @@ class Client extends \GuzzleHttp\Client
      * @param array  $values    data
      * @return stdClass
      */
-    public function apiRequest($method, $url='', $values=array())
+    public function apiRequest($method, $url='', $values=array(),
+        $multipart=false)
     {
         try
         {
-            $result = $this->$method($url, [ 'json' => $values ] );
+            $format = $multipart ? 'multipart' : 'json';
+            $result = $this->$method($url, [ $format => $values ] );
         }
         catch (\Exception $e)
         {
             $this->catchGuzzleException($e);
         }
 
-        //echo $result->getBody();
-        return $result;
-        //return json_decode($result->getBody());
+        echo $result->getBody();
+
+        return json_decode($result->getBody());
     }
 
     /**

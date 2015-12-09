@@ -6,12 +6,12 @@
  * @copyright (C) 2015 Oasiswork
  * @author Yannick Huerre <dev@sheoak.fr>
  */
-namespace Crunchmail\Resources;
+namespace Crunchmail\Entities;
 
 /**
  * Crunchmail\Client subclass Messages
  */
-class RecipientResource extends \Crunchmail\Resources\GenericResource
+class RecipientEntity extends \Crunchmail\Entities\GenericEntity
 {
     public function __toString()
     {
