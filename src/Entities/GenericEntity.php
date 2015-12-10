@@ -12,9 +12,22 @@ namespace Crunchmail\Entities;
  */
 class GenericEntity
 {
+    /**
+     * Guzzle client object
+     * @var object
+     */
     private $client;
+
+    /**
+     * Entity body
+     * @var stdClass
+     */
     public  $body;
 
+    /**
+     * Links mapping
+     * @var array
+     */
     private static $links = [
         'messages'     => 'messages',
         'recipients'   => 'mails',
@@ -24,42 +37,72 @@ class GenericEntity
         'attachments'  => 'attachments'
     ];
 
+    /**
+     * List of authorized methods
+     * @var array
+     */
+    private static $methods = [
+        'get',
+        'delete',
+        'head',
+        'options',
+        'patch',
+        'post',
+        'put',
+        'request'
+    ];
+
+
+    /**
+     * Create a new entity
+     *
+     * @param \Crunchmail\Client $Client api client
+     * @param stdClass $data entity data
+     */
     public function __construct(\Crunchmail\Client $Client, \stdClass $data)
     {
         $this->client = $Client;
         $this->body = $data;
     }
 
+    /**
+     * Convert guzzle result to an entity (current class)
+     *
+     * @param object $result
+     * @return mixed
+     */
     private function toEntity($result)
     {
         return new static($this->client, json_decode($result->getBody()));
     }
 
-    public function delete()
+    /**
+     * Catch get, post, put… methods
+     *
+     * @param string $name method name
+     * @param array $args arguments
+     * @return mixed
+     */
+    public function __call($name, $args)
     {
-        $this->client->delete($this->url);
+        array_unshift($args, $this->url);
+
+        if (!in_array($name, self::$methods))
+        {
+            throw new \Exception("Unknow method: $name");
+        }
+
+        $result = call_user_func_array([$this->client, $name], $args);
+
+        return $this->toEntity($result);
     }
 
-    public function post($values)
-    {
-        return $this->toEntity($this->client->post($this->url, $values));
-    }
-
-    public function patch($values)
-    {
-        return $this->toEntity($this->client->patch($this->url, $values));
-    }
-
-    public function get()
-    {
-        return $this->toEntity($this->client->get($this->url));
-    }
-
-    public function put($values)
-    {
-        return $this->toEntity($this->client->put($this->url, $values));
-    }
-
+    /**
+     * Access entity resources
+     *
+     * @param string $name resource name
+     * @return mixed resource
+     */
     public function __get($name)
     {
         // access to collections
@@ -78,12 +121,5 @@ class GenericEntity
         }
 
         throw new \Exception('Entity has no resource "' . $name . '"');
-    }
-
-    public function toObject()
-    {
-        $result = $this->body;
-        //unset($result->_links);
-        return $result;
     }
 }

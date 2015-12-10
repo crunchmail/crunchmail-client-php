@@ -21,29 +21,8 @@ require_once(__DIR__ . '/..//helpers/cm_mock.php');
  */
 class RecipientEntityTest extends PHPUnit_Framework_TestCase
 {
-    /**
-     * Test adding mail to an invalid message
-     *
-     * @todo verify API is working (404)
-     *
-     * @covers ::push
-     */
-    /*
-    public function testInvalidPush()
+    public function testToString()
     {
-        // Create a mock and queue two responses.
-        $tpl = 'mails_push_error';
-        $body = file_get_contents(__DIR__ . '/responses/' . $tpl . '.json');
-
-        // Create a mock and queue two responses.
-        $mock = new MockHandler([ new Response('200', [], $body) ]);
-
-        $handler = HandlerStack::create($mock);
-        $client = new Crunchmail\Client(['base_uri' => '', 'handler' =>
-            $handler]);
-
-        $res = $client->mails->push('fakeid', 'fakeemail@domain.com');
     }
-     */
 
 }

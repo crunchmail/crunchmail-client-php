@@ -21,21 +21,9 @@ use GuzzleHttp\Psr7\Request;
  */
 class ClientTest extends PHPUnit_Framework_TestCase
 {
-    /**
+    /*
      * Providers
      */
-
-    /**
-     * Returns an empty client
-     *
-     * @return array
-     */
-    public function emptyClientProvider()
-    {
-        return [
-            [new Crunchmail\Client(['base_uri' => ''])]
-        ];
-    }
 
     /**
      * Returns error situations
@@ -46,24 +34,59 @@ class ClientTest extends PHPUnit_Framework_TestCase
     {
         return [
             ['empty', '400', 'get'],
+            ['empty', '404', 'get'],
             ['empty', '400', 'post'],
             ['domain_error', '400', 'post'],
             ['empty', '400', 'delete'],
             ['empty', '500', 'get'],
             ['empty', '500', 'post'],
+            ['empty', '500', 'patch'],
+            ['empty', '500', 'put'],
             ['empty', '501', 'get']
         ];
     }
-    /**
+
+    /*
      * -----------------------------------------------------------------------
      * Tests
      * -----------------------------------------------------------------------
      */
 
     /**
-     * @covers ::__construct
-     * @covers ::catchGuzzleException
+     * Test empty client creation (for errors)
      *
+     * @return array
+     */
+    public function testEmptyClient()
+    {
+        $client = new Crunchmail\Client(['base_uri' => '']);
+        $this->assertInstanceOf('\Crunchmail\Client', $client);
+        return $client;
+    }
+
+    /**
+     * @depends testEmptyClient
+     *
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionCode 0
+     */
+    public function testInvalidMethodThrowsAnException($client)
+    {
+        $client->invalidMethod();
+    }
+
+    /**
+     * @depends testEmptyClient
+     *
+     * @expectedException RuntimeException
+     * @expectedExceptionCode 0
+     */
+    public function testUnknowPropertyThrowsAnException($client)
+    {
+        $client->invalidProperty->test();
+    }
+
+    /**
      * @expectedException RuntimeException
      * @expectedExceptionCode 0
      */
@@ -73,33 +96,6 @@ class ClientTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::__construct
-     * @covers ::catchGuzzleException
-     *
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionCode 0
-     * @dataProvider emptyClientProvider
-     */
-    public function testInvalidMethodThrowsAnException($client)
-    {
-        $client->invalidMethod();
-    }
-
-    /**
-     * @covers ::catchGuzzleException
-     *
-     * @expectedException RuntimeException
-     * @expectedExceptionCode 0
-     * @dataProvider emptyClientProvider
-     */
-    public function testUnknowPropertyThrowsAnException($client)
-    {
-        $client->invalidProperty->test();
-    }
-
-    /**
-     * @covers ::catchGuzzleException
-     *
      * @expectedExceptionCode 0
      * @expectedException \RuntimeException
      */
@@ -110,14 +106,11 @@ class ClientTest extends PHPUnit_Framework_TestCase
         // Create a mock and queue responses.
         $mock = new MockHandler($responses);
         $handler = HandlerStack::create($mock);
-        $client = new Crunchmail\Client(['base_uri' => '', 'handler' => $handler]);
-
+        $client = cm_mock_client([]);
         $client->apiRequest('get', 'fake');
     }
 
     /**
-     * @covers ::catchGuzzleException
-     *
      * @expectedException Crunchmail\Exception\ApiException
      * @expectedExceptionCode 0
      */
@@ -130,6 +123,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider errorCodesProvider
+     *
      * @expectedException Crunchmail\Exception\ApiException
      */
     public function testResponseErrorThrowsAnException($tpl, $code, $method)

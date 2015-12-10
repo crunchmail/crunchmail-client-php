@@ -11,8 +11,6 @@ require_once(__DIR__ . '/../helpers/cm_mock.php');
 
 /**
  * Test class
- *
- * @coversDefaultClass \Crunchmail\Entity\MessageEntity
  */
 class MessageEntityTest extends PHPUnit_Framework_TestCase
 {
@@ -36,8 +34,6 @@ class MessageEntityTest extends PHPUnit_Framework_TestCase
 
     /**
      * @testdox Valid status should return the translated string
-     *
-     * @covers ::readableStatus
      */
     public function testValidStatusReturnsString()
     {
@@ -49,8 +45,6 @@ class MessageEntityTest extends PHPUnit_Framework_TestCase
 
     /**
      * @testdox Invalid status should return the given string
-     *
-     * @covers ::readableStatus
      */
     public function testInvalidStatusReturnsString()
     {
@@ -63,9 +57,6 @@ class MessageEntityTest extends PHPUnit_Framework_TestCase
     /**
      * @testdox create() returns a valid result
      *
-     * @covers ::post
-     * @covers \Crunchmail\Client::apiRequest
-     *
      * @todo spy that client call get method on guzzle
      */
     public function testRetrieveReturnsAProperResult()
@@ -77,27 +68,22 @@ class MessageEntityTest extends PHPUnit_Framework_TestCase
     /**
      * @testdox put() returns a valid result
      *
-     * @covers ::put
-     * @covers \Crunchmail\Client::apiRequest
-     *
      * @todo spy that client call get method on guzzle
      */
     public function testPutReturnsAProperResult()
     {
-        $client = cm_mock_client(
-            [ ['message_ok', '200'], ['message_ok', '200'] ]
-        );
+        $client = cm_mock_client([
+            ['message_ok', '200'],
+            ['message_ok', '200']
+        ]);
         $msg = $client->messages->get('https://fake');
-
         $put = $msg->put([]);
+
         $this->checkMessage($put);
     }
 
     /**
      * @testdox Method hasBeenSent() works properly
-     *
-     * @covers ::hasBeenSent
-     * @covers ::checkMessage
      */
     public function testMessageHasBeenSent()
     {
@@ -112,9 +98,6 @@ class MessageEntityTest extends PHPUnit_Framework_TestCase
 
     /**
      * @testdox Method isSending() works properly
-     *
-     * @covers ::isSending
-     * @covers ::checkMessage
      */
     public function testMessageIsSending()
     {
@@ -129,9 +112,6 @@ class MessageEntityTest extends PHPUnit_Framework_TestCase
 
     /**
      * @testdox Method isReady() works properly
-     *
-     * @covers ::isReady
-     * @covers ::checkMessage
      */
     public function testIsReady()
     {
@@ -146,9 +126,6 @@ class MessageEntityTest extends PHPUnit_Framework_TestCase
 
     /**
      * @testdox Method hasError() works properly
-     *
-     * @covers ::hasIssue
-     * @covers ::checkMessage
      */
     public function testMessageHasError()
     {
@@ -162,7 +139,7 @@ class MessageEntityTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::sendMessage
+     * @todo test that send() is stateless
      */
     public function testSendingAMessageReturnsAValidResponse()
     {
@@ -172,17 +149,22 @@ class MessageEntityTest extends PHPUnit_Framework_TestCase
             ['message_sending', '200']
         ], $container);
 
-        $message = $client->messages->get('http://fake');
+        $message = $client->messages->get('https://fake');
 
-        $res = $message->send();
+        $message = $message->send();
 
-        $this->assertInstanceOf('\Crunchmail\Entities\MessageEntity', $res);
-        $this->assertTrue($message->isSending($res));
+        $this->assertInstanceOf('\Crunchmail\Entities\MessageEntity', $message);
+        $this->assertTrue($message->isSending());
+
+        $this->assertEquals(2, count($container));
 
         $req = $container[0]['request'];
-        $this->assertEquals(1, count($container));
+        $this->assertEquals('GET', $req->getMethod());
+        $this->assertEquals('https://fake', (string) $req->getUri());
+
+        $req = $container[1]['request'];
         $this->assertEquals('PATCH', $req->getMethod());
-        $this->assertEquals('https://testid', (string) $req->getUri());
+        $this->assertRegExp('#.*/messages/[0-9]+/$#', (string) $req->getUri());
     }
 
 }

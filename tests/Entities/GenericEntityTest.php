@@ -16,4 +16,7 @@ require_once(__DIR__ . '/../helpers/cm_mock.php');
  */
 class GenericEntityTest extends PHPUnit_Framework_TestCase
 {
+    public function testToObjectFormat()
+    {
+    }
 }

@@ -17,13 +17,6 @@ namespace Crunchmail\Resources;
 class GenericResource
 {
     /**
-     * List of authorized methods
-     * @var array
-     */
-    private static $catch = ['get', 'delete', 'head', 'options', 'patch',
-        'post', 'put', 'request' ];
-
-    /**
      * The client object
      * @var Crunchmail\client
      */
