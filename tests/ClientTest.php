@@ -7,19 +7,13 @@
  * @author Yannick Huerre <dev@sheoak.fr>
  */
 
-require_once('helpers/cm_mock.php');
-
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Psr7\Request;
 
 /**
  * Test class
- *
- * @coversDefaultClass \Crunchmail\Client
  */
-class ClientTest extends PHPUnit_Framework_TestCase
+class ClientTest extends \Crunchmail\Tests\TestCase
 {
     /*
      * Providers
@@ -67,6 +61,17 @@ class ClientTest extends PHPUnit_Framework_TestCase
     /**
      * @depends testEmptyClient
      *
+     * @expectedException Crunchmail\Exception\ApiException
+     * @expectedExceptionCode 0
+     */
+    public function testApiOfflineThrowsAnException($client)
+    {
+        $client->apiRequest('get', '/fake');
+    }
+
+    /**
+     * @depends testEmptyClient
+     *
      * @expectedException \InvalidArgumentException
      * @expectedExceptionCode 0
      */
@@ -102,23 +107,12 @@ class ClientTest extends PHPUnit_Framework_TestCase
     public function testUnexpectedErrors()
     {
         $responses = [ new MockHandler([ new RuntimeException('Oops!') ]) ];
+        $mock      = new MockHandler($responses);
+        $handler   = HandlerStack::create($mock);
 
-        // Create a mock and queue responses.
-        $mock = new MockHandler($responses);
-        $handler = HandlerStack::create($mock);
-        $client = cm_mock_client([]);
+        $client  = $this->mockClient($handler);
+
         $client->apiRequest('get', 'fake');
-    }
-
-    /**
-     * @expectedException Crunchmail\Exception\ApiException
-     * @expectedExceptionCode 0
-     */
-    public function testApiOfflineThrowsAnException()
-    {
-        // no mocking (Connection exception)
-        $client = new Crunchmail\Client(['base_uri' => '']);
-        $client->apiRequest('get', '/fake');
     }
 
     /**
@@ -128,7 +122,9 @@ class ClientTest extends PHPUnit_Framework_TestCase
      */
     public function testResponseErrorThrowsAnException($tpl, $code, $method)
     {
-        cm_mock_client([[$tpl, $code]])->apiRequest($method, '/fake');
+        $handler = $this->mockHandler([$tpl, $code]);
+        $client  = $this->mockClient($handler);
+        $client->apiRequest($method, '/fake');
     }
 
     /**
@@ -138,7 +134,9 @@ class ClientTest extends PHPUnit_Framework_TestCase
     {
         try
         {
-            cm_mock_client([[$tpl, $code]])->apiRequest($method, '/fake');
+            $handler = $this->mockHandler([$tpl, $code]);
+            $client  = $this->mockClient($handler);
+            $client->apiRequest($method, '/fake');
         }
         catch (\Exception $e)
         {
@@ -149,14 +147,13 @@ class ClientTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::__get
-     *
      * @expectedExceptionCode 0
      * @expectedException \RuntimeException
      */
     public function testAccessingUnknowPropertyThrowsAnException()
     {
-        $client = cm_mock_client([['empty', '200']]);
+        $handler = $this->mockHandler(['empty', '200']);
+        $client  = $this->mockClient($handler);
         $client->invalid->test = 1;
     }
 }

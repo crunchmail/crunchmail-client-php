@@ -8,12 +8,11 @@
  *
  * @todo verify request parameters (filter)
  */
-require_once(__DIR__ . '/../helpers/cm_mock.php');
 
 /**
  * Test class
  */
-class DomainsTest extends PHPUnit_Framework_TestCase
+class DomainsTest extends \Crunchmail\Tests\TestCase
 {
 
     /* -----------------------------------------------------------------------
@@ -25,7 +24,7 @@ class DomainsTest extends PHPUnit_Framework_TestCase
      */
     protected function prepareCheck($method, $tpl, $domain='fake.com')
     {
-        $client = cm_mock_client([[$tpl, '200']]);
+        $client = $this->quickMock([$tpl, 200]);
         return $client->domains->$method($domain);
     }
 
@@ -39,7 +38,7 @@ class DomainsTest extends PHPUnit_Framework_TestCase
      */
     public function testVerifyInternalServerError()
     {
-        $client = cm_mock_client([['empty' , '500']]);
+        $client = $this->quickMock(['empty', 500]);
         $res = $client->domains->verify('fake.com');
     }
 
@@ -49,7 +48,7 @@ class DomainsTest extends PHPUnit_Framework_TestCase
      */
     public function testSearchInternalServerError()
     {
-        $client = cm_mock_client([['empty' , '500']]);
+        $client = $this->quickMock(['empty', 500]);
         $res = $client->domains->search('fake.com');
     }
 

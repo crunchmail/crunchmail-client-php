@@ -7,12 +7,10 @@
  * @author Yannick Huerre <dev@sheoak.fr>
  */
 
-require_once(__DIR__ . '/../helpers/cm_mock.php');
-
 /**
  * Test class
  */
-class MessagesResourceTest extends PHPUnit_Framework_TestCase
+class MessagesResourceTest extends \Crunchmail\Tests\TestCase
 {
     /**
      * Helpers
@@ -34,9 +32,8 @@ class MessagesResourceTest extends PHPUnit_Framework_TestCase
      */
     public function testCreateWithInvalidDomain()
     {
-        $client = cm_mock_client([['domains_invalid_mx', '400']]);
+        $client = $this->quickMock(['domains_invalid_mx', '400']);
         $result = $client->messages->post([]);
     }
-
 
 }

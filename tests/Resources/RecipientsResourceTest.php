@@ -7,12 +7,10 @@
  * @author Yannick Huerre <dev@sheoak.fr>
  */
 
-require_once(__DIR__ . '/../helpers/cm_mock.php');
-
 /**
  * Test class
  */
-class RecipientsResourceTest extends PHPUnit_Framework_TestCase
+class RecipientsResourceTest extends \Crunchmail\Tests\TestCase
 {
     /**
      * Helpers
@@ -33,7 +31,7 @@ class RecipientsResourceTest extends PHPUnit_Framework_TestCase
      */
     public function testCreateReturnsAProperResult()
     {
-        $client = cm_mock_client([[ 'message_ok', '200' ]]);
+        $client = $this->quickMock([ 'message_ok', '200' ]);
         $msg = $client->messages->post([]);
         $this->checkMessage($msg);
     }
@@ -43,10 +41,10 @@ class RecipientsResourceTest extends PHPUnit_Framework_TestCase
      */
     public function testAddingInvalidEmailReturnsFailure()
     {
-        $client = cm_mock_client([
+        $client = $this->quickMock(
             ['message_ok'      , '200'],
             ['mail_push_error' , '200']
-        ]);
+        );
 
         $msg = $client->messages->get('http://fakeid');
         $res = $msg->recipients->post('error');
@@ -64,10 +62,10 @@ class RecipientsResourceTest extends PHPUnit_Framework_TestCase
      */
     public function testAddingValidEmailReturnsProperCount()
     {
-        $client = cm_mock_client([
+        $client = $this->quickMock(
             ['message_ok'   , '200'],
             ['mail_push_ok' , '200']
-        ]);
+        );
         $msg = $client->messages->get('http://fakeid');
         $res = $msg->recipients->post('fakeemail@domain.com');
 
@@ -81,10 +79,10 @@ class RecipientsResourceTest extends PHPUnit_Framework_TestCase
      */
     public function testAddingValidEmailListReturnsProperCount()
     {
-        $client = cm_mock_client([
+        $client = $this->quickMock(
             ['message_ok'   , '200'],
             ['mail_push_ok' , '200']
-        ]);
+        );
         $msg = $client->messages->get('http://fakeid');
         $res = $msg->recipients->post(['fakeemail@domain.com']);
 

@@ -12,37 +12,36 @@ require_once(__DIR__ . '/../helpers/cm_mock.php');
 /**
  * Test class
  */
-class PreviewResourceTest extends PHPUnit_Framework_TestCase
+class PreviewResourceTest extends \Crunchmail\Tests\TestCase
 {
     /**
      */
     public function testSendingPreviewReturnsAValidResponse()
     {
-        $container = [];
-        $client = cm_mock_client([['message_ok', '200'], ['message_ok', '200']],
-            $container);
+        $client = $this->quickMock(['message_ok', '200'], ['message_ok', '200']);
 
         $msg = $client->messages->get('https://fakeid');
         $res = $msg->preview->send('f@fake.fr');
 
+        $history = $this->getHistory();
+
         $this->assertTrue($msg->isReady($res));
 
         // checking requests
-        $this->assertEquals(2, count($container));
+        $this->assertEquals(2, count($history));
 
         // checking getPreviw request
-        $reqUrl = $container[0]['request'];
+        $reqUrl = $history[0]['request'];
         $this->assertEquals('GET', $reqUrl->getMethod());
         $this->assertEquals('https://fakeid', (string) $reqUrl->getUri());
 
         // checking sending preview request
-        $reqSend = $container[1]['request'];
+        $reqSend = $history[1]['request'];
         $this->assertEquals('POST', $reqSend->getMethod());
 
         // check that the preview url has been used
         $this->assertStringEndsWith('preview_send/', (string)
             $reqSend->getUri());
-
     }
 
     /**
@@ -51,7 +50,7 @@ class PreviewResourceTest extends PHPUnit_Framework_TestCase
      */
     public function testGetMethodIsDisabled()
     {
-        $client = cm_mock_client([['message_ok', '200']]);
+        $client = $this->quickMock(['message_ok', '200']);
         $msg = $client->messages->get('https://fakeid');
         $res = $msg->preview->get();
     }

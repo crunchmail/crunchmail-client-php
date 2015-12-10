@@ -7,12 +7,10 @@
  * @author Yannick Huerre <dev@sheoak.fr>
  */
 
-require_once(__DIR__ . '/../helpers/cm_mock.php');
-
 /**
  * Test class
  */
-class AttachementsResourceTest extends PHPUnit_Framework_TestCase
+class AttachementsResourceTest extends \Crunchmail\Tests\TestCase
 {
     /**
      * File to test error about unreadable files
@@ -44,10 +42,11 @@ class AttachementsResourceTest extends PHPUnit_Framework_TestCase
      */
     public function testAddingAFileReturnsAProperResult()
     {
-        $message = cm_get_message([
-            ['message_ok'   , '200'],
+        $client = $this->quickMock(
+            ['message_ok',    '200'],
             ['attachment_ok', '200']
-        ]);
+        );
+        $message = $client->messages->get('https://fake');
 
         $filepath= realpath(__DIR__ . '/../files/test.svg');
         $result = $message->attachments->upload($filepath);
@@ -64,10 +63,12 @@ class AttachementsResourceTest extends PHPUnit_Framework_TestCase
      */
     public function testAddingAnExistingFileThrowsAnException()
     {
-        $message = cm_get_message([
-            ['message_ok'   , '200'],
+        $client = $this->quickMock(
+            ['message_ok',    '200'],
             ['attachment_error', '400']
-        ]);
+        );
+        $message = $client->messages->get('https://fake');
+
         $filepath= realpath(__DIR__ . '/../files/test.svg');
         $result = $message->attachments->upload($filepath);
     }
@@ -78,10 +79,11 @@ class AttachementsResourceTest extends PHPUnit_Framework_TestCase
      */
     public function testAddingAMissingFileThrowsAnException()
     {
-        $message = cm_get_message([
-            ['message_ok'   , '200'],
+        $client = $this->quickMock(
+            ['message_ok',    '200'],
             ['attachment_error', '400']
-        ]);
+        );
+        $message = $client->messages->get('https://fake');
         $result = $message->attachments->upload('missing_file.svg');
     }
 
@@ -91,10 +93,11 @@ class AttachementsResourceTest extends PHPUnit_Framework_TestCase
      */
     public function testAddingAnUnreadableFileThrowsAnException()
     {
-        $message = cm_get_message([
-            ['message_ok'   , '200'],
+        $client = $this->quickMock(
+            ['message_ok',    '200'],
             ['attachment_error', '400']
-        ]);
+        );
+        $message = $client->messages->get('https://fake');
         $filepath=$this->fileUnreadable;
 
         // check file is not readable first
