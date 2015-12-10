@@ -49,34 +49,6 @@ class MessageEntity extends \Crunchmail\Entities\GenericEntity
     }
 
     /**
-     * Return the message preview url after an api request
-     *
-     * @param string $id Message url id
-     * @return string
-    private function getPreviewUrl()
-    {
-        return $this->_links->preview_send->href;
-    }
-     */
-
-    /**
-     * Send the preview for the message to the given recipients
-     *
-     * @param array $recipients list of recipients for the test
-     * @return mixed
-     * TODO: move to PreviewResource
-    public function sendPreview($recipients)
-    {
-        $recipients = is_array($recipients) ? $recipients : [ $recipients ];
-
-        $url = $this->getPreviewUrl();
-
-        // sending the preview via crunchmail API
-        return $this->post(['to' => implode(',', $recipients) ], $url);
-    }
-     */
-
-    /**
      * Check if the givem message is valid, or throw an exception
      */
     protected function checkMessage()

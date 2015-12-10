@@ -32,7 +32,7 @@ class GenericEntity
 
     private function toEntity($result)
     {
-        return new self($this->client, json_decode($result->getBody()));
+        return new static($this->client, json_decode($result->getBody()));
     }
 
     public function delete()
@@ -77,7 +77,7 @@ class GenericEntity
             return $this->body->$name;
         }
 
-        throw new Exception('Unknow property: ' . $name);
+        throw new \Exception('Entity has no resource "' . $name . '"');
     }
 
     public function toObject()

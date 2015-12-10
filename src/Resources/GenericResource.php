@@ -48,6 +48,12 @@ class GenericResource
     public $parent;
 
     /**
+     * Applied filters
+     * @var array
+     */
+    private $filters = [];
+
+    /**
      * Instanciate a new resource
      *
      * @param Crunchmail\Client $client Client object
@@ -88,6 +94,7 @@ class GenericResource
             $classPath    = \Crunchmail\client::$entities[$this->path];
             $classType    = 'Entity';
         }
+
 
         $classPrefix .= '\\';
         $className     = ucfirst($classPath) . $classType;
@@ -150,6 +157,16 @@ class GenericResource
     }
 
     /**
+     * Registers request filters
+     *
+     * @param array $filters
+     */
+    public function filter(array $filters)
+    {
+        $this->filters = $filters;
+    }
+
+    /**
      * Execute a client request and return an entity or a collection of
      * entities
      *
@@ -158,10 +175,11 @@ class GenericResource
      * @param array $values data
      * @return mixed
      */
-    public function request($method, $url=null, $values=[])
+    public function request($method, $url=null, $values=[], $multipart=false)
     {
         $url = $this->prepareUrl($url);
-        $data = $this->client->apiRequest($method, $url, $values);
+        $data = $this->client->apiRequest($method, $url, $values,
+            $this->filters, $multipart);
         return $this->dataToObject($data);
     }
 

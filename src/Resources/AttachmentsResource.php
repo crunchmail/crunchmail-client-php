@@ -21,7 +21,7 @@ class AttachmentsResource extends GenericResource
      * @param string $path File path
      * @return stdClass
      */
-    public function addAttachment($path)
+    public function upload($path)
     {
         if (!file_exists($path))
         {
@@ -36,7 +36,7 @@ class AttachmentsResource extends GenericResource
         $body = fopen($path, 'r');
 
         // multipart post (*true* parameter)
-        return $this->attachments->post([
+        return $this->client->attachments->post([
             [
                 'name' => 'file',
                 'contents' => $body

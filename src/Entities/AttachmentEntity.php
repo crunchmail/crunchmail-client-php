@@ -13,12 +13,12 @@
  * @link https://github.com/crunchmail/crunchmail-client-php
  * @link http://docs.guzzlephp.org/en/latest/
  */
-namespace Crunchmail;
+namespace Crunchmail\Entities;
 
 /**
  * Crunchmail\Client subclass Attachments
  */
-class Attachments extends Client
+class AttachmentEntity extends \Crunchmail\Entities\GenericEntity
 {
 }
 

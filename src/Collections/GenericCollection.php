@@ -22,12 +22,6 @@ class GenericCollection
     private $resource;
 
     /**
-     * Current page
-     * @var int
-     */
-    private $page = 1;
-
-    /**
      * Current data, set of Entities
      * @var array
      */
@@ -138,6 +132,6 @@ class GenericCollection
      */
     public function refresh()
     {
-        //return $this->resource->get();
+        return $this->resource->get();
     }
 }
