@@ -1,21 +1,23 @@
 <?php
 /**
- * Messages subclass for Crunchmail API
+ * Message entity
  *
  * @license MIT
  * @copyright (C) 2015 Oasiswork
  * @author Yannick Huerre <dev@sheoak.fr>
- *
- * @link https://github.com/crunchmail/crunchmail-client-php
- * @link http://docs.guzzlephp.org/en/latest/
  */
 namespace Crunchmail\Entities;
 
 /**
- * Crunchmail\Client subclass Messages
+ * Message entity class
  */
 class MessageEntity extends \Crunchmail\Entities\GenericEntity
 {
+    public function __toString()
+    {
+        return $this->body->name;
+    }
+
     /**
      * Return a human readable status from int status
      *
@@ -46,17 +48,6 @@ class MessageEntity extends \Crunchmail\Entities\GenericEntity
     public function send()
     {
         return $this->patch(['status' => 'sending']);
-    }
-
-    /**
-     * Check if the givem message is valid, or throw an exception
-     */
-    protected function checkMessage()
-    {
-        if (!isset($this->body->status))
-        {
-            throw new \RuntimeException('Invalid message');
-        }
     }
 
     /**
@@ -96,4 +87,16 @@ class MessageEntity extends \Crunchmail\Entities\GenericEntity
         $this->checkMessage();
         return $this->status === 'sent';
     }
+
+    /**
+     * Check if the givem message is valid, or throw an exception
+     */
+    protected function checkMessage()
+    {
+        if (!isset($this->body->status))
+        {
+            throw new \RuntimeException('Invalid message');
+        }
+    }
+
 }

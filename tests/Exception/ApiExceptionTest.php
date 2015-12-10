@@ -25,7 +25,8 @@ class ApiExceptionTest extends PHPUnit_Framework_TestCase
     {
         try
         {
-            $client = cm_mock_client(404, 'message_error')->remove('/fake');
+            $client = cm_mock_client([['message_error', '400']]);
+            $client->messages->get('http://fake');
         }
         catch (Crunchmail\Exception\ApiException $e)
         {
@@ -45,8 +46,8 @@ class ApiExceptionTest extends PHPUnit_Framework_TestCase
     {
         try
         {
-            $client = cm_mock_client(500);
-            $client->remove('/fake');
+            $client = cm_mock_client([['empty', '500']]);
+            $client->messages->delete('http://fake');
         }
         catch (Crunchmail\Exception\ApiException $e)
         {
@@ -69,8 +70,8 @@ class ApiExceptionTest extends PHPUnit_Framework_TestCase
     {
         try
         {
-            $client = cm_mock_client(400, 'message_invalid');
-            $client->create([]);
+            $client = cm_mock_client([['message_invalid', '400']]);
+            $client->messages->post([]);
         }
         catch (Crunchmail\Exception\ApiException $e)
         {
@@ -91,7 +92,8 @@ class ApiExceptionTest extends PHPUnit_Framework_TestCase
     {
         try
         {
-            cm_mock_client(400, 'message_invalid')->create([]);
+            $client = cm_mock_client([['message_invalid', '400']]);
+            $client->messages->post([]);
         }
         catch (Crunchmail\Exception\ApiException $e)
         {

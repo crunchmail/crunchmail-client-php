@@ -7,12 +7,10 @@
  * @author Yannick Huerre <dev@sheoak.fr>
  */
 
-require_once('helpers/cm_mock.php');
+require_once(__DIR__ . '/../helpers/cm_mock.php');
 
 /**
  * Test class
- *
- * @coversDefaultClass \Crunchmail\Resources\MessagesResource
  */
 class MessagesResourceTest extends PHPUnit_Framework_TestCase
 {
@@ -29,18 +27,16 @@ class MessagesResourceTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @testdox create() returns a valid result
+     * @testdox Method post() throws an exception on invalid domain
      *
-     * @covers ::create
-     * @covers ::apiRequest
-     *
-     * @todo spy that client call post method on guzzle
+     * @expectedException Crunchmail\Exception\ApiException
+     * @expectedExceptionCode 400
      */
-    public function testCreateReturnsAProperResult()
+    public function testCreateWithInvalidDomain()
     {
-        $client = cm_mock_client([ 'message_ok' => '200' ]);
-        $msg = $client->messages->post([]);
-        $this->checkMessage($msg);
+        $client = cm_mock_client([['domains_invalid_mx', '400']]);
+        $result = $client->messages->post([]);
     }
+
 
 }

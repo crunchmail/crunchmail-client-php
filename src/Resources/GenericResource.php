@@ -117,7 +117,7 @@ class GenericResource
     {
         if (!is_null($url) && strpos($url, 'http') !== 0)
         {
-            throw new \Exception('Only absolute URI are allowed');
+            throw new \RuntimeException('Only absolute URI are allowed');
         }
 
         $result = $this->path . '/';
@@ -225,5 +225,15 @@ class GenericResource
     public function post($values, $multipart=false)
     {
         return $this->request('post', null, $values, $multipart);
+    }
+
+    /**
+     * Execute a delete request
+     *
+     * @param array $values post data
+     */
+    public function delete($values)
+    {
+        return $this->request('delete');
     }
 }

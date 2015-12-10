@@ -22,6 +22,39 @@ use GuzzleHttp\Psr7\Request;
 class ClientTest extends PHPUnit_Framework_TestCase
 {
     /**
+     * Providers
+     */
+
+    /**
+     * Returns an empty client
+     *
+     * @return array
+     */
+    public function emptyClientProvider()
+    {
+        return [
+            [new Crunchmail\Client(['base_uri' => ''])]
+        ];
+    }
+
+    /**
+     * Returns error situations
+     *
+     * @return array
+     */
+    public function errorCodesProvider()
+    {
+        return [
+            ['empty', '400', 'get'],
+            ['empty', '400', 'post'],
+            ['domain_error', '400', 'post'],
+            ['empty', '400', 'delete'],
+            ['empty', '500', 'get'],
+            ['empty', '500', 'post'],
+            ['empty', '501', 'get']
+        ];
+    }
+    /**
      * -----------------------------------------------------------------------
      * Tests
      * -----------------------------------------------------------------------
@@ -40,26 +73,15 @@ class ClientTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::catchGuzzleException
-     *
-     * @expectedException Crunchmail\Exception\ApiException
-     * @expectedExceptionCode 401
-     */
-    public function testInvalidAuthThrowsAnException()
-    {
-        $msg = cm_get_message(['auth_error' => '401']);
-    }
-
-    /**
      * @covers ::__construct
      * @covers ::catchGuzzleException
      *
      * @expectedException \InvalidArgumentException
      * @expectedExceptionCode 0
+     * @dataProvider emptyClientProvider
      */
-    public function testInvalidMethodThrowsAnException()
+    public function testInvalidMethodThrowsAnException($client)
     {
-        $client = new Crunchmail\Client(['base_uri' => '']);
         $client->invalidMethod();
     }
 
@@ -68,10 +90,10 @@ class ClientTest extends PHPUnit_Framework_TestCase
      *
      * @expectedException RuntimeException
      * @expectedExceptionCode 0
+     * @dataProvider emptyClientProvider
      */
-    public function testUnknowPropertyThrowsAnException()
+    public function testUnknowPropertyThrowsAnException($client)
     {
-        $client = new Crunchmail\Client(['base_uri' => '']);
         $client->invalidProperty->test();
     }
 
@@ -107,92 +129,29 @@ class ClientTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @testdox retrieve() throws an exception on error 500
-     *
-     * @covers ::retrieve
-     * @covers ::catchGuzzleException
-     *
+     * @dataProvider errorCodesProvider
      * @expectedException Crunchmail\Exception\ApiException
-     * @expectedExceptionCode 500
      */
-    public function testRetrieveInternalServerError()
+    public function testResponseErrorThrowsAnException($tpl, $code, $method)
     {
-        cm_mock_client(['empty' => '500'])->apiRequest('get', '/fake');
+        cm_mock_client([[$tpl, $code]])->apiRequest($method, '/fake');
     }
 
     /**
-     * @testdox retrieve() throws an exception on error 400
-     *
-     * @covers ::retrieve
-     * @covers ::catchGuzzleException
-     *
-     * @expectedException Crunchmail\Exception\ApiException
-     * @expectedExceptionCode 404
+     * @dataProvider errorCodesProvider
      */
-    public function testRetrieve404Error()
+    public function testResponseErrorCodes($tpl, $code, $method)
     {
-        cm_mock_client(['empty' => '404'])->apiRequest('get', '/fake');
-    }
-
-    /**
-     * @testdox udpate() throws an exception on error 500
-     *
-     * @covers ::update
-     * @covers ::apiRequest
-     * @covers ::catchGuzzleException
-     *
-     * @expectedException Crunchmail\Exception\ApiException
-     * @expectedExceptionCode 500
-     */
-    public function testUpdateInternalServerError()
-    {
-        cm_mock_client(['empty' => '500'])->apiRequest('put', '/fake');
-    }
-
-    /**
-     * @testdox create() throws an exception on error 500
-     *
-     * @covers ::create
-     * @covers ::apiRequest
-     * @covers ::catchGuzzleException
-     * 
-     * @expectedException Crunchmail\Exception\ApiException
-     * @expectedExceptionCode 500
-     */
-    public function testCreateInternalServerError()
-    {
-        cm_mock_client(['empty' => '500'])->apiRequest('post', '/fake');
-    }
-
-    /**
-     * @covers ::create
-     * @covers ::apiRequest
-     * @covers ::catchGuzzleException
-     *
-     * @expectedException Crunchmail\Exception\ApiException
-     * @expectedExceptionCode 400
-     *
-     * @group bug-2030
-     * @todo update template when API has been fixed
-     */
-    public function testCreateOnInvalidDomainsThrowsAnException()
-    {
-        cm_mock_client(['domain_error' => '400'])->apiRequest('post', '/fake');
-    }
-
-    /**
-     * @testdox remove() throws an exception on error 500
-     *
-     * @covers ::remove
-     * @covers ::apiRequest
-     * @covers ::catchGuzzleException
-     *
-     * @expectedException Crunchmail\Exception\ApiException
-     * @expectedExceptionCode 500
-     */
-    public function testRemoveInternalServerError()
-    {
-        cm_mock_client(['empty' => '500'])->apiRequest('delete', '/fake');
+        try
+        {
+            cm_mock_client([[$tpl, $code]])->apiRequest($method, '/fake');
+        }
+        catch (\Exception $e)
+        {
+            $this->assertEquals($code, $e->getCode());
+            return;
+        }
+        $this->fail('An expected exception has not been raised');
     }
 
     /**
@@ -203,7 +162,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
      */
     public function testAccessingUnknowPropertyThrowsAnException()
     {
-        $client = cm_mock_client(['empty' => '200']);
+        $client = cm_mock_client([['empty', '200']]);
         $client->invalid->test = 1;
     }
 }

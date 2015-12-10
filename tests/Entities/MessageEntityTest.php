@@ -7,7 +7,7 @@
  * @author Yannick Huerre <dev@sheoak.fr>
  */
 
-require_once('helpers/cm_mock.php');
+require_once(__DIR__ . '/../helpers/cm_mock.php');
 
 /**
  * Test class
@@ -26,6 +26,12 @@ class MessageEntityTest extends PHPUnit_Framework_TestCase
         $this->assertObjectHasAttribute('_links', $msg->body);
         $this->assertInternalType('boolean', $msg->body->track_clicks);
         $this->assertEquals('message_ok', $msg->body->status);
+    }
+
+    public function testToStringReturnsMessageName()
+    {
+        $msg = cm_get_message([['message_ok', '200']]);
+        $this->assertEquals( (string) $msg, $msg->body->name);
     }
 
     /**
@@ -154,4 +160,29 @@ class MessageEntityTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($msg->isSending($msg));
         $this->assertFalse($msg->hasBeenSent());
     }
+
+    /**
+     * @covers ::sendMessage
+     */
+    public function testSendingAMessageReturnsAValidResponse()
+    {
+        $container = [];
+        $client = cm_mock_client([
+            ['message_ok', '200'],
+            ['message_sending', '200']
+        ], $container);
+
+        $message = $client->messages->get('http://fake');
+
+        $res = $message->send();
+
+        $this->assertInstanceOf('\Crunchmail\Entities\MessageEntity', $res);
+        $this->assertTrue($message->isSending($res));
+
+        $req = $container[0]['request'];
+        $this->assertEquals(1, count($container));
+        $this->assertEquals('PATCH', $req->getMethod());
+        $this->assertEquals('https://testid', (string) $req->getUri());
+    }
+
 }

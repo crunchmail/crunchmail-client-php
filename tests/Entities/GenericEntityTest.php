@@ -7,7 +7,7 @@
  * @author Yannick Huerre <dev@sheoak.fr>
  */
 
-require_once('helpers/cm_mock.php');
+require_once(__DIR__ . '/../helpers/cm_mock.php');
 
 /**
  * Test class
