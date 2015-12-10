@@ -12,7 +12,7 @@
  */
 class GenericCollectionTest extends \Crunchmail\Tests\TestCase
 {
-    public function testMessagesFilter()
+    public function testCollectionCanBeFiltered()
     {
         $client = $this->quickMock(['messages', 200]);
 
@@ -25,7 +25,7 @@ class GenericCollectionTest extends \Crunchmail\Tests\TestCase
         $this->assertEquals('search=fake', $req->getUri()->getQuery());
     }
 
-    public function testCurrentReturnsProperValues()
+    public function testCollectionCanBeRetrieveAsAnArray()
     {
         $client = $this->quickMock(['messages', 200]);
 

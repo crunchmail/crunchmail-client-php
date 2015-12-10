@@ -51,7 +51,7 @@ class ClientTest extends \Crunchmail\Tests\TestCase
      *
      * @return array
      */
-    public function testEmptyClient()
+    public function testEmptyClientReturnsAResponse()
     {
         $client = new Crunchmail\Client(['base_uri' => '']);
         $this->assertInstanceOf('\Crunchmail\Client', $client);
@@ -59,18 +59,18 @@ class ClientTest extends \Crunchmail\Tests\TestCase
     }
 
     /**
-     * @depends testEmptyClient
+     * @depends testEmptyClientReturnsAResponse
      *
      * @expectedException Crunchmail\Exception\ApiException
      * @expectedExceptionCode 0
      */
-    public function testApiOfflineThrowsAnException($client)
+    public function testClientThrowsAnExceptionIfApiIsOffline($client)
     {
         $client->apiRequest('get', '/fake');
     }
 
     /**
-     * @depends testEmptyClient
+     * @depends testEmptyClientReturnsAResponse
      *
      * @expectedException \InvalidArgumentException
      * @expectedExceptionCode 0
@@ -81,7 +81,7 @@ class ClientTest extends \Crunchmail\Tests\TestCase
     }
 
     /**
-     * @depends testEmptyClient
+     * @depends testEmptyClientReturnsAResponse
      *
      * @expectedException RuntimeException
      * @expectedExceptionCode 0
@@ -104,7 +104,7 @@ class ClientTest extends \Crunchmail\Tests\TestCase
      * @expectedExceptionCode 0
      * @expectedException \RuntimeException
      */
-    public function testUnexpectedErrors()
+    public function testUnexpectedErrorsThrowsRuntimeException()
     {
         $responses = [ new MockHandler([ new RuntimeException('Oops!') ]) ];
         $mock      = new MockHandler($responses);
@@ -130,7 +130,7 @@ class ClientTest extends \Crunchmail\Tests\TestCase
     /**
      * @dataProvider errorCodesProvider
      */
-    public function testResponseErrorCodes($tpl, $code, $method)
+    public function testResponseErrorCodesAreCorrect($tpl, $code, $method)
     {
         try
         {

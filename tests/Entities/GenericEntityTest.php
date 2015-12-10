@@ -12,7 +12,7 @@
  */
 class GenericEntityTest extends \Crunchmail\Tests\TestCase
 {
-    public function testToObjectFormat()
+    public function testBodyCanBeRetrieve()
     {
     }
 }
