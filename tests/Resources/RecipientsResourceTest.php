@@ -49,12 +49,12 @@ class RecipientsResourceTest extends \Crunchmail\Tests\TestCase
         $msg = $client->messages->get('http://fakeid');
         $res = $msg->recipients->post('error');
 
-        $this->assertEquals(0, $res->success_count);
+        $this->assertSame(0, $res->success_count);
 
         $invalid = (array) $res->failed;
 
         $this->assertInternalType('array', $invalid);
-        $this->assertEquals(1, count($invalid));
+        $this->assertCount(1, $invalid);
     }
 
     /**

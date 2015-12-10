@@ -69,8 +69,8 @@ class DomainsTest extends \Crunchmail\Tests\TestCase
         $res = $this->prepareCheck('search', 'domains_empty');
         $res = $res->current();
 
-        $this->assertTrue(is_array($res));
-        $this->assertTrue(count($res) === 0);
+        $this->assertInternalType('array', $res);
+        $this->assertCount(0, $res);
     }
 
     /**

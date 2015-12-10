@@ -54,7 +54,7 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
         $msg = $cli->messages->get('https://fake');
         $res = $msg->readableStatus();
         $this->assertInternalType('string', $res);
-        $this->assertFalse(empty($res));
+        $this->assertNotEmpty($res);
     }
 
     /**
@@ -66,7 +66,7 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
         $msg = $cli->messages->get('https://fake');
         $res = $msg->readableStatus();
         $this->assertInternalType('string', $res);
-        $this->assertFalse(empty($res));
+        $this->assertNotEmpty($res);
     }
 
     /**

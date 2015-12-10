@@ -28,7 +28,7 @@ class PreviewResourceTest extends \Crunchmail\Tests\TestCase
         $this->assertTrue($msg->isReady($res));
 
         // checking requests
-        $this->assertEquals(2, count($history));
+        $this->assertCount(2, $history);
 
         // checking getPreviw request
         $reqUrl = $history[0]['request'];

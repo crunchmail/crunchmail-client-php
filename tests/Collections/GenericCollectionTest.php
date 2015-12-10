@@ -36,8 +36,10 @@ class GenericCollectionTest extends \Crunchmail\Tests\TestCase
         $this->assertInternalType('array', $arr);
 
         $body = $this->getSentBody(0);
-        $this->assertEquals($body->count, $collection->count());
-        $this->assertEquals($body->page_count, $collection->pageCount());
+        $this->assertSame($body->count, $collection->count());
+        $this->assertSame($body->page_count, $collection->pageCount());
+        $this->assertContainsOnlyInstancesOf(
+            '\Crunchmail\Entities\MessageEntity', $arr);
     }
 
 }
