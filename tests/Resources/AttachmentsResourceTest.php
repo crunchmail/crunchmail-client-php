@@ -1,9 +1,9 @@
 <?php
 /**
- * Test class for Crunchmail\Attachments
+ * Test class for Crunchmail\Resources\AttachmentsResource
  *
  * @license MIT
- * @copyright (C) 2015 Oasis Work
+ * @copyright (C) 2015 Oasiswork
  * @author Yannick Huerre <dev@sheoak.fr>
  */
 
@@ -12,9 +12,9 @@ require_once('helpers/cm_mock.php');
 /**
  * Test class
  *
- * @coversDefaultClass \Crunchmail\Attachments
+ * @coversDefaultClass \Crunchmail\Resource\AttachmentsResource
  */
-class AttachmentsTest extends PHPUnit_Framework_TestCase
+class AttachementsResourceTest extends PHPUnit_Framework_TestCase
 {
     /**
      * File to test error about unreadable files
@@ -28,7 +28,7 @@ class AttachmentsTest extends PHPUnit_Framework_TestCase
     protected function setUp()
     {
         // this file must be unreadable for tests
-        $this->fileUnreadable = realpath(__DIR__ . '/files/unreadable.svg');
+        $this->fileUnreadable = realpath(__DIR__ . '/../files/unreadable.svg');
         chmod($this->fileUnreadable, 0000);
     }
 
@@ -43,15 +43,19 @@ class AttachmentsTest extends PHPUnit_Framework_TestCase
 
     /**
      * @covers ::upload
+     * @todo mulitpart check
      */
     public function testAddingAFileReturnsAProperResult()
     {
-        $client = cm_mock_client(200, 'file_ok');
-        $filepath= realpath(__DIR__ . '/files/test.svg');
-        $result = $client->attachments->upload('fakeid', $filepath);
+        $message = cm_get_message(['message_ok' => '200', 'attachment_ok' => '200']);
 
-        $this->assertInstanceOf('stdClass', $result);
-        $this->assertInternalType('string', $result->file);
+        $filepath= realpath(__DIR__ . '/../files/test.svg');
+        $result = $message->attachments->upload($filepath);
+
+        $this->assertInstanceOf('\Crunchmail\Entities\GenericEntity', $result);
+        $this->assertObjectHasAttribute('body', $result);
+        $this->assertObjectHasAttribute('file', $result->body);
+        $this->assertInternalType('string', $result->body->file);
     }
 
     /**
@@ -62,9 +66,9 @@ class AttachmentsTest extends PHPUnit_Framework_TestCase
      */
     public function testAddingAnExistingFileThrowsAnException()
     {
-        $client = cm_mock_client(400, 'file_error');
-        $filepath= realpath(__DIR__ . '/files/test.svg');
-        $result = $client->attachments->upload('fakeid', $filepath);
+        $message = cm_get_message(['message_ok' => '200', 'attachment_error' => '400']);
+        $filepath= realpath(__DIR__ . '/../files/test.svg');
+        $result = $message->attachments->upload($filepath);
     }
 
     /**
@@ -75,9 +79,8 @@ class AttachmentsTest extends PHPUnit_Framework_TestCase
      */
     public function testAddingAMissingFileThrowsAnException()
     {
-        $client = cm_mock_client(200, 'empty');
-        $filepath='missing_file.svg';
-        $result = $client->attachments->upload('fakeid', $filepath);
+        $message = cm_get_message(['message_ok' => '200', 'attachment_error' => '400']);
+        $result = $message->attachments->upload('missing_file.svg');
     }
 
     /**
@@ -88,7 +91,7 @@ class AttachmentsTest extends PHPUnit_Framework_TestCase
      */
     public function testAddingAnUnreadableFileThrowsAnException()
     {
-        $client = cm_mock_client(200, 'empty');
+        $message = cm_get_message(['message_ok' => '200', 'attachment_error' => '400']);
         $filepath=$this->fileUnreadable;
 
         // check file is not readable first
@@ -98,6 +101,6 @@ class AttachmentsTest extends PHPUnit_Framework_TestCase
              readable');
         }
 
-        $result = $client->attachments->upload('fakeid', $filepath);
+        $result = $message->attachments->upload($filepath);
     }
 }

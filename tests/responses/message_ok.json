@@ -29,6 +29,9 @@
         },
         "stats": {
             "href": "https://api.crunchmail.me/v1/messages/594/stats/"
+        },
+        "attachments": {
+            "href": "https://api.crunchmail.me/v1/messages/594/attachments/"
         }
     },
     "category": null,

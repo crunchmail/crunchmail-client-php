@@ -21,21 +21,6 @@ use GuzzleHttp\Psr7\Request;
  */
 class ClientTest extends PHPUnit_Framework_TestCase
 {
-    protected function setUp()
-    {
-    }
-
-    /**
-     * Helpers
-     */
-    function checkMessage($msg)
-    {
-        $this->assertInstanceOf('stdClass', $msg);
-        $this->assertObjectHasAttribute('_links', $msg);
-        $this->assertInternalType('boolean', $msg->track_clicks);
-        $this->assertEquals('message_ok', $msg->status);
-    }
-
     /**
      * -----------------------------------------------------------------------
      * Tests
@@ -62,7 +47,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
      */
     public function testInvalidAuthThrowsAnException()
     {
-        $msg = cm_get_message('auth_error', 401);
+        $msg = cm_get_message(['auth_error' => '401']);
     }
 
     /**
@@ -105,7 +90,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
         $handler = HandlerStack::create($mock);
         $client = new Crunchmail\Client(['base_uri' => '', 'handler' => $handler]);
 
-        $client->retrieve('fake');
+        $client->apiRequest('get', 'fake');
     }
 
     /**
@@ -118,7 +103,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
     {
         // no mocking (Connection exception)
         $client = new Crunchmail\Client(['base_uri' => '']);
-        $client->retrieve('/fake');
+        $client->apiRequest('get', '/fake');
     }
 
     /**
@@ -132,7 +117,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
      */
     public function testRetrieveInternalServerError()
     {
-        cm_mock_client(500)->retrieve('/fake');
+        cm_mock_client(['empty' => '500'])->apiRequest('get', '/fake');
     }
 
     /**
@@ -146,7 +131,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
      */
     public function testRetrieve404Error()
     {
-        cm_mock_client(404)->retrieve('/fake');
+        cm_mock_client(['empty' => '404'])->apiRequest('get', '/fake');
     }
 
     /**
@@ -161,7 +146,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
      */
     public function testUpdateInternalServerError()
     {
-        cm_mock_client(500)->update([]);
+        cm_mock_client(['empty' => '500'])->apiRequest('put', '/fake');
     }
 
     /**
@@ -176,7 +161,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
      */
     public function testCreateInternalServerError()
     {
-        cm_mock_client(500)->create([]);
+        cm_mock_client(['empty' => '500'])->apiRequest('post', '/fake');
     }
 
     /**
@@ -192,7 +177,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
      */
     public function testCreateOnInvalidDomainsThrowsAnException()
     {
-        cm_mock_client(400, 'domain_error')->create([]);
+        cm_mock_client(['domain_error' => '400'])->apiRequest('post', '/fake');
     }
 
     /**
@@ -207,20 +192,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
      */
     public function testRemoveInternalServerError()
     {
-        cm_mock_client(500)->remove('/fake');
-    }
-
-    /**
-     * @covers ::__get
-     */
-    public function testResourcesAreNotReinstanciated()
-    {
-        $client = cm_mock_client(200);
-        $client->messages->newprop = 1;
-        $client->messages->otherprop= 2;
-
-        $this->assertEquals(1, $client->messages->newprop);
-        $this->assertEquals(2, $client->messages->otherprop);
+        cm_mock_client(['empty' => '500'])->apiRequest('delete', '/fake');
     }
 
     /**
@@ -231,74 +203,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
      */
     public function testAccessingUnknowPropertyThrowsAnException()
     {
-        $client = cm_mock_client(200);
+        $client = cm_mock_client(['empty' => '200']);
         $client->invalid->test = 1;
-    }
-
-    /**
-     * @testdox create() returns a valid result
-     *
-     * @covers ::create
-     * @covers ::apiRequest
-     *
-     * @todo spy that client call post method on guzzle
-     */
-    public function testCreateReturnsAProperResult()
-    {
-        $client = cm_mock_client('200', 'message_ok');
-        $msg = $client->create([]);
-        $this->checkMessage($msg);
-    }
-
-    /**
-     * @testdox update() returns a valid result
-     *
-     * @covers ::update
-     * @covers ::apiRequest
-     *
-     * @todo spy that client call get method on guzzle
-     */
-    public function testUpdateReturnsAProperResult()
-    {
-        $client = cm_mock_client('200', 'message_ok');
-        $msg = $client->create([]);
-        $this->checkMessage($msg);
-    }
-
-    /**
-     * @testdox create() returns a valid result
-     *
-     * @covers ::create
-     * @covers ::apiRequest
-     *
-     * @todo spy that client call get method on guzzle
-     */
-    public function testRetrieveReturnsAProperResult()
-    {
-        $msg = cm_get_message('message_ok');
-        $this->checkMessage($msg);
-    }
-
-    /**
-     * @testdox Valid status should return the translated string
-     *
-     * @covers ::readableMessageStatus
-     */
-    public function testValidStatusReturnsString()
-    {
-        $res = Crunchmail\Client::readableMessageStatus('message_ok');
-        $this->assertInternalType('string', $res);
-        $this->assertFalse(empty($res));
-    }
-
-    /**
-     * @testdox Invalid status should return the given string
-     *
-     * @covers ::readableMessageStatus
-     */
-    public function testInvalidStatusReturnsString()
-    {
-        $res = Crunchmail\Client::readableMessageStatus('error');
-        $this->assertTrue($res === 'error');
     }
 }

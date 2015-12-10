@@ -21,14 +21,15 @@ use GuzzleHttp\Middleware;
  * @param array $body body response
  * @return Crunchmail\Client
  */
-function cm_mock_client($code, $tpl=['empty'], &$container=null)
+function cm_mock_client($send=[], &$container=null)
 {
-    $tpl = is_array($tpl) ? $tpl : [$tpl];
     $responses = [];
 
-    foreach ($tpl as $t)
+    foreach ($send as $params)
     {
-        $body = file_get_contents(__DIR__ . '/../responses/' . $t . '.json');
+        list($tpl, $code) = $params;
+
+        $body = file_get_contents(__DIR__ . '/../responses/' . $tpl . '.json');
         $responses[] = new MockHandler([ new Response($code, [], $body) ]);
     }
 
@@ -52,9 +53,9 @@ function cm_mock_client($code, $tpl=['empty'], &$container=null)
     return $client;
 }
 
-function cm_get_message($tpl, $code=200)
+function cm_get_message($send)
 {
-    $client = cm_mock_client($code, $tpl);
-    return $client->retrieve('/fake');
+    $client = cm_mock_client($send);
+    return $client->messages->get('https://fake');
 }
 
