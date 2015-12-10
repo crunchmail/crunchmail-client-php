@@ -157,6 +157,7 @@ class GenericResource
     public function filter(array $filters)
     {
         $this->filters = $filters;
+        return $this;
     }
 
     /**

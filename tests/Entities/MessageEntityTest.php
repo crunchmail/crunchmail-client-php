@@ -12,9 +12,10 @@
  */
 class MessageEntityTest extends \Crunchmail\Tests\TestCase
 {
-    /**
+    /*
      * Helpers
      */
+
     public function checkMessage($msg)
     {
         $this->assertInstanceOf('\Crunchmail\Entities\MessageEntity', $msg);
@@ -24,10 +25,23 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
         $this->assertEquals('message_ok', $msg->body->status);
     }
 
+    public function checkSentHistory($method, $i=1, $reg='#.*/messages/[0-9]+/$#')
+    {
+        $history = $this->getHistory();
+
+        $req = $history[1]['request'];
+        $this->assertEquals($method, $req->getMethod());
+        $this->assertRegExp($reg, (string) $req->getUri());
+    }
+
+    /*
+     * Tests
+     */
+
     public function testToStringReturnsMessageName()
     {
-        $client = $this->quickMock(['message_ok', '200']);
-        $msg = $client->messages->get('https://fake');
+        $cli = $this->quickMock(['message_ok', '200']);
+        $msg = $cli->messages->get('https://fake');
         $this->assertEquals( (string) $msg, $msg->body->name);
     }
 
@@ -36,8 +50,8 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
      */
     public function testValidStatusReturnsString()
     {
-        $client = $this->quickMock(['message_ok', '200']);
-        $msg = $client->messages->get('https://fake');
+        $cli = $this->quickMock(['message_ok', '200']);
+        $msg = $cli->messages->get('https://fake');
         $res = $msg->readableStatus();
         $this->assertInternalType('string', $res);
         $this->assertFalse(empty($res));
@@ -48,8 +62,8 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
      */
     public function testInvalidStatusReturnsString()
     {
-        $client = $this->quickMock(['message_html_empty', '200']);
-        $msg = $client->messages->get('https://fake');
+        $cli = $this->quickMock(['message_html_empty', '200']);
+        $msg = $cli->messages->get('https://fake');
         $res = $msg->readableStatus();
         $this->assertInternalType('string', $res);
         $this->assertFalse(empty($res));
@@ -60,28 +74,45 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
      *
      * @todo spy that client call get method on guzzle
      */
-    public function testRetrieveReturnsAProperResult()
+    public function testGet()
     {
-        $client = $this->quickMock(['message_ok', '200']);
-        $msg = $client->messages->get('https://fake');
+        $cli = $this->quickMock(['message_ok', '200']);
+        $msg = $cli->messages->get('https://fake');
         $this->checkMessage($msg);
+        return $msg;
     }
 
     /**
      * @testdox put() returns a valid result
-     *
-     * @todo spy that client call get method on guzzle
      */
-    public function testPutReturnsAProperResult()
+    public function testPut()
     {
-        $client = $this->quickMock(
+        $cli = $this->quickMock(
             ['message_ok', '200'],
             ['message_ok', '200']
         );
-        $msg = $client->messages->get('https://fake');
-        $put = $msg->put([]);
+        $msg = $cli->messages->get('https://fake');
+        $msg = $msg->put([]);
 
-        $this->checkMessage($put);
+        $this->checkMessage($msg);
+        $this->checkSentHistory('PUT');
+    }
+
+    /**
+     */
+    public function testDelete()
+    {
+        $cli = $this->quickMock(
+            ['message_ok', '200'],
+            ['empty', '204']
+        );
+
+        $msg = $cli->messages->get('https://fake');
+        $msg = $msg->delete();
+
+        $this->assertEmpty((array) $msg->body);
+
+        $this->checkSentHistory('DELETE');
     }
 
     /**
@@ -89,8 +120,8 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
      */
     public function testMessageHasBeenSent()
     {
-        $client = $this->quickMock(['message_sent', '200']);
-        $msg = $client->messages->get('https://fake');
+        $cli = $this->quickMock(['message_sent', '200']);
+        $msg = $cli->messages->get('https://fake');
 
         $this->assertTrue($msg->hasBeenSent());
 
@@ -104,8 +135,8 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
      */
     public function testMessageIsSending()
     {
-        $client = $this->quickMock(['message_sending', '200']);
-        $msg = $client->messages->get('https://fake');
+        $cli = $this->quickMock(['message_sending', '200']);
+        $msg = $cli->messages->get('https://fake');
 
         $this->assertTrue($msg->isSending($msg));
 
@@ -116,12 +147,11 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
 
     /**
      * @testdox Method isReady() works properly
+     *
+     * @depends testGet
      */
-    public function testIsReady()
+    public function testIsReady($msg)
     {
-        $client = $this->quickMock(['message_ok', '200']);
-        $msg = $client->messages->get('https://fake');
-
         $this->assertTrue($msg->isReady($msg));
 
         $this->assertFalse($msg->isSending($msg));
@@ -134,8 +164,8 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
      */
     public function testMessageHasError()
     {
-        $client = $this->quickMock(['message_error', '200']);
-        $msg = $client->messages->get('https://fake');
+        $cli = $this->quickMock(['message_error', '200']);
+        $msg = $cli->messages->get('https://fake');
 
         $this->assertTrue($msg->hasIssue($msg));
 
@@ -149,29 +179,17 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
      */
     public function testSendingAMessageReturnsAValidResponse()
     {
-        $client = $this->quickMock(
+        $cli = $this->quickMock(
             ['message_ok', '200'],
             ['message_sending', '200']
         );
 
-        $message = $client->messages->get('https://fake');
+        $msgBase = $cli->messages->get('https://fake');
 
-        $message = $message->send();
+        $msg = $msgBase->send();
 
-        $history = $this->getHistory();
+        $this->assertFalse($msg === $msgBase);
 
-        $this->assertInstanceOf('\Crunchmail\Entities\MessageEntity', $message);
-        $this->assertTrue($message->isSending());
-
-        $this->assertEquals(2, count($history));
-
-        $req = $history[0]['request'];
-        $this->assertEquals('GET', $req->getMethod());
-        $this->assertEquals('https://fake', (string) $req->getUri());
-
-        $req = $history[1]['request'];
-        $this->assertEquals('PATCH', $req->getMethod());
-        $this->assertRegExp('#.*/messages/[0-9]+/$#', (string) $req->getUri());
+        $this->checkSentHistory('PATCH');
     }
-
 }
