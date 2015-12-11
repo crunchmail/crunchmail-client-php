@@ -26,21 +26,21 @@ class GenericResource
      *
      * @var string
      */
-    public $path;
+    protected $path;
 
     /**
      * Forced url to resource
      *
      * @var string
      */
-    public $url;
+    protected $url;
 
     /**
      * Parent Entity object, if url has been forced
      *
      * @var mixed
      */
-    public $parent;
+    protected $parent;
 
     /**
      * Applied filters
@@ -63,6 +63,16 @@ class GenericResource
         $this->path   = $path;
         $this->url    = $url;
         $this->parent = $parent;
+    }
+
+    /**
+     * Return resource default path
+     *
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->path;
     }
 
     /**

@@ -73,9 +73,9 @@ class GenericCollection
             $class = '';
 
             // this resource has a mapping
-            if (isset($map[$this->resource->path]))
+            if (isset($map[$this->resource->getPath()]))
             {
-                $name = $map[$this->resource->path];
+                $name = $map[$this->resource->getPath()];
                 $class = '\\Crunchmail\\Entities\\' . ucfirst($name) . 'Entity';
             }
 
