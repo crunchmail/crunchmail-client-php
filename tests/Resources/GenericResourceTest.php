@@ -198,4 +198,33 @@ class GenericResourceTest extends \Crunchmail\Tests\TestCase
 
         $this->assertEquals('search=fake', $req->getUri()->getQuery());
     }
+
+    /**
+     * @covers ::page
+     */
+    public function testAccessPage()
+    {
+        $client = $this->quickMock(
+            ['messages', 200]
+        );
+        $collection = $client->messages->page(2);
+        $request = $this->getHistoryRequest(0);
+        $query = $request->getUri()->getQuery();
+
+        $this->assertEquals('page=2', $query);
+    }
+
+    /**
+     * @covers ::page
+     * @expectedExceptionCode 0
+     * @expectedException \RuntimeException
+     */
+    public function testAccessingAnInvalidPageThrowsAnException()
+    {
+        $client = $this->quickMock(
+            ['messages', 200]
+        );
+        $collection = $client->messages->page('error');
+    }
+
 }

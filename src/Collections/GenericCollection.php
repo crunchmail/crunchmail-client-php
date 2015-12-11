@@ -61,18 +61,6 @@ class GenericCollection
     }
 
     /**
-     * Direct acces to a specific page (shortcut)
-     *
-     * @param int $n page number
-     * @return \Crunchmail\Collection\GenericCollection
-     */
-    public function page($n)
-    {
-        $this->filters['page'] = (int) $n;
-        return $this->get();
-    }
-
-    /**
      * Populate the collection as an array of entities
      */
     private function setCollection()

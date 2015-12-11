@@ -174,6 +174,23 @@ class GenericResource
     }
 
     /**
+     * Direct acces to a specific page (shortcut)
+     *
+     * @param int $n page number
+     * @return \Crunchmail\Collection\GenericCollection
+     */
+    public function page($n)
+    {
+        if (!is_numeric($n) || $n < 0)
+        {
+            throw new \RuntimeException('Invalid page number');
+        }
+
+        $this->filters['page'] = (int) $n;
+        return $this->get();
+    }
+
+    /**
      * Execute a client request and return an entity or a collection of
      * entities
      *
