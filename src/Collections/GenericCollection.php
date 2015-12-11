@@ -17,6 +17,7 @@ class GenericCollection
 {
     /**
      * Resource that created the collection
+     *
      * @var mixed
      */
     private $resource;
@@ -44,6 +45,11 @@ class GenericCollection
         $this->resource = $Resource;
         $this->response = $data;
         $this->setCollection();
+    }
+
+    public function getResponse()
+    {
+        return $this->response;
     }
 
     /**
@@ -110,7 +116,7 @@ class GenericCollection
      */
     public function next()
     {
-        return $this->resource->get($this->response->next);
+        $this->getAdjacent('next');
     }
 
     /**
@@ -121,7 +127,13 @@ class GenericCollection
      */
     public function previous()
     {
-        return $this->resource->get($this->response->previous);
+        $this->getAdjacent('previous');
+    }
+
+    public function getAdjacent($direction)
+    {
+        $url = $this->response->$direction;
+        return !empty($url) ? $this->resource->get($url) : null;
     }
 
     /**

@@ -152,6 +152,18 @@ class Client extends \GuzzleHttp\Client
         try
         {
             $format = $multipart ? 'multipart' : 'json';
+
+            $parse = parse_url($url);
+
+            // if url contains a query string, we have to merge it to avoid
+            // any conflict with filters
+            if (isset($parse['query']))
+            {
+                $query = $parse['query'];
+                parse_str($query, $output);
+                $filters = array_merge($filters, $output);
+            }
+
             $result = $this->$method($url, [
                 $format => $values,
                 'query' => $filters
