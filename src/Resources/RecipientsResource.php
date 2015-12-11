@@ -21,7 +21,7 @@ class RecipientsResource extends GenericResource
      * @param mixed recipients, string or array
      * @return Crunchmail\Entity\RecipientEntity
      */
-    public function post($recipients)
+    public function add($recipients)
     {
         if (! $this->parent instanceof \Crunchmail\Entities\MessageEntity)
         {

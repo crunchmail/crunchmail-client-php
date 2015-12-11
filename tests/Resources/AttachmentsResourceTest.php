@@ -68,8 +68,8 @@ class AttachementsResourceTest extends \Crunchmail\Tests\TestCase
         // checking result
         $this->assertInstanceOf('\Crunchmail\Entities\GenericEntity', $result);
         $this->assertObjectHasAttribute('body', $result);
-        $this->assertObjectHasAttribute('file', $result->body);
-        $this->assertInternalType('string', $result->body->file);
+        $this->assertObjectHasAttribute('file', $result->getBody());
+        $this->assertInternalType('string', $result->getBody()->file);
 
         // checking request sent
         $content = $this->getHistoryContent(1, false);

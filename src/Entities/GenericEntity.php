@@ -25,7 +25,7 @@ class GenericEntity
      *
      * @var stdClass
      */
-    public  $body;
+    protected $body;
 
     /**
      * Links remapping
@@ -34,7 +34,7 @@ class GenericEntity
      */
     private static $links = [
         'recipients'   => 'mails',
-        'preview'      => 'preview_send'
+//        'preview'      => 'preview_send'
     ];
 
     /**
@@ -55,22 +55,20 @@ class GenericEntity
      * @param stdClass $data entity data
      * @return Crunchmail\Entity\GenericEntity
      */
-    public function __construct(\Crunchmail\Client $Client, \stdClass $data)
+    public function __construct(\Crunchmail\Client $client, \stdClass $data)
     {
-        $this->client = $Client;
-        $this->body = $data;
-        return $this;
+        $this->client = $client;
+        return $this->body = $data;
     }
 
     /**
-     * Convert guzzle result to an entity, using current class
+     * Return Entity body
      *
-     * @param object $result
-     * @return mixed
+     * @return stdClass
      */
-    private function toEntity($result)
+    public function getBody()
     {
-        return new static($this->client, json_decode($result->getBody()));
+        return $this->body;
     }
 
     /**
@@ -135,4 +133,16 @@ class GenericEntity
 
         throw new \RuntimeException('Entity has no resource "' . $name . '"');
     }
+
+    /**
+     * Convert guzzle result to an entity, using current class
+     *
+     * @param object $result
+     * @return mixed
+     */
+    private function toEntity($result)
+    {
+        return new static($this->client, json_decode($result->getBody()));
+    }
+
 }

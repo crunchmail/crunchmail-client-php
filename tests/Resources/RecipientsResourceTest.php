@@ -27,21 +27,21 @@ class RecipientsResourceTest extends \Crunchmail\Tests\TestCase
         $this->assertEquals('message_ok', $msg->body->status);
     }
 
-    public function postRecipient($to)
+    public function addRecipient($to)
     {
         $client = $this->quickMock(
             ['message_ok'   , '200'],
             ['mail_push_ok' , '200']
         );
         $msg = $client->messages->get('http://fakeid');
-        return $msg->recipients->post($to);
+        return $msg->recipients->add($to);
     }
 
     /* ---------------------------------------------------------------------
      * Providers
      * --------------------------------------------------------------------- */
 
-    public function postEmailProvider()
+    public function addEmailProvider()
     {
         return [
             'empty_array' => [[]],
@@ -58,7 +58,7 @@ class RecipientsResourceTest extends \Crunchmail\Tests\TestCase
     /**
      * Test adding invalid recipients
      *
-     * @covers ::post
+     * @covers ::add
      */
     public function testAddingInvalidEmailReturnsFailure()
     {
@@ -68,7 +68,7 @@ class RecipientsResourceTest extends \Crunchmail\Tests\TestCase
         );
 
         $msg = $client->messages->get('http://fakeid');
-        $res = $msg->recipients->post('error');
+        $res = $msg->recipients->add('error');
 
         $this->assertSame(0, $res->success_count);
 
@@ -81,23 +81,23 @@ class RecipientsResourceTest extends \Crunchmail\Tests\TestCase
     /**
      * Test adding a proper recipient
      *
-     * @covers ::post
-     * @dataProvider postEmailProvider
+     * @covers ::add
+     * @dataProvider addEmailProvider
      */
     public function testAddingValidEmailReturnsProperCount($to)
     {
         // string
-        $res = $this->postRecipient($to);
+        $res = $this->addRecipient($to);
         $this->assertEquals(1, $res->success_count);
     }
 
     /**
-     * @covers ::post
-     * @dataProvider postEmailProvider
+     * @covers ::add
+     * @dataProvider addEmailProvider
      */
     public function testAddingRecipientSendExpectedParameters($to)
     {
-        $this->postRecipient($to);
+        $this->addRecipient($to);
         $content = $this->getHistoryContent(1);
 
         $to = is_array($to) ? $to : [$to];
@@ -112,15 +112,15 @@ class RecipientsResourceTest extends \Crunchmail\Tests\TestCase
     }
 
     /**
-     * @covers ::post
+     * @covers ::add
      *
      * @expectedException RuntimeException
      * @expectedExceptionCode 0
      */
-    public function testPostMethodIsForbiddenOutOfContext()
+    public function testAddMethodIsForbiddenOutOfContext()
     {
         $client = $this->quickMock(['message_ok'   , '200']);
-        $client->recipients->post('whatever');
+        $client->recipients->add('whatever');
     }
 
 

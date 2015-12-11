@@ -22,10 +22,9 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
     public function checkMessage($msg)
     {
         $this->assertInstanceOf('\Crunchmail\Entities\MessageEntity', $msg);
-        $this->assertObjectHasAttribute('body', $msg);
-        $this->assertObjectHasAttribute('_links', $msg->body);
-        $this->assertInternalType('boolean', $msg->body->track_clicks);
-        $this->assertEquals('message_ok', $msg->body->status);
+        $this->assertObjectHasAttribute('_links', $msg->getBody());
+        $this->assertInternalType('boolean', $msg->getBody()->track_clicks);
+        $this->assertEquals('message_ok', $msg->getBody()->status);
     }
 
     public function checkSentHistory($method, $i=1, $reg='#.*/messages/[0-9]+/$#')
@@ -72,7 +71,7 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
     {
         $cli = $this->quickMock(['message_ok', '200']);
         $msg = $cli->messages->get('https://fake');
-        $this->assertEquals( (string) $msg, $msg->body->name);
+        $this->assertEquals( (string) $msg, $msg->getBody()->name);
     }
 
     /**
@@ -114,19 +113,23 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
         return $msg;
     }
 
+    public function retrievePreview($method)
+    {
+        $cli = $this->quickMock(
+            ['message_ok', '200'],
+            ['preview', '200']
+        );
+        $msg = $cli->messages->get('https://fake');
+        return $msg->$method();
+    }
+
     /**
      * @depends testGet
      * @covers ::html
      */
     public function testRetrievingHtmlContent($msg)
     {
-        $cli = $this->quickMock(
-            ['message_ok', '200'],
-            ['message.html', '200']
-        );
-        $msg = $cli->messages->get('https://fake');
-        $result = $msg->html();
-
+        $result = $this->retrievePreview('html');
         $this->assertStringStartsWith('<!DOCTYPE html', (string) $result);
     }
 
@@ -136,12 +139,7 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
      */
     public function testRetrievingTxtContent($msg)
     {
-        $cli = $this->quickMock(
-            ['message_ok', '200'],
-            ['message.txt', '200']
-        );
-        $msg = $cli->messages->get('https://fake');
-        $result = $msg->txt();
+        $result = $this->retrievePreview('txt');
 
         $this->assertNotContains('DOCTYPE', (string) $result);
         $this->assertContains('UNSUBSCRIBE', (string) $result);
@@ -192,7 +190,7 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
         $msg = $cli->messages->get('https://fake');
         $msg = $msg->delete();
 
-        $this->assertEmpty((array) $msg->body);
+        $this->assertEmpty((array) $msg->getBody());
 
         $this->checkSentHistory('DELETE');
     }

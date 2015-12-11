@@ -90,34 +90,22 @@ class MessageEntity extends \Crunchmail\Entities\GenericEntity
     }
 
     /**
-     * Retrieve html content
+     * Retrieve html content (shortcut)
      *
      * @return string
      */
     public function html()
     {
-        return $this->getMsgContent('preview.html');
+        return (string) $this->preview->get()->html;
     }
 
     /**
-     * Retrieve text content
+     * Retrieve text content (shortcut)
      *
      * @return string
      */
     public function txt()
     {
-        return $this->getMsgContent('preview.txt');
-    }
-
-    /**
-     * Retrieve url content as a string
-     *
-     * @return GuzzleHttp\Psr7\Response
-     */
-    private function getMsgContent($key)
-    {
-        $url = $this->_links->$key->href;
-        $body = $this->client->get($url);
-        return (string) $body->getBody();
+        return (string) $this->preview->get()->plaintext;
     }
 }

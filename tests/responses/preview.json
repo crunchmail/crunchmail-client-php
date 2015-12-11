@@ -1,0 +1,11 @@
+{
+    "recipients": [
+        "gentle-bar@example.com",
+        "gentle-foo@example.com"
+    ],
+    "excluded_recipients": [],
+    "spam_score": null,
+    "is_spam": false,
+    "html": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr><td><p style=\"font-size: small;color: grey\">\nLe message s'affiche mal ?\n<a style=\"color: grey\" href=\"WEB_VERSION_URL\">Visualisez-le dans votre navigateur</a>.\n</p></td></tr><tr><td><table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr><td><h1>I'm the gentle spam</h1></td></tr><tr><td><p style=\"font-size: small\"><a href=\"UNSUBSCRIBE_URL\">Se désinscrire</a> pour ne plus recevoir ces emails</p></td></tr></table></td></tr></table></body></html>",
+    "plaintext": "Le message s'affiche mal ? [Visualisez-le dans votre navigateur][1].\n\n# I'm the gentle spam\n\n[Se désinscrire][2] pour ne plus recevoir ces emails\n\n   [1]: WEB_VERSION_URL\n\n   [2]: UNSUBSCRIBE_URL\n\n"
+}

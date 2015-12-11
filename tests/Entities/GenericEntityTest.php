@@ -68,12 +68,13 @@ class GenericEntityTest extends \Crunchmail\Tests\TestCase
      * @depends testRetrivingAnEntity
      * @covers ::__construct
      * @covers ::__get
+     * @covers ::getBody
      */
     public function testEntityFieldsCanBeAccessed($entity)
     {
-        $this->assertInstanceOf('stdClass', $entity->body);
+        $this->assertInstanceOf('stdClass', $entity->getBody());
 
-        foreach ((array) $entity->body as $k => $v)
+        foreach ((array) $entity->getBody() as $k => $v)
         {
             $this->assertSame($entity->$k, $v);
         }
