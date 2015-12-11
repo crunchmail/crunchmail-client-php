@@ -14,6 +14,13 @@
  *
  * @link https://github.com/crunchmail/crunchmail-client-php
  * @link http://docs.guzzlephp.org/en/latest/
+ *
+ * @todo check $message->bounces (bounce resource)
+ * @todo check $message->spam (spam resource)
+ * @todo check $message->stats (stat resource)
+ * @todo implements $message->archive (archive_url resource)
+ * @todo implements forbidden resources list for entities
+ * @todo implements content-type results : html, txt ($message->toHtml())
  */
 
 namespace Crunchmail;
@@ -25,6 +32,8 @@ class Client extends \GuzzleHttp\Client
 {
     /**
      * Allowed paths and mapping to api resource path
+     * (only for api root)
+     *
      * @var array
      */
     public static $paths = [
@@ -36,13 +45,12 @@ class Client extends \GuzzleHttp\Client
         "bounces"     => 'bounces',
         'attachments' => 'attachments',
         "optouts"     => 'opt-outs',
-        "users"       => 'users',
-
-        'preview'     => 'preview',     // ERROR
+        "users"       => 'users'
     ];
 
     /**
      * Plural / Singular names of entites
+     *
      * @var array
      */
     public static $entities = [
@@ -50,11 +58,11 @@ class Client extends \GuzzleHttp\Client
         'messages'    => 'message',
         'recipients'  => 'recipient',
         'attachments' => 'attachment',
-        'preview'     => 'preview',
         "customers"   => 'customer',
         "categories"  => 'category',
         "bounces"     => 'bounce',
-        "users"       => 'user'
+        "users"       => 'user',
+        'preview'     => 'preview'
     ];
 
     /**
@@ -69,7 +77,7 @@ class Client extends \GuzzleHttp\Client
         'patch',
         'post',
         'put'
-        //'request'
+        //'request' // request is disable for now, not implemented
     ];
 
     /**
@@ -153,6 +161,8 @@ class Client extends \GuzzleHttp\Client
         {
             $this->catchGuzzleException($e);
         }
+
+        //var_dump($result->getHeaders());
 
         //echo "\n\n" . $result->getBody() . "\n\n";
         return json_decode($result->getBody());

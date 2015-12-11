@@ -7,14 +7,16 @@
  * @author Yannick Huerre <dev@sheoak.fr>
  */
 
-require_once(__DIR__ . '/../helpers/cm_mock.php');
-
 /**
  * Test class
+ *
+ * @covers \Crunchmail\Resources\PreviewResource
+ * @coversDefaultClass \Crunchmail\Resources\PreviewResource
  */
 class PreviewResourceTest extends \Crunchmail\Tests\TestCase
 {
     /**
+     * @covers ::send
      */
     public function testSendingPreviewReturnsAValidResponse()
     {
@@ -45,12 +47,17 @@ class PreviewResourceTest extends \Crunchmail\Tests\TestCase
     }
 
     /**
+     * @covers \Crunchmail\Resources\GenericResource::__call
+     *
      * @expectedException Crunchmail\Exception\ApiException
-     * @expectedExceptionCode 0
+     * @expectedExceptionCode 405
      */
     public function testGetMethodIsDisabled()
     {
-        $client = $this->quickMock(['message_ok', '200']);
+        $client = $this->quickMock(
+            ['message_ok', '200'],
+            ['method_get_forbidden', '405']
+        );
         $msg = $client->messages->get('https://fakeid');
         $res = $msg->preview->get();
     }

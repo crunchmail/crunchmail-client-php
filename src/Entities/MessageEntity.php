@@ -55,7 +55,6 @@ class MessageEntity extends \Crunchmail\Entities\GenericEntity
      */
     public function hasIssue()
     {
-        $this->checkMessage();
         return $this->status === 'message_issues';
     }
 
@@ -64,7 +63,6 @@ class MessageEntity extends \Crunchmail\Entities\GenericEntity
      */
     public function isReady()
     {
-        $this->checkMessage();
         return $this->status === 'message_ok';
     }
 
@@ -75,7 +73,6 @@ class MessageEntity extends \Crunchmail\Entities\GenericEntity
      */
     public function isSending()
     {
-        $this->checkMessage();
         return $this->status === 'sending';
     }
 
@@ -84,19 +81,38 @@ class MessageEntity extends \Crunchmail\Entities\GenericEntity
      */
     public function hasBeenSent()
     {
-        $this->checkMessage();
         return $this->status === 'sent';
     }
 
     /**
-     * Check if the givem message is valid, or throw an exception
+     * Retrieve html content
+     *
+     * @return string
      */
-    protected function checkMessage()
+    public function html()
     {
-        if (!isset($this->body->status))
-        {
-            throw new \RuntimeException('Invalid message');
-        }
+        return $this->getMsgContent('preview.html');
     }
 
+    /**
+     * Retrieve text content
+     *
+     * @return string
+     */
+    public function txt()
+    {
+        return $this->getMsgContent('preview.txt');
+    }
+
+    /**
+     * Retrieve url content as a string
+     *
+     * @return GuzzleHttp\Psr7\Response
+     */
+    private function getMsgContent($key)
+    {
+        $url = $this->_links->$key->href;
+        $body = $this->client->get($url);
+        return (string) $body->getBody();
+    }
 }

@@ -16,7 +16,7 @@ class GenericEntity
      * Guzzle client object
      * @var object
      */
-    private $client;
+    protected $client;
 
     /**
      * Entity body
@@ -30,7 +30,12 @@ class GenericEntity
      */
     private static $links = [
         'recipients'   => 'mails',
-        'preview'      => 'preview_send',
+        'preview'      => 'preview_send'
+    ];
+
+    private static $blacklistLinks = [
+        'preview.html', 'preview.txt', 'archive_url', 'opt_outs',
+        'spam_details'
     ];
 
     /**
@@ -87,6 +92,12 @@ class GenericEntity
     {
         // access to collections
         $map = isset(self::$links[$name]) ? self::$links[$name] : $name;
+
+        if (in_array($map, self::$blacklistLinks))
+        {
+            throw new \RuntimeException('Direct access to ' . $map . ' is 
+                prohibited');
+        }
 
         if (isset($this->body->_links->$map))
         {

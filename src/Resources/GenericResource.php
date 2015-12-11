@@ -83,11 +83,16 @@ class GenericResource
         // entities otherwise
         else
         {
+            if (empty(\Crunchmail\client::$entities[$this->path]))
+            {
+                throw new \RuntimeException('Unknow entity for  ' .
+                    $this->path);
+            }
+
             $classPrefix .= 'Entities';
             $classPath    = \Crunchmail\client::$entities[$this->path];
             $classType    = 'Entity';
         }
-
 
         $classPrefix .= '\\';
         $className     = ucfirst($classPath) . $classType;

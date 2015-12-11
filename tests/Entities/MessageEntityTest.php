@@ -49,6 +49,18 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
         ];
     }
 
+    public function blacklistedResourcesProvider()
+    {
+        return [
+            ['preview.html'],
+            ['preview.txt'],
+            ['archive_url'],
+            ['opt_outs'],
+            ['spam_details']
+        ];
+    }
+
+
     /* ---------------------------------------------------------------------
      * Tests
      * --------------------------------------------------------------------- */
@@ -100,6 +112,39 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
         $msg = $cli->messages->get('https://fake');
         $this->checkMessage($msg);
         return $msg;
+    }
+
+    /**
+     * @depends testGet
+     * @covers ::html
+     */
+    public function testRetrievingHtmlContent($msg)
+    {
+        $cli = $this->quickMock(
+            ['message_ok', '200'],
+            ['message.html', '200']
+        );
+        $msg = $cli->messages->get('https://fake');
+        $result = $msg->html();
+
+        $this->assertStringStartsWith('<!DOCTYPE html', (string) $result);
+    }
+
+    /**
+     * @depends testGet
+     * @covers ::txt
+     */
+    public function testRetrievingTxtContent($msg)
+    {
+        $cli = $this->quickMock(
+            ['message_ok', '200'],
+            ['message.txt', '200']
+        );
+        $msg = $cli->messages->get('https://fake');
+        $result = $msg->txt();
+
+        $this->assertNotContains('DOCTYPE', (string) $result);
+        $this->assertContains('UNSUBSCRIBE', (string) $result);
     }
 
     /**
@@ -238,4 +283,18 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
 
         $this->checkSentHistory('PATCH');
     }
+
+    /**
+     * @covers ::__get
+     * @depends testGet
+     * @dataProvider blacklistedResourcesProvider
+     *
+     * @expectedException \RuntimeException
+     * @expectedExceptionCode 0
+     */
+    public function testBlacklistedResourcesAreNotReachable($field, $msg)
+    {
+        $msg->$field;
+    }
+
 }

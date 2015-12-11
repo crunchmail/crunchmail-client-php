@@ -57,14 +57,26 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $responses = [];
         $this->bodyHistory = [];
 
+        $dir = __DIR__ . '/responses/';
+
         foreach (func_get_args() as $r)
         {
             list($tpl, $code) = $r;
 
-            $body = file_get_contents(__DIR__ . '/responses/' . $tpl .
-                '.json');
+            $path = $dir . $tpl;
 
-            $this->bodyHistory[] = json_decode($body);
+            // automatic json extension
+            if ( ! preg_match('#\.[a-z]+$#', $tpl) )
+            {
+                $path .= '.json';
+                $body = file_get_contents($path);
+                $this->bodyHistory[] = json_decode($body);
+            }
+            else
+            {
+                $body = file_get_contents($path);
+                $this->bodyHistory[] = $body;
+            }
 
             $responses[] = new MockHandler([ new Response($code, [], $body) ]);
         }

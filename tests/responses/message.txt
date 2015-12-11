@@ -1,0 +1,9 @@
+Le message s'affiche mal ? [Visualisez-le dans votre navigateur][1].
+
+fantastic!
+
+[Se désinscrire][2] pour ne plus recevoir ces emails
+
+   [1]: WEB_VERSION_URL
+
+   [2]: UNSUBSCRIBE_URL

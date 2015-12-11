@@ -5,8 +5,6 @@
  * @license MIT
  * @copyright (C) 2015 Oasis Work
  * @author Yannick Huerre <dev@sheoak.fr>
- *
- * @todo verify request parameters (filter)
  */
 
 /**
@@ -87,6 +85,7 @@ class DomainsTest extends \Crunchmail\Tests\TestCase
      * @dataProvider searchProvider
      *
      * @covers ::verify
+     * @covers \Crunchmail\Entities\DomainEntity::__toString
      */
     public function testSearchDomainReturnsACollection($tpl, $count)
     {
@@ -98,6 +97,11 @@ class DomainsTest extends \Crunchmail\Tests\TestCase
         $res = $res->current();
         $this->assertInternalType('array', $res);
         $this->assertCount($count, $res);
+
+        foreach ($res as $domain)
+        {
+            $this->assertEquals($domain->name, (string) $domain);
+        }
     }
 
     /**

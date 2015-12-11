@@ -50,6 +50,7 @@ class AttachementsResourceTest extends \Crunchmail\Tests\TestCase
 
     /**
      * @covers ::upload
+     * @covers \Crunchmail\Entities\AttachmentEntity::__toString
      */
     public function testAddingAFileWorksProperly()
     {
@@ -61,6 +62,8 @@ class AttachementsResourceTest extends \Crunchmail\Tests\TestCase
 
         $filepath= realpath(__DIR__ . '/../files/test.svg');
         $result = $message->attachments->upload($filepath);
+
+        $this->assertEquals($result->file, (string) $result);
 
         // checking result
         $this->assertInstanceOf('\Crunchmail\Entities\GenericEntity', $result);
