@@ -1,5 +1,6 @@
 <?php
 /**
+ * Attachment resources
  *
  * @author Yannick Huerre <dev@sheoak.fr>
  * @copyright (C) 2015 Oasiswork
@@ -10,7 +11,7 @@
 namespace Crunchmail\Resources;
 
 /**
- * Crunchmail\Client main class
+ * Attachment resources class
  */
 class AttachmentsResource extends GenericResource
 {

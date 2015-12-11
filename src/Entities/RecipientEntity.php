@@ -13,6 +13,11 @@ namespace Crunchmail\Entities;
  */
 class RecipientEntity extends \Crunchmail\Entities\GenericEntity
 {
+    /**
+     * To string
+     *
+     * @return string
+     */
     public function __toString()
     {
         return $this->to;

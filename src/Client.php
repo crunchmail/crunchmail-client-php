@@ -2,12 +2,6 @@
 /**
  * Handle crunchmail REST API in php
  *
- * Raw Usage (guzzle client):
- *
- * $Client = new Client($apiConfig);
- * $object = $Client->get($url_ressource);
- * $result = $Client->delete($url_ressource);
- *
  * @license MIT
  * @copyright (C) 2015 Oasiswork
  * @author Yannick Huerre <dev@sheoak.fr>
@@ -20,7 +14,6 @@
  * @todo check $message->stats (stat resource)
  * @todo implements $message->archive (archive_url resource)
  * @todo implements forbidden resources list for entities
- * @todo implements content-type results : html, txt ($message->toHtml())
  */
 
 namespace Crunchmail;
@@ -32,7 +25,7 @@ class Client extends \GuzzleHttp\Client
 {
     /**
      * Allowed paths and mapping to api resource path
-     * (only for api root)
+     * ex: $client->recipients will access path /mails
      *
      * @var array
      */
@@ -50,6 +43,7 @@ class Client extends \GuzzleHttp\Client
 
     /**
      * Plural / Singular names of entites
+     * This is used to generate class name that need singular form
      *
      * @var array
      */
@@ -66,7 +60,9 @@ class Client extends \GuzzleHttp\Client
     ];
 
     /**
-     * List of authorized methods
+     * List of authorized methods on client.
+     * ex: $client->get($url);
+     *
      * @var array
      */
     public static $methods = [
@@ -97,11 +93,13 @@ class Client extends \GuzzleHttp\Client
     }
 
     /**
-     * Create a resource when accessing client properties like:
-     * $client->messages
+     * Create a resource when accessing client properties and returns it
+     *
+     * @example $client->messages
+     * @example $messageEntity->recipients
      *
      * @param string $name
-     * @return mixed
+     * @return \Crunchmail\Resources\GenericResource
      */
     public function __get($name)
     {
@@ -111,7 +109,6 @@ class Client extends \GuzzleHttp\Client
         }
 
         return $this->createResource($name);
-
     }
 
     /**
@@ -120,9 +117,12 @@ class Client extends \GuzzleHttp\Client
      * If a specific class exists for this type of ressource (ie:
      * attachmentResource) then it will be used.
      *
+     * Forcing an url is usefull when creating a sub-resource from an
+     * entity object, because the base url is then specific
+     *
      * @param string $name   name of the resource (ie: attachments)
      * @param string $url    force an url for the resource
-     * @param mixed  $parent parent entity, if url is specified
+     * @param \Crunchmail\Entities\GenericEntity $parent parent entity
      */
     public function createResource($name, $url='',
         \Crunchmail\Entities\GenericEntity $parent=null)
@@ -138,19 +138,27 @@ class Client extends \GuzzleHttp\Client
     }
 
     /**
-     * Request the API with the given method and params
+     * Request the API with the given method and params.
+     *
+     * This will execute a guzzle call and catch any guzzle exception.
+     * Default mode is json, but you can specify a multipart format.
+     * In that case the values must be in the format expected from guzzle
      *
      * @param string  $method    method to test
      * @param string  $url       url id
      * @param array   $values    data
      * @param boolean $multipart send as multipart/form-data
      * @return stdClass
+     *
+     * @link http://docs.guzzlephp.org/en/latest/quickstart.html?highlight=multipart#sending-form-files
+     * @link http://docs.guzzlephp.org/en/latest/request-options.html?highlight=query#query
      */
     public function apiRequest($method, $url='', $values=[], $filters=[],
         $multipart=false)
     {
         try
         {
+            // default is json
             $format = $multipart ? 'multipart' : 'json';
 
             $parse = parse_url($url);
@@ -164,6 +172,7 @@ class Client extends \GuzzleHttp\Client
                 $filters = array_merge($filters, $output);
             }
 
+            // making the guzzle call, json or multipart
             $result = $this->$method($url, [
                 $format => $values,
                 'query' => $filters
@@ -174,9 +183,6 @@ class Client extends \GuzzleHttp\Client
             $this->catchGuzzleException($e);
         }
 
-        //var_dump($result->getHeaders());
-
-        //echo "\n\n" . $result->getBody() . "\n\n";
         return json_decode($result->getBody());
     }
 

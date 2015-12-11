@@ -5,43 +5,46 @@
  * @author Yannick Huerre <dev@sheoak.fr>
  * @copyright (C) 2015 Oasiswork
  * @license MIT
- *
- * TODO: description
  */
 
 namespace Crunchmail\Resources;
 
 /**
- * Crunchmail\Client main class
+ * Generic resource class
  */
 class GenericResource
 {
     /**
      * The client object
+     *
      * @var Crunchmail\client
      */
     public $client;
 
     /**
      * Path to resource
+     *
      * @var string
      */
     public $path;
 
     /**
      * Forced url to resource
+     *
      * @var string
      */
     public $url;
 
     /**
      * Parent Entity object, if url has been forced
+     *
      * @var mixed
      */
     public $parent;
 
     /**
      * Applied filters
+     *
      * @var array
      */
     private $filters = [];
@@ -49,22 +52,21 @@ class GenericResource
     /**
      * Instanciate a new resource
      *
-     * @param Crunchmail\Client $client Client object
-     * @param string            $path resource path
-     * @param string            $url forced url
-     * @param mixed             $parent parent entity
+     * @param Crunchmail\Client               $client Client object
+     * @param string                          $path resource path
+     * @param string                          $url forced url
+     * @param Crunchmail\Entity\GenericEntity $parent parent entity
      */
-    public function __construct($Client, $path, $url='', $parent=null)
+    public function __construct($client, $path, $url='', $parent=null)
     {
-        $this->client = $Client;
+        $this->client = $client;
         $this->path   = $path;
-
         $this->url    = $url;
         $this->parent = $parent;
     }
 
     /**
-     * Return a collection or a resource classname
+     * Return a collection or a resource class name
      *
      * @param boolean $isCollection return a collection
      * @return string
@@ -118,12 +120,15 @@ class GenericResource
             throw new \RuntimeException('Only absolute URI are allowed');
         }
 
+        // default url is the relative path
         $result = $this->path . '/';
 
+        // url was forced on call
         if (!is_null($url))
         {
             $result = $url;
         }
+        // url was predefined on construction as an absolute url
         elseif (!empty($this->url))
         {
             $result = $this->url;
@@ -157,7 +162,10 @@ class GenericResource
     /**
      * Registers request filters
      *
+     * @example $client->messages->filter($filter)->get()
+     *
      * @param array $filters
+     * @return Crunchmail\Resources\GenericResource
      */
     public function filter(array $filters)
     {
@@ -181,14 +189,22 @@ class GenericResource
             throw new \RuntimeException("Unknow method: $method");
         }
 
+        // handle different cases with url
         $url = $this->prepareUrl($url);
+
+        // guzzle call to the api, including the applied filters
+        // for the current collection
         $data = $this->client->apiRequest($method, $url, $values,
             $this->filters, $multipart);
+
+        // collection of entity or single entity
         return $this->dataToObject($data);
     }
 
     /**
      * Catch get, post, put… methods
+     *
+     * @example $this->messages->post($values)
      *
      * @param string $name method name
      * @param array $args arguments
@@ -196,6 +212,7 @@ class GenericResource
      */
     public function __call($name, $args)
     {
+        // get first parameter is different (forced url)
         if ('get' !== $name)
         {
             array_unshift($args, null);

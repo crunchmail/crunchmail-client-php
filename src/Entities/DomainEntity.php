@@ -13,6 +13,11 @@ namespace Crunchmail\Entities;
  */
 class DomainEntity extends GenericEntity
 {
+    /**
+     * To string
+     *
+     * @return string
+     */
     public function __toString()
     {
         return $this->body->name;

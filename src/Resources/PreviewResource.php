@@ -1,5 +1,6 @@
 <?php
 /**
+ * Preview resource
  *
  * @author Yannick Huerre <dev@sheoak.fr>
  * @copyright (C) 2015 Oasiswork
@@ -10,15 +11,18 @@
 namespace Crunchmail\Resources;
 
 /**
- * Crunchmail\Client main class
+ * Preview resource class
  */
 class PreviewResource extends GenericResource
 {
     /**
-     * Send the preview for the message to the given recipients
+     * Send the preview to the given recipients.
+     * You can only call it from a message entity
+     *
+     * @example $message->preview->send($email)
      *
      * @param array $recipients list of recipients for the test
-     * @return mixed
+     * @return \Crunchmail\Entity\GenericEntity
      */
     public function send($recipients)
     {
@@ -27,5 +31,4 @@ class PreviewResource extends GenericResource
         // sending the preview via crunchmail API
         return $this->post(['to' => implode(',', $recipients) ]);
     }
-
 }

@@ -13,6 +13,11 @@ namespace Crunchmail\Entities;
  */
 class AttachmentEntity extends \Crunchmail\Entities\GenericEntity
 {
+    /**
+     * To string
+     *
+     * @return string
+     */
     public function __toString()
     {
         return $this->body->file;

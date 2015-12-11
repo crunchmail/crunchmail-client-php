@@ -3,10 +3,10 @@
  * Generic collection for Crunchmail API
  *
  * @license MIT
- * @copyright (C) 2015 Oasis Work
+ * @copyright (C) 2015 Oasiswork
  * @author Yannick Huerre <dev@sheoak.fr>
  *
- * @TODO handle pagination get: $this->messages->getPage(2)
+ * @todo accessing directly a page (adding filter page)
  */
 namespace Crunchmail\Collections;
 
@@ -24,12 +24,15 @@ class GenericCollection
 
     /**
      * Current data, set of Entities
+     *
      * @var array
      */
     private $collection = [];
 
     /**
      * Raw collection
+     *
+     * @var GuzzleHttp\Psr7\Response
      */
     private $response;
 
@@ -47,9 +50,26 @@ class GenericCollection
         $this->setCollection();
     }
 
+    /**
+     * Returns the raw response
+     *
+     * @return GuzzleHttp\Psr7\Response
+     */
     public function getResponse()
     {
         return $this->response;
+    }
+
+    /**
+     * Direct acces to a specific page (shortcut)
+     *
+     * @param int $n page number
+     * @return \Crunchmail\Collection\GenericCollection
+     */
+    public function page($n)
+    {
+        $this->filters['page'] = (int) $n;
+        return $this->get();
     }
 
     /**
@@ -57,23 +77,27 @@ class GenericCollection
      */
     private function setCollection()
     {
+        // mapping collection name to entity name
         $map = \Crunchmail\Client::$entities;
 
         foreach ($this->response->results as $row)
         {
             $class = '';
 
+            // this resource has a mapping
             if (isset($map[$this->resource->path]))
             {
                 $name = $map[$this->resource->path];
                 $class = '\\Crunchmail\\Entities\\' . ucfirst($name) . 'Entity';
             }
 
+            // class as not been found, use generic class
             if (empty($class) || !class_exists($class))
             {
                 $class = '\\Crunchmail\\Entities\\GenericEntity';
             }
 
+            // add the new entity to collection
             $this->collection[] = new $class($this->resource->client, $row);
         }
     }
@@ -111,8 +135,7 @@ class GenericCollection
     /**
      * Repopulate collection with next results
      *
-     * @return mixed
-     * @todo
+     * @return \Crunchmail\Collections\GenericCollection
      */
     public function next()
     {
@@ -122,14 +145,19 @@ class GenericCollection
     /**
      * Repopulate current collection with previous results
      *
-     * @return mixed
-     * @todo
+     * @return \Crunchmail\Collections\GenericCollection
      */
     public function previous()
     {
         $this->getAdjacent('previous');
     }
 
+    /**
+     * Return next or previous page
+     *
+     * @param string $direction next or previous
+     * @return \Crunchmail\Collections\GenericCollection
+     */
     public function getAdjacent($direction)
     {
         $url = $this->response->$direction;
@@ -139,8 +167,7 @@ class GenericCollection
     /**
      * Repopulate current collection with fresh data
      *
-     * @return mixed
-     * @todo
+     * @return \Crunchmail\Collections\GenericCollection
      */
     public function refresh()
     {

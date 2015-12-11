@@ -16,10 +16,10 @@ namespace Crunchmail\Resources;
 class RecipientsResource extends GenericResource
 {
     /**
-     * Overwrite post for this resource
+     * Overwrite post for this resource, because of its special format
      *
      * @param mixed recipients, string or array
-     * @return \Crunchmail\Entity\RecipientEntity
+     * @return Crunchmail\Entity\RecipientEntity
      */
     public function post($recipients)
     {
