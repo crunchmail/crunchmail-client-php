@@ -15,6 +15,10 @@
 - More filter() tests
 - More request sent tests
 
+- Put on current object with current values:
+
+    $message->title = 'Hello';
+    $message->put();
 
 # Missing tests
 
@@ -27,6 +31,8 @@
 
     $client->bounces->get()
     $message->bounces->get()
+
+- verify delete tests
 
 # fix
 
