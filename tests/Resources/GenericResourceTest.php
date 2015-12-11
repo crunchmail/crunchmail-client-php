@@ -216,6 +216,7 @@ class GenericResourceTest extends \Crunchmail\Tests\TestCase
 
     /**
      * @covers ::page
+     *
      * @expectedExceptionCode 0
      * @expectedException \RuntimeException
      */

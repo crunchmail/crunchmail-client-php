@@ -29,7 +29,7 @@ class MessageEntity extends \Crunchmail\Entities\GenericEntity
      * @param int $status
      * @return string
      *
-     * @todo translation system
+     * @deprecated this should be handle by application
      */
     public function readableStatus()
     {
