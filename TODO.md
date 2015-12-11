@@ -1,4 +1,9 @@
 
+# Rethink
+
+
+- Exception system : RuntimeException vs Exception\ClientException
+
 # Missing
 
 - Domain validate ?
@@ -18,7 +23,8 @@
 - Put on current object with current values:
 
     $message->title = 'Hello';
-    $message->put();
+    $edit = $message->put();
+    $edit = $message->put($values);
 
 # Missing tests
 
@@ -33,6 +39,10 @@
     $message->bounces->get()
 
 - verify delete tests
+
+- unset(\$message->title) throws an error
+- body protected ?
+
 
 # fix
 
