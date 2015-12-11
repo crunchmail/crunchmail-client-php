@@ -122,10 +122,8 @@ class Client extends \GuzzleHttp\Client
      *
      * @param string $name   name of the resource (ie: attachments)
      * @param string $url    force an url for the resource
-     * @param \Crunchmail\Entities\GenericEntity $parent parent entity
      */
-    public function createResource($name, $url='',
-        \Crunchmail\Entities\GenericEntity $parent=null)
+    public function createResource($name, $url='')
     {
         $className = '\\Crunchmail\\Resources\\' . ucfirst($name) . 'Resource';
 
@@ -134,7 +132,7 @@ class Client extends \GuzzleHttp\Client
             $className = '\\Crunchmail\\Resources\\GenericResource';
         }
 
-        return new $className($this, $name, $url, $parent);
+        return new $className($this, $name, $url);
     }
 
     /**

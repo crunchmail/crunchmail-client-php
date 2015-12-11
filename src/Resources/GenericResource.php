@@ -36,13 +36,6 @@ class GenericResource
     protected $url;
 
     /**
-     * Parent Entity object, if url has been forced
-     *
-     * @var mixed
-     */
-    protected $parent;
-
-    /**
      * Applied filters
      *
      * @var array
@@ -55,14 +48,12 @@ class GenericResource
      * @param Crunchmail\Client               $client Client object
      * @param string                          $path resource path
      * @param string                          $url forced url
-     * @param Crunchmail\Entity\GenericEntity $parent parent entity
      */
-    public function __construct($client, $path, $url='', $parent=null)
+    public function __construct($client, $path, $url='')
     {
         $this->client = $client;
         $this->path   = $path;
         $this->url    = $url;
-        $this->parent = $parent;
     }
 
     /**
