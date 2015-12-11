@@ -15,6 +15,35 @@
  */
 class MessageEntityTest extends \Crunchmail\Tests\TestCase
 {
+    /**
+     * File to test error about unreadable files
+     * @var string
+     */
+    private $fileUnreadable;
+
+    /* ---------------------------------------------------------------------
+     * Pre/Post-run
+     * --------------------------------------------------------------------- */
+
+    /**
+     * Before tests
+     */
+    protected function setUp()
+    {
+        // this file must be unreadable for tests
+        $this->fileUnreadable = realpath(__DIR__ . '/../files/unreadable.svg');
+        chmod($this->fileUnreadable, 0000);
+    }
+
+    /**
+     * After tests
+     */
+    protected function tearDown()
+    {
+        // restore file permissions for git
+        chmod($this->fileUnreadable, 0664);
+    }
+
     /* ---------------------------------------------------------------------
      * Helpers
      * --------------------------------------------------------------------- */
@@ -32,6 +61,16 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
         $req = $this->getHistoryRequest(1);
         $this->assertEquals($method, $req->getMethod());
         $this->assertRegExp($reg, (string) $req->getUri());
+    }
+
+    public function addRecipients($to)
+    {
+        $client = $this->quickMock(
+            ['message_ok'   , '200'],
+            ['mail_push_ok' , '200']
+        );
+        $msg = $client->messages->get('http://fakeid');
+        return $msg->addRecipients($to);
     }
 
     /* ---------------------------------------------------------------------
@@ -59,6 +98,15 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
         ];
     }
 
+    public function addEmailProvider()
+    {
+        return [
+            'empty_array' => [[]],
+            'empty_email' => [''],
+            'string_email' => ['fakeemail@fake.com'],
+            'array_emails' => [['fakeemail@fake.com', 'another@fake.com']]
+        ];
+    }
 
     /* ---------------------------------------------------------------------
      * Tests
@@ -72,6 +120,39 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
         $cli = $this->quickMock(['message_ok', '200']);
         $msg = $cli->messages->get('https://fake');
         $this->assertEquals( (string) $msg, $msg->getBody()->name);
+    }
+
+    /**
+     * Test adding a proper recipient
+     *
+     * @covers ::add
+     * @dataProvider addEmailProvider
+     */
+    public function testAddingValidEmailReturnsProperCount($to)
+    {
+        // string
+        $res = $this->addRecipients($to);
+        $this->assertEquals(1, $res->success_count);
+    }
+
+    /**
+     * @covers ::add
+     * @dataProvider addEmailProvider
+     */
+    public function testAddingRecipientSendExpectedParameters($to)
+    {
+        $this->addRecipients($to);
+        $content = $this->getHistoryContent(1);
+
+        $to = is_array($to) ? $to : [$to];
+
+        $this->assertCount(count($to), $content);
+
+        foreach ($content as $k => $row)
+        {
+            $this->assertEquals($to[$k], $row->to);
+            $this->assertRegExp('#^https://.+/messages/[0-9]+/$#', $content[0]->message);
+        }
     }
 
     /**
@@ -293,6 +374,124 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
     public function testBlacklistedResourcesAreNotReachable($field, $msg)
     {
         $msg->$field;
+    }
+
+    /**
+     * @covers ::addAttachment
+     * @covers \Crunchmail\Entities\AttachmentEntity::__toString
+     */
+    public function testAddingAFileWorksProperly()
+    {
+        $client = $this->quickMock(
+            ['message_ok',    '200'],
+            ['attachment_ok', '200']
+        );
+        $message = $client->messages->get('https://fake');
+
+        $filepath= realpath(__DIR__ . '/../files/test.svg');
+        $result = $message->addAttachment($filepath);
+
+        $this->assertEquals($result->file, (string) $result);
+
+        // checking result
+        $this->assertInstanceOf('\Crunchmail\Entities\GenericEntity', $result);
+        $this->assertObjectHasAttribute('body', $result);
+        $this->assertObjectHasAttribute('file', $result->getBody());
+        $this->assertInternalType('string', $result->getBody()->file);
+
+        // checking request sent
+        $content = $this->getHistoryContent(1, false);
+
+        $this->assertContains('name="file"', $content);
+        $this->assertContains('filename="test.svg"', $content);
+        $this->assertContains('Content-Type: image/svg+xml', $content);
+        $this->assertContains('Content-Length: 25354', $content);
+
+        $req = $this->getHistoryRequest(1);
+        $this->assertEquals('POST', $req->getMethod());
+        $this->assertEquals('attachments/', (string) $req->getUri());
+    }
+
+    /**
+     * @covers ::addAttachment
+     *
+     * @expectedException Crunchmail\Exception\ApiException
+     * @expectedExceptionCode 400
+     */
+    public function testAddingAnExistingFileThrowsAnException()
+    {
+        $client = $this->quickMock(
+            ['message_ok',    '200'],
+            ['attachment_error', '400']
+        );
+        $message = $client->messages->get('https://fake');
+
+        $filepath= realpath(__DIR__ . '/../files/test.svg');
+        $result = $message->addAttachment($filepath);
+    }
+
+    /**
+     * @covers ::addAttachment
+     *
+     * @expectedException \RuntimeException
+     * @expectedExceptionCode 0
+     */
+    public function testAddingAMissingFileThrowsAnException()
+    {
+        $client = $this->quickMock(
+            ['message_ok',    '200'],
+            ['attachment_error', '400']
+        );
+        $message = $client->messages->get('https://fake');
+        $result = $message->addAttachment('missing_file.svg');
+    }
+
+    /**
+     * @covers ::addAttachment
+     *
+     * @expectedException \RuntimeException
+     * @expectedExceptionCode 0
+     */
+    public function testAddingAnUnreadableFileThrowsAnException()
+    {
+        $client = $this->quickMock(
+            ['message_ok',    '200'],
+            ['attachment_error', '400']
+        );
+        $message = $client->messages->get('https://fake');
+        $filepath=$this->fileUnreadable;
+
+        // check file is not readable first
+        if (!file_exists($filepath) || is_readable($filepath))
+        {
+           $this->markTestSkipped('The unreadable file is missing or is
+             readable');
+        }
+
+        $result = $message->addAttachment($filepath);
+    }
+
+    /**
+     * Test adding invalid recipients
+     *
+     * @covers ::addRecipients
+     */
+    public function testAddingInvalidEmailReturnsFailure()
+    {
+        $client = $this->quickMock(
+            ['message_ok'      , '200'],
+            ['mail_push_error' , '200']
+        );
+
+        $msg = $client->messages->get('http://fakeid');
+        $res = $msg->addRecipients('error');
+
+        $this->assertSame(0, $res->success_count);
+
+        $invalid = (array) $res->failed;
+
+        $this->assertInternalType('array', $invalid);
+        $this->assertCount(1, $invalid);
     }
 
 }

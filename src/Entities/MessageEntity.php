@@ -56,6 +56,65 @@ class MessageEntity extends \Crunchmail\Entities\GenericEntity
     }
 
     /**
+     * Add an attachment to the message
+     *
+     * @param string $path File path
+     * @return stdClass
+     */
+    public function addAttachment($path)
+    {
+        if (!file_exists($path))
+        {
+            throw new \RuntimeException('File not found');
+        }
+
+        if (!is_readable($path))
+        {
+            throw new \RuntimeException('File not readable');
+        }
+
+        $body = fopen($path, 'r');
+
+        // multipart post (*true* parameter)
+        return $this->client->attachments->post([
+            [
+                'name' => 'file',
+                'contents' => $body
+            ],
+            [
+                'name' => 'message',
+                'contents' => $this->url
+            ]
+        ], true);
+    }
+
+    /**
+     * Overwrite post for this resource, because of its special format
+     *
+     * @param mixed recipients, string or array
+     * @return Crunchmail\Entity\RecipientEntity
+     */
+    public function addRecipients($recipients)
+    {
+        // modify post, adding base_uri as 'message' key
+        $format = [];
+
+        $recipients = is_array($recipients) ? $recipients : [$recipients];
+
+        // format recipients for the API POST, waiting for an associative array
+        // with to/message keys
+        foreach ($recipients as $mail)
+        {
+            $format[] = [
+                'to'        => $mail,
+                'message'   => $this->url
+                ];
+        }
+
+        return $this->recipients->post($format);
+    }
+
+    /**
      * Return true if the message status is message_ok
      */
     public function hasIssue()
