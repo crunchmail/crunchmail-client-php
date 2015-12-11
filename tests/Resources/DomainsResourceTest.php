@@ -11,6 +11,9 @@
 
 /**
  * Test class
+ *
+ * @covers \Crunchmail\Resources\DomainsResource
+ * @coversDefaultClass \Crunchmail\Resources\DomainsResource
  */
 class DomainsTest extends \Crunchmail\Tests\TestCase
 {
@@ -29,10 +32,34 @@ class DomainsTest extends \Crunchmail\Tests\TestCase
     }
 
     /* -----------------------------------------------------------------------
-     * Test
+     * Providers
+     * --------------------------------------------------------------------- */
+
+    public function domainVerifyProvider()
+    {
+        return [
+            ['domains_ok', true],
+            ['domains_empty', false],
+            ['domains_invalid_dkim', false],
+            ['domains_invalid_mx', false]
+        ];
+    }
+
+    public function searchProvider()
+    {
+        return [
+            ['domains_ok', 1],
+            ['domains_empty', 0]
+        ];
+    }
+
+    /* -----------------------------------------------------------------------
+     * Tests
      * --------------------------------------------------------------------- */
 
     /**
+     * @covers ::verify
+    *
      * @expectedException Crunchmail\Exception\ApiException
      * @expectedExceptionCode 500
      */
@@ -43,6 +70,8 @@ class DomainsTest extends \Crunchmail\Tests\TestCase
     }
 
     /**
+     * @covers ::verify
+     *
      * @expectedException Crunchmail\Exception\ApiException
      * @expectedExceptionCode 500
      */
@@ -53,61 +82,47 @@ class DomainsTest extends \Crunchmail\Tests\TestCase
     }
 
     /**
-     * @testdox Searching a valid domain returns an array
+     * @testdox Searching a valid domain returns a valid collection
+     *
+     * @dataProvider searchProvider
+     *
+     * @covers ::verify
      */
-    public function testSearchDomainReturnsACollection()
+    public function testSearchDomainReturnsACollection($tpl, $count)
     {
-        $res = $this->prepareCheck('search', 'domains_ok');
-        $this->assertInstanceOf('\Crunchmail\Collections\GenericCollection', $res);
-    }
+        $res = $this->prepareCheck('search', $tpl);
 
-    /**
-     * @testdox Searching a invalid domain returns an empty array
-     */
-    public function testSearchUnknowDomainReturnsAnEmptyArray()
-    {
-        $res = $this->prepareCheck('search', 'domains_empty');
+        $this->assertInstanceOf('\Crunchmail\Collections\GenericCollection',
+            $res);
+
         $res = $res->current();
-
         $this->assertInternalType('array', $res);
-        $this->assertCount(0, $res);
+        $this->assertCount($count, $res);
     }
 
     /**
      * @testdox Verifying a valid domain returns true
      *
+     * @covers ::verify
+     * @covers \Crunchmail\Entities\DomainEntity::verify
+     * @covers \Crunchmail\Entities\DomainEntity::checkMx
+     * @covers \Crunchmail\Entities\DomainEntity::checkDkim
+     *
+     * @dataProvider domainVerifyProvider
+     *
      * @todo check call to post, with domain and email as parameter
      */
-    public function testVerifyValidDomainReturnsTrue()
+    public function testVerifyValidDomainReturnsTrue($tpl, $expected)
     {
-        $res = $this->prepareCheck('verify', 'domains_ok');
-        $this->assertTrue($res);
-    }
+        $res = $this->prepareCheck('verify', $tpl);
 
-    /**
-     * @testdox Verifying an unknow domain returns false
-     */
-    public function testVerifyInvalidDomainReturnsFalse()
-    {
-        $res = $this->prepareCheck('verify', 'domains_empty');
-        $this->assertFalse($res);
-    }
-
-    /**
-     * @testdox Verifying an invalid existing domain returns false (dkim)
-     */
-    public function testDomainInvalidDkim()
-    {
-        $res = $this->prepareCheck('verify', 'domains_invalid_dkim');
-        $this->assertFalse($res);
-    }
-
-    /**
-     * @testdox Verifying an invalid existing domain returns false (mx)
-     */
-    public function testDomainInvalidMx()
-    {
-        $res = $this->prepareCheck('verify', 'domains_invalid_mx');
-        $this->assertFalse($res);
+        if ($expected)
+        {
+            $this->assertTrue($res);
+        }
+        else
+        {
+            $this->assertFalse($res);
+        }
     }
 }

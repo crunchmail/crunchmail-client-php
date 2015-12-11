@@ -107,11 +107,16 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         return $data;
     }
 
-    public function getHistoryContent($i)
+    public function getHistoryRequest($i)
     {
         $history = $this->getHistory();
-        $content = $history[$i]['request']->getBody()->getContents();
-        return json_decode($content);
+        return $history[$i]['request'];
     }
 
+    public function getHistoryContent($i, $decode=true)
+    {
+        $req = $this->getHistoryRequest($i);
+        $content = $req->getBody()->getContents();
+        return $decode ? json_decode($content) : $content;
+    }
 }

@@ -30,9 +30,7 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
 
     public function checkSentHistory($method, $i=1, $reg='#.*/messages/[0-9]+/$#')
     {
-        $history = $this->getHistory();
-
-        $req = $history[1]['request'];
+        $req = $this->getHistoryRequest(1);
         $this->assertEquals($method, $req->getMethod());
         $this->assertRegExp($reg, (string) $req->getUri());
     }

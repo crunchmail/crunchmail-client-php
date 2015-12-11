@@ -17,4 +17,35 @@ class DomainEntity extends GenericEntity
     {
         return $this->body->name;
     }
+
+    /**
+     * Check mx status
+     *
+     * @return boolean
+     */
+    public function checkMx()
+    {
+        return ('ok' === $this->mx_status);
+    }
+
+    /**
+     * Check dkim status
+     *
+     * @return boolean
+     */
+    public function checkDkim()
+    {
+        return ('ok' === $this->dkim_status);
+    }
+
+    /**
+     * Check both mx and dkim status
+     *
+     * @return boolean
+     */
+    public function verify()
+    {
+        return $this->checkMx() && $this->checkDkim();
+    }
+
 }

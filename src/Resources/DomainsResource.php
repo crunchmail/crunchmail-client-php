@@ -37,7 +37,7 @@ class DomainsResource extends GenericResource
     }
 
     /**
-     * Check if domains is validated
+     * Check if domains is validated (shortcut)
      *
      * @param string $domain domain to verify
      * @return boolean
@@ -46,8 +46,6 @@ class DomainsResource extends GenericResource
     {
         // get a collection of domains and retrieve the array
         $l = $this->search($domain)->current();
-
-        return (count($l) > 0 &&
-            ('ok' === $l[0]->mx_status && 'ok' === $l[0]->dkim_status));
+        return (count($l) > 0 && $l[0]->verify());
     }
 }

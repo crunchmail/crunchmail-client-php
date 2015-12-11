@@ -5,6 +5,8 @@
  * @license MIT
  * @copyright (C) 2015 Oasiswork
  * @author Yannick Huerre <dev@sheoak.fr>
+ *
+ * @todo test accessing resource on linkless entity (optout)
  */
 
 /**

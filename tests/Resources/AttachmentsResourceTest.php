@@ -9,6 +9,9 @@
 
 /**
  * Test class
+ *
+ * @covers \Crunchmail\Resources\AttachmentsResource
+ * @coversDefaultClass \Crunchmail\Resources\AttachmentsResource
  */
 class AttachementsResourceTest extends \Crunchmail\Tests\TestCase
 {
@@ -17,6 +20,10 @@ class AttachementsResourceTest extends \Crunchmail\Tests\TestCase
      * @var string
      */
     private $fileUnreadable;
+
+    /* ---------------------------------------------------------------------
+     * Pre/Post-run
+     * --------------------------------------------------------------------- */
 
     /**
      * Before tests
@@ -37,10 +44,14 @@ class AttachementsResourceTest extends \Crunchmail\Tests\TestCase
         chmod($this->fileUnreadable, 0664);
     }
 
+    /* ---------------------------------------------------------------------
+     * Tests
+     * --------------------------------------------------------------------- */
+
     /**
-     * @todo mulitpart check
+     * @covers ::upload
      */
-    public function testAddingAFileReturnsAProperResult()
+    public function testAddingAFileWorksProperly()
     {
         $client = $this->quickMock(
             ['message_ok',    '200'],
@@ -51,13 +62,28 @@ class AttachementsResourceTest extends \Crunchmail\Tests\TestCase
         $filepath= realpath(__DIR__ . '/../files/test.svg');
         $result = $message->attachments->upload($filepath);
 
+        // checking result
         $this->assertInstanceOf('\Crunchmail\Entities\GenericEntity', $result);
         $this->assertObjectHasAttribute('body', $result);
         $this->assertObjectHasAttribute('file', $result->body);
         $this->assertInternalType('string', $result->body->file);
+
+        // checking request sent
+        $content = $this->getHistoryContent(1, false);
+
+        $this->assertContains('name="file"', $content);
+        $this->assertContains('filename="test.svg"', $content);
+        $this->assertContains('Content-Type: image/svg+xml', $content);
+        $this->assertContains('Content-Length: 25354', $content);
+
+        $req = $this->getHistoryRequest(1);
+        $this->assertEquals('POST', $req->getMethod());
+        $this->assertEquals('attachments/', (string) $req->getUri());
     }
 
     /**
+     * @covers ::upload
+     *
      * @expectedException Crunchmail\Exception\ApiException
      * @expectedExceptionCode 400
      */
@@ -74,6 +100,8 @@ class AttachementsResourceTest extends \Crunchmail\Tests\TestCase
     }
 
     /**
+     * @covers ::upload
+     *
      * @expectedException \RuntimeException
      * @expectedExceptionCode 0
      */
@@ -88,6 +116,8 @@ class AttachementsResourceTest extends \Crunchmail\Tests\TestCase
     }
 
     /**
+     * @covers ::upload
+     *
      * @expectedException \RuntimeException
      * @expectedExceptionCode 0
      */

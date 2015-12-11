@@ -28,17 +28,17 @@ class Client extends \GuzzleHttp\Client
      * @var array
      */
     public static $paths = [
-        'domains'     => 'domains',
         'messages'    => 'messages',
-        'recipients'  => 'mails',
-        'attachments' => 'attachments',
-        'preview'     => 'preview',
         "customers"   => 'customers',
+        'domains'     => 'domains',
         "categories"  => 'categories',
+        'recipients'  => 'mails',
         "bounces"     => 'bounces',
-        "attachments" => 'attachments',
-        "opt"         => 'opt-outs',
-        "users"       => 'users'
+        'attachments' => 'attachments',
+        "optouts"     => 'opt-outs',
+        "users"       => 'users',
+
+        'preview'     => 'preview',     // ERROR
     ];
 
     /**
