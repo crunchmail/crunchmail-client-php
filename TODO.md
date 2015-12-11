@@ -42,6 +42,7 @@
 
 - unset(\$message->title) throws an error
 - body protected ?
+- raw requests
 
 
 # fix
