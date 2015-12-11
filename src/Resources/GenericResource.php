@@ -171,6 +171,11 @@ class GenericResource
      */
     public function request($method, $url=null, $values=[], $multipart=false)
     {
+        if (!in_array($method, \Crunchmail\Client::$methods))
+        {
+            throw new \RuntimeException("Unknow method: $method");
+        }
+
         $url = $this->prepareUrl($url);
         $data = $this->client->apiRequest($method, $url, $values,
             $this->filters, $multipart);
@@ -178,56 +183,22 @@ class GenericResource
     }
 
     /**
-     * Execute a get request and return an entity or a collection of entities
+     * Catch get, post, put… methods
      *
-     * @param string $url
+     * @param string $name method name
+     * @param array $args arguments
      * @return mixed
      */
-    public function get($url=null)
+    public function __call($name, $args)
     {
-        return $this->request('get', $url);
-    }
+        if ('get' !== $name)
+        {
+            array_unshift($args, null);
+        }
 
-    /**
-     * Execute a put request and return an entity or a collection of entities
-     *
-     * @param array $values put data
-     * @return mixed
-     */
-    public function put($values)
-    {
-        return $this->request('put', null, $values);
-    }
+        // method is the first parameter
+        array_unshift($args, $name);
 
-    /**
-     * Execute a patch request and return an entity or a collection of entities
-     *
-     * @param array $values patched data
-     * @return mixed
-     */
-    public function patch($values)
-    {
-        return $this->request('patch', null, $values);
-    }
-
-    /**
-     * Execute a post request and return an entity or a collection of entities
-     *
-     * @param array $values post data
-     * @return mixed
-     */
-    public function post($values, $multipart=false)
-    {
-        return $this->request('post', null, $values, $multipart);
-    }
-
-    /**
-     * Execute a delete request
-     *
-     * @param array $values post data
-     */
-    public function delete($values)
-    {
-        return $this->request('delete');
+        return call_user_func_array([$this, 'request'], $args);
     }
 }

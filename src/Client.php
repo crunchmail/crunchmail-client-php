@@ -24,7 +24,7 @@ namespace Crunchmail;
 class Client extends \GuzzleHttp\Client
 {
     /**
-     * Allowed paths
+     * Allowed paths and mapping to api resource path
      * @var array
      */
     public static $paths = [
@@ -37,7 +37,7 @@ class Client extends \GuzzleHttp\Client
         "categories"  => 'categories',
         "bounces"     => 'bounces',
         "attachments" => 'attachments',
-        "opt-outs"    => 'opt',
+        "opt"         => 'opt-outs',
         "users"       => 'users'
     ];
 
@@ -55,6 +55,21 @@ class Client extends \GuzzleHttp\Client
         "categories"  => 'category',
         "bounces"     => 'bounce',
         "users"       => 'user'
+    ];
+
+    /**
+     * List of authorized methods
+     * @var array
+     */
+    public static $methods = [
+        'get',
+        'delete',
+        'head',
+        'options',
+        'patch',
+        'post',
+        'put'
+        //'request'
     ];
 
     /**
@@ -82,8 +97,7 @@ class Client extends \GuzzleHttp\Client
      */
     public function __get($name)
     {
-        //echo "Accessing property $name ...\n";
-        if (!in_array($name, self::$paths))
+        if (!in_array($name, array_keys(self::$paths)))
         {
             throw new \RuntimeException('Unknow path: ' . $name);
         }
@@ -102,10 +116,10 @@ class Client extends \GuzzleHttp\Client
      * @param string $url    force an url for the resource
      * @param mixed  $parent parent entity, if url is specified
      */
-    public function createResource($name, $url='', $parent=null)
+    public function createResource($name, $url='',
+        \Crunchmail\Entities\GenericEntity $parent=null)
     {
-        $className = '\\Crunchmail\\Resources\\' .
-            ucfirst(self::$paths[$name]) . 'Resource';
+        $className = '\\Crunchmail\\Resources\\' . ucfirst($name) . 'Resource';
 
         if (!class_exists($className))
         {

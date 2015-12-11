@@ -9,22 +9,20 @@
 
 /**
  * Test class
+ *
+ * @covers \Crunchmail\Collections\GenericCollection
+ * @coversDefaultClass \Crunchmail\Collections\GenericCollection
  */
 class GenericCollectionTest extends \Crunchmail\Tests\TestCase
 {
-    public function testCollectionCanBeFiltered()
-    {
-        $client = $this->quickMock(['messages', 200]);
 
-        $collection = $client->messages->filter(['search' => 'fake'])->get();
-        $arr = $collection->current();
-
-        $history = $this->getHistory();
-        $req = $history[0]['request'];
-
-        $this->assertEquals('search=fake', $req->getUri()->getQuery());
-    }
-
+    /**
+     * @covers ::current
+     * @covers ::pageCount
+     * @covers ::setCollection
+     *
+     * @todo test generic collection
+     */
     public function testCollectionCanBeRetrieveAsAnArray()
     {
         $client = $this->quickMock(['messages', 200]);

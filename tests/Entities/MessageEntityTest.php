@@ -9,12 +9,15 @@
 
 /**
  * Test class
+ *
+ * @covers \Crunchmail\Entities\MessageEntity
+ * @coversDefaultClass \Crunchmail\Entities\MessageEntity
  */
 class MessageEntityTest extends \Crunchmail\Tests\TestCase
 {
-    /*
+    /* ---------------------------------------------------------------------
      * Helpers
-     */
+     * --------------------------------------------------------------------- */
 
     public function checkMessage($msg)
     {
@@ -34,10 +37,27 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
         $this->assertRegExp($reg, (string) $req->getUri());
     }
 
-    /*
-     * Tests
-     */
+    /* ---------------------------------------------------------------------
+     * Providers
+     * --------------------------------------------------------------------- */
 
+    public function resourcesPathProvider()
+    {
+        return [
+            ['attachments'],
+            ['recipients'],
+            ['stats'],
+            ['bounces']
+        ];
+    }
+
+    /* ---------------------------------------------------------------------
+     * Tests
+     * --------------------------------------------------------------------- */
+
+    /**
+     * @covers ::__get
+     */
     public function testToStringReturnsMessageName()
     {
         $cli = $this->quickMock(['message_ok', '200']);
@@ -47,6 +67,7 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
 
     /**
      * @testdox Valid status should return the translated string
+     * @covers ::readableStatus
      */
     public function testValidStatusReturnsString()
     {
@@ -59,6 +80,7 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
 
     /**
      * @testdox Invalid status should return the given string
+     * @covers ::readableStatus
      */
     public function testInvalidStatusReturnsString()
     {
@@ -72,7 +94,7 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
     /**
      * @testdox create() returns a valid result
      *
-     * @todo spy that client call get method on guzzle
+     * @covers ::__construct
      */
     public function testGet()
     {
@@ -83,7 +105,23 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
     }
 
     /**
+     * @depends testGet
+     * @dataProvider resourcesPathProvider
+     *
+     * @covers ::__get
+     */
+    public function testAccessingResourceWorksProperly($path, $msg)
+    {
+        $resource = $msg->$path;
+
+        $this->assertInstanceOf('\Crunchmail\Resources\GenericResource',
+            $resource);
+    }
+
+    /**
      * @testdox put() returns a valid result
+     *
+     * @covers ::__call
      */
     public function testPut()
     {
@@ -99,6 +137,7 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
     }
 
     /**
+     * @covers ::__call
      */
     public function testDelete()
     {
@@ -117,6 +156,8 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
 
     /**
      * @testdox Method hasBeenSent() works properly
+     *
+     * @covers ::hasBeenSent
      */
     public function testMessageHasBeenSent()
     {
@@ -132,6 +173,8 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
 
     /**
      * @testdox Method isSending() works properly
+     *
+     * @covers ::isSending
      */
     public function testMessageIsSending()
     {
@@ -149,6 +192,7 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
      * @testdox Method isReady() works properly
      *
      * @depends testGet
+     * @covers ::isReady
      */
     public function testIsReady($msg)
     {
@@ -161,6 +205,8 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
 
     /**
      * @testdox Method hasError() works properly
+     *
+     * @covers ::hasIssue
      */
     public function testMessageHasError()
     {
@@ -176,6 +222,8 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
 
     /**
      * @todo test that send() is stateless
+     *
+     * @covers ::send
      */
     public function testSendingAMessageReturnsAValidResponse()
     {

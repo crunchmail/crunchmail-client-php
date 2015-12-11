@@ -23,6 +23,12 @@ class RecipientsResource extends GenericResource
      */
     public function post($recipients)
     {
+        if (! $this->parent instanceof \Crunchmail\Entities\MessageEntity)
+        {
+            throw new \RuntimeException('post() method can only call when
+                accessing recipient resource from a message entity');
+        }
+
         // modify post, adding base_uri as 'message' key
         $format = [];
 
@@ -34,7 +40,7 @@ class RecipientsResource extends GenericResource
         {
             $format[] = [
                 'to'        => $mail,
-                'message'   => $url
+                'message'   => $this->parent->url
                 ];
         }
 

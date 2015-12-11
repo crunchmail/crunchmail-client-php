@@ -12,12 +12,15 @@ use GuzzleHttp\HandlerStack;
 
 /**
  * Test class
+ *
+ * @covers \Crunchmail\Client
+ * @coversDefaultClass \Crunchmail\Client
  */
 class ClientTest extends \Crunchmail\Tests\TestCase
 {
-    /*
+    /* ---------------------------------------------------------------------
      * Providers
-     */
+     * --------------------------------------------------------------------- */
 
     /**
      * Returns error situations
@@ -40,16 +43,27 @@ class ClientTest extends \Crunchmail\Tests\TestCase
         ];
     }
 
-    /*
-     * -----------------------------------------------------------------------
+    public function resourceProvider()
+    {
+        $list = [];
+        foreach (\Crunchmail\Client::$paths as $path => $v)
+        {
+            $list[] = [$path];
+        }
+        return $list;
+    }
+
+
+    /* ---------------------------------------------------------------------
      * Tests
-     * -----------------------------------------------------------------------
-     */
+     * --------------------------------------------------------------------- */
 
     /**
      * Test empty client creation (for errors)
      *
      * @return array
+     *
+     * @covers ::__construct
      */
     public function testEmptyClientReturnsAResponse()
     {
@@ -59,20 +73,21 @@ class ClientTest extends \Crunchmail\Tests\TestCase
     }
 
     /**
-     * @depends testEmptyClientReturnsAResponse
+     * @covers ::__construct
      *
-     * @expectedException Crunchmail\Exception\ApiException
      * @expectedExceptionCode 0
+     * @expectedException RuntimeException
      */
-    public function testClientThrowsAnExceptionIfApiIsOffline($client)
+    public function testInvalidConfigurationThrowsAnException()
     {
-        $client->apiRequest('get', '/fake');
+        $client = new Crunchmail\Client([]);
     }
 
     /**
      * @depends testEmptyClientReturnsAResponse
+     * @covers ::__call
      *
-     * @expectedException \InvalidArgumentException
+     * @expectedException InvalidArgumentException
      * @expectedExceptionCode 0
      */
     public function testInvalidMethodThrowsAnException($client)
@@ -82,27 +97,40 @@ class ClientTest extends \Crunchmail\Tests\TestCase
 
     /**
      * @depends testEmptyClientReturnsAResponse
+     * @covers ::__get
      *
      * @expectedException RuntimeException
      * @expectedExceptionCode 0
      */
-    public function testUnknowPropertyThrowsAnException($client)
+    public function testAccessingAnUnknowResourceThrowsAnException()
     {
-        $client->invalidProperty->test();
+        $handler = $this->mockHandler(['empty', '200']);
+        $client  = $this->mockClient($handler);
+        $client->invalid->test = 1;
     }
 
     /**
-     * @expectedException RuntimeException
-     * @expectedExceptionCode 0
+     * @dataProvider resourceProvider
+     * @covers ::createResource
+     * @covers ::__get
+     *
+     * @todo test instance of specific resource
+     * @todo test generic resources creation
      */
-    public function testInvalidConfigurationThrowsAnException()
+    public function testAccessingAResourceReturnsAResource($resource)
     {
-        $client = new Crunchmail\Client([]);
+        $handler = $this->mockHandler(['empty', '200']);
+        $client  = $this->mockClient($handler);
+
+        $this->assertInstanceOf('\Crunchmail\Resources\GenericResource',
+            $client->$resource);
     }
 
     /**
+     * @covers ::apiRequest
+     *
      * @expectedExceptionCode 0
-     * @expectedException \RuntimeException
+     * @expectedException RuntimeException
      */
     public function testUnexpectedErrorsThrowsRuntimeException()
     {
@@ -116,7 +144,48 @@ class ClientTest extends \Crunchmail\Tests\TestCase
     }
 
     /**
+     * @covers ::apiRequest
+     */
+    public function testAbsoluteUriRequestReturnAValidObject()
+    {
+        $handler = $this->mockHandler(['message_ok', '200']);
+        $client  = $this->mockClient($handler);
+
+        $result = $client->apiRequest('get', 'https://fake');
+
+        $this->assertInstanceOf('stdClass', $result);
+    }
+
+    /**
+     * @covers ::apiRequest
+     */
+    public function testRelativeUriRequestReturnAValidObject()
+    {
+        $handler = $this->mockHandler(['message_ok', '200']);
+        $client  = $this->mockClient($handler);
+
+        $result = $client->apiRequest('get', 'fake');
+
+        $this->assertInstanceOf('stdClass', $result);
+    }
+
+    /**
+     * @depends testEmptyClientReturnsAResponse
+     * @covers ::apiRequest
+     * @covers ::catchGuzzleException
+     *
+     * @expectedException Crunchmail\Exception\ApiException
+     * @expectedExceptionCode 0
+     */
+    public function testClientThrowsAnExceptionIfApiIsOffline($client)
+    {
+        $client->apiRequest('get', '/fake');
+    }
+
+    /**
      * @dataProvider errorCodesProvider
+     * @covers ::apiRequest
+     * @covers ::catchGuzzleException
      *
      * @expectedException Crunchmail\Exception\ApiException
      */
@@ -129,6 +198,7 @@ class ClientTest extends \Crunchmail\Tests\TestCase
 
     /**
      * @dataProvider errorCodesProvider
+     * @covers ::apiRequest
      */
     public function testResponseErrorCodesAreCorrect($tpl, $code, $method)
     {
@@ -146,14 +216,4 @@ class ClientTest extends \Crunchmail\Tests\TestCase
         $this->fail('An expected exception has not been raised');
     }
 
-    /**
-     * @expectedExceptionCode 0
-     * @expectedException \RuntimeException
-     */
-    public function testAccessingUnknowPropertyThrowsAnException()
-    {
-        $handler = $this->mockHandler(['empty', '200']);
-        $client  = $this->mockClient($handler);
-        $client->invalid->test = 1;
-    }
 }

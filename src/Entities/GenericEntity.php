@@ -25,33 +25,13 @@ class GenericEntity
     public  $body;
 
     /**
-     * Links mapping
+     * Links remapping
      * @var array
      */
     private static $links = [
-        'messages'     => 'messages',
         'recipients'   => 'mails',
-        'domains'      => 'domains',
-        'categories'   => 'categories',
         'preview'      => 'preview_send',
-        'attachments'  => 'attachments'
     ];
-
-    /**
-     * List of authorized methods
-     * @var array
-     */
-    private static $methods = [
-        'get',
-        'delete',
-        'head',
-        'options',
-        'patch',
-        'post',
-        'put',
-        'request'
-    ];
-
 
     /**
      * Create a new entity
@@ -87,9 +67,9 @@ class GenericEntity
     {
         array_unshift($args, $this->url);
 
-        if (!in_array($name, self::$methods))
+        if (!in_array($name, \Crunchmail\Client::$methods))
         {
-            throw new \Exception("Unknow method: $name");
+            throw new \RuntimeException("Unknow method: $name");
         }
 
         $result = call_user_func_array([$this->client, $name], $args);
@@ -115,11 +95,11 @@ class GenericEntity
         }
 
         // shortcut to body fields
-        if (isset($this->body->$name))
+        if (property_exists($this->body, $name))
         {
             return $this->body->$name;
         }
 
-        throw new \Exception('Entity has no resource "' . $name . '"');
+        throw new \RuntimeException('Entity has no resource "' . $name . '"');
     }
 }
