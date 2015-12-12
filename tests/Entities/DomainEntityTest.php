@@ -37,7 +37,7 @@ class DomainEntityTest extends TestCase
         $cli = $this->quickMock(['domains_ok', 200]);
         $res = $cli->domains->get();
 
-        foreach ($res as $domain)
+        foreach ($res->current() as $domain)
         {
             $this->assertEquals($domain->name, (string) $domain);
         }
@@ -60,9 +60,9 @@ class DomainEntityTest extends TestCase
         $list = $cli->domains->get();
 
         // check all domains of the collection
-        foreach ($list as $domain)
+        foreach ($list->current() as $domain)
         {
-            $res = $domains->verify();
+            $res = $domain->verify();
             if ($expected)
             {
                 return $this->assertTrue($res);
