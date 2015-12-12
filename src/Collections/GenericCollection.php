@@ -10,7 +10,8 @@
  */
 namespace Crunchmail\Collections;
 
-use \Crunchmail\Resources\GenericResource;
+use Crunchmail\Resources\GenericResource;
+use Crunchmail\Client;
 
 /**
  * Generic collection for Crunchmail API
@@ -67,7 +68,7 @@ class GenericCollection
     private function setCollection()
     {
         // mapping collection name to entity name
-        $map = \Crunchmail\Client::$entities;
+        $map = Client::$entities;
 
         foreach ($this->response->results as $row)
         {
@@ -124,7 +125,7 @@ class GenericCollection
     /**
      * Repopulate collection with next results
      *
-     * @return \Crunchmail\Collections\GenericCollection
+     * @return Crunchmail\Collections\GenericCollection
      */
     public function next()
     {
@@ -134,7 +135,7 @@ class GenericCollection
     /**
      * Repopulate current collection with previous results
      *
-     * @return \Crunchmail\Collections\GenericCollection
+     * @return Crunchmail\Collections\GenericCollection
      */
     public function previous()
     {
@@ -145,7 +146,7 @@ class GenericCollection
      * Return next or previous page
      *
      * @param string $direction next or previous
-     * @return \Crunchmail\Collections\GenericCollection
+     * @return Crunchmail\Collections\GenericCollection
      */
     public function getAdjacent($direction)
     {
@@ -156,7 +157,7 @@ class GenericCollection
     /**
      * Repopulate current collection with fresh data
      *
-     * @return \Crunchmail\Collections\GenericCollection
+     * @return Crunchmail\Collections\GenericCollection
      */
     public function refresh()
     {
