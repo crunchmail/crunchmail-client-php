@@ -379,7 +379,7 @@ class MessageEntityTest extends TestCase
      * @covers ::addAttachment
      * @covers \Crunchmail\Entities\AttachmentEntity::__toString
      */
-    public function testAddingAFileWorksProperly()
+    public function testAddingAFile()
     {
         $client = $this->quickMock(
             ['message_ok',    '200'],
@@ -388,15 +388,7 @@ class MessageEntityTest extends TestCase
         $message = $client->messages->get('https://fake');
 
         $filepath= realpath(__DIR__ . '/../files/test.svg');
-        $result = $message->addAttachment($filepath);
-
-        $this->assertEquals($result->file, (string) $result);
-
-        // checking result
-        $this->assertEntity($result);
-        $this->assertObjectHasAttribute('body', $result);
-        $this->assertObjectHasAttribute('file', $result->getBody());
-        $this->assertInternalType('string', $result->getBody()->file);
+        $attachment = $message->addAttachment($filepath);
 
         // checking request sent
         $content = $this->getHistoryContent(1, false);
@@ -409,6 +401,22 @@ class MessageEntityTest extends TestCase
         $req = $this->getHistoryRequest(1);
         $this->assertEquals('POST', $req->getMethod());
         $this->assertEquals('attachments/', (string) $req->getUri());
+
+        return $attachment;
+    }
+
+    /**
+     * @depends testAddingAFile
+     */
+    public function testAddingAttachmentReturnsAProperEntity($attachment)
+    {
+
+        // checking attachment
+        $this->assertEntity($attachment);
+        $this->assertEquals($attachment->file, (string) $attachment);
+        $this->assertObjectHasAttribute('body', $attachment);
+        $this->assertObjectHasAttribute('file', $attachment->getBody());
+        $this->assertInternalType('string', $attachment->getBody()->file);
     }
 
     /**
