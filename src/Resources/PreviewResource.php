@@ -2,9 +2,9 @@
 /**
  * Preview resource
  *
- * @author Yannick Huerre <dev@sheoak.fr>
- * @copyright (C) 2015 Oasiswork
- * @license MIT
+ * @author    Yannick Huerre <dev@sheoak.fr>
+ * @copyright 2015 (c) Oasiswork
+ * @license   https://opensource.org/licenses/MIT MIT
  *
  */
 

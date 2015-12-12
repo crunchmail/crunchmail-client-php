@@ -2,12 +2,14 @@
 /**
  * Generic resource class
  *
- * @author Yannick Huerre <dev@sheoak.fr>
- * @copyright (C) 2015 Oasiswork
- * @license MIT
+ * @author    Yannick Huerre <dev@sheoak.fr>
+ * @copyright 2015 (c) Oasiswork
+ * @license   https://opensource.org/licenses/MIT MIT
  */
 
 namespace Crunchmail\Resources;
+
+use Crunchmail\Client;
 
 /**
  * Generic resource class
@@ -49,7 +51,7 @@ class GenericResource
      * @param string                          $path resource path
      * @param string                          $url forced url
      */
-    public function __construct($client, $path, $url='')
+    public function __construct($client, $path, $url = '')
     {
         $this->client = $client;
         $this->path   = $path;
@@ -71,29 +73,31 @@ class GenericResource
      *
      * @param boolean $isCollection return a collection
      * @return string
+     *
+     * @fixme autoload does not work with use Crunchmail\Path\Class
      */
-    private function getResultClass($isCollection=true)
+    private function getResultClass($isCollection = true)
     {
         $classPrefix = '\\Crunchmail\\';
 
         // collection have a "results" field
         if ($isCollection)
         {
-            $classPrefix .= 'Collections';
+            $classPrefix  .= 'Collections';
             $classPath    = $this->path;
             $classType    = 'Collection';
         }
         // entities otherwise
         else
         {
-            if (empty(\Crunchmail\client::$entities[$this->path]))
+            if (empty(Client::$entities[$this->path]))
             {
                 throw new \RuntimeException('Unknow entity for  ' .
                     $this->path);
             }
 
-            $classPrefix .= 'Entities';
-            $classPath    = \Crunchmail\client::$entities[$this->path];
+            $classPrefix  .= 'Entities';
+            $classPath    = Client::$entities[$this->path];
             $classType    = 'Entity';
         }
 
@@ -114,7 +118,7 @@ class GenericResource
      * @param string url
      * @return string
      */
-    private function prepareUrl($url=null)
+    private function prepareUrl($url = null)
     {
         if (!is_null($url) && strpos($url, 'http') !== 0)
         {
@@ -163,9 +167,10 @@ class GenericResource
     /**
      * Registers request filters
      *
-     * @example $client->messages->filter($filter)->get()
+     * Ex: $client->messages->filter($filter)->get()
      *
      * @param array $filters
+     *
      * @return Crunchmail\Resources\GenericResource
      */
     public function filter(array $filters)
@@ -178,7 +183,8 @@ class GenericResource
      * Direct acces to a specific page (shortcut)
      *
      * @param int $n page number
-     * @return \Crunchmail\Collection\GenericCollection
+     *
+     * @return Crunchmail\Collection\GenericCollection
      */
     public function page($n)
     {
@@ -198,11 +204,12 @@ class GenericResource
      * @param string $method get, post, put…
      * @param string $url forced url
      * @param array $values data
+     *
      * @return mixed
      */
-    public function request($method, $url=null, $values=[], $multipart=false)
+    public function request($method, $url = null, $values = [], $multipart = false)
     {
-        if (!in_array($method, \Crunchmail\Client::$methods))
+        if (!in_array($method, Client::$methods))
         {
             throw new \RuntimeException("Unknow method: $method");
         }
@@ -212,8 +219,9 @@ class GenericResource
 
         // guzzle call to the api, including the applied filters
         // for the current collection
-        $data = $this->client->apiRequest($method, $url, $values,
-            $this->filters, $multipart);
+        $data = $this->client->apiRequest(
+            $method, $url, $values, $this->filters, $multipart
+        );
 
         // collection of entity or single entity
         return $this->dataToObject($data);

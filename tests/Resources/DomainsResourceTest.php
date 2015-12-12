@@ -2,10 +2,12 @@
 /**
  * Test class for Crunchmail\Resources\DomainsResources
  *
- * @license MIT
- * @copyright (C) 2015 Oasis Work
- * @author Yannick Huerre <dev@sheoak.fr>
+ * @author    Yannick Huerre <dev@sheoak.fr>
+ * @copyright 2015 (c) Oasiswork
+ * @license   https://opensource.org/licenses/MIT MIT
  */
+
+namespace Crunchmail\Tests;
 
 /**
  * Test class
@@ -13,7 +15,7 @@
  * @covers \Crunchmail\Resources\DomainsResource
  * @coversDefaultClass \Crunchmail\Resources\DomainsResource
  */
-class DomainsTest extends \Crunchmail\Tests\TestCase
+class DomainsTest extends TestCase
 {
 
     /* -----------------------------------------------------------------------
@@ -23,7 +25,7 @@ class DomainsTest extends \Crunchmail\Tests\TestCase
     /**
      * Create a client and call requested method
      */
-    protected function prepareCheck($method, $tpl, $domain='fake.com')
+    protected function prepareCheck($method, $tpl, $domain = 'fake.com')
     {
         $client = $this->quickMock([$tpl, 200]);
         return $client->domains->$method($domain);
@@ -91,8 +93,7 @@ class DomainsTest extends \Crunchmail\Tests\TestCase
     {
         $res = $this->prepareCheck('search', $tpl);
 
-        $this->assertInstanceOf('\Crunchmail\Collections\GenericCollection',
-            $res);
+        $this->assertCollection($res);
 
         $res = $res->current();
         $this->assertInternalType('array', $res);

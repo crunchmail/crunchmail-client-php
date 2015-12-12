@@ -2,13 +2,15 @@
 /**
  * Generic collection for Crunchmail API
  *
- * @license MIT
- * @copyright (C) 2015 Oasiswork
- * @author Yannick Huerre <dev@sheoak.fr>
+ * @author    Yannick Huerre <dev@sheoak.fr>
+ * @copyright 2015 (c) Oasiswork
+ * @license   https://opensource.org/licenses/MIT MIT
  *
  * @todo accessing directly a page (adding filter page)
  */
 namespace Crunchmail\Collections;
+
+use \Crunchmail\Resources\GenericResource;
 
 /**
  * Generic collection for Crunchmail API
@@ -42,8 +44,7 @@ class GenericCollection
       * @param array $config API configuration
       * @return object
      */
-    public function __construct(\Crunchmail\Resources\GenericResource
-        $Resource, $data)
+    public function __construct(GenericResource $Resource, $data)
     {
         $this->resource = $Resource;
         $this->response = $data;

@@ -2,12 +2,14 @@
 /**
  * Base test class
  *
- * @license MIT
- * @copyright (C) 2015 Oasis Work
- * @author Yannick Huerre <dev@sheoak.fr>
+ * @author    Yannick Huerre <dev@sheoak.fr>
+ * @copyright 2015 (c) Oasiswork
+ * @license   https://opensource.org/licenses/MIT MIT
  */
 
 namespace Crunchmail\Tests;
+
+use Crunchmail\Client;
 
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -23,7 +25,6 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     private $container = [];
     private $bodyHistory = [];
 
-
     /**
      * Shortcut to get a quick mocked client
      *
@@ -31,9 +32,8 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      */
     public function quickMock()
     {
-        $handler = call_user_func_array([$this, 'mockHandler'],
-            func_get_args());
-        return $this->mockClient($handler);
+        $h = call_user_func_array([$this, 'mockHandler'], func_get_args());
+        return $this->mockClient($h);
     }
 
     /**
@@ -43,7 +43,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      */
     public function mockClient($handler)
     {
-        $client = new \Crunchmail\Client(['base_uri' => '', 'handler' => $handler]);
+        $client = new Client(['base_uri' => '', 'handler' => $handler]);
         return $client;
     }
 
@@ -66,7 +66,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
             $path = $dir . $tpl;
 
             // automatic json extension
-            if ( ! preg_match('#\.[a-z]+$#', $tpl) )
+            if (! preg_match('#\.[a-z]+$#', $tpl))
             {
                 $path .= '.json';
                 $body = file_get_contents($path);
@@ -112,7 +112,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     public function methodsProvider()
     {
         $data = [];
-        foreach (\Crunchmail\Client::$methods as $m)
+        foreach (Client::$methods as $m)
         {
             $data[] = [$m];
         }
@@ -125,10 +125,28 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         return $history[$i]['request'];
     }
 
-    public function getHistoryContent($i, $decode=true)
+    public function getHistoryContent($i, $decode = true)
     {
         $req = $this->getHistoryRequest($i);
         $content = $req->getBody()->getContents();
         return $decode ? json_decode($content) : $content;
+    }
+
+    public function assertCollection($e, $name = 'Generic')
+    {
+        $name = '\Crunchmail\Collections\\' . $name . 'Collection';
+        $this->assertInstanceOf($name, $e);
+    }
+
+    public function assertResource($e, $name = 'Generic')
+    {
+        $name = '\Crunchmail\Resources\\' . $name . 'Resource';
+        $this->assertInstanceOf($name, $e);
+    }
+
+    public function assertEntity($e, $name = 'Generic')
+    {
+        $name = '\Crunchmail\Entities\\' . $name . 'Entity';
+        $this->assertInstanceOf($name, $e);
     }
 }

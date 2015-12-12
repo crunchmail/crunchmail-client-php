@@ -2,22 +2,23 @@
 /**
  * Test class for Crunchmail\Resources\MessagesResource
  *
- * @license MIT
- * @copyright (C) 2015 Oasiswork
- * @author Yannick Huerre <dev@sheoak.fr>
+ * @author    Yannick Huerre <dev@sheoak.fr>
+ * @copyright 2015 (c) Oasiswork
+ * @license   https://opensource.org/licenses/MIT MIT
  */
+namespace Crunchmail\Tests;
 
 /**
  * Test class
  */
-class MessagesResourceTest extends \Crunchmail\Tests\TestCase
+class MessagesResourceTest extends TestCase
 {
     /**
      * Helpers
      */
     public function checkMessage($msg)
     {
-        $this->assertInstanceOf('\Crunchmail\Entities\MessageEntity', $msg);
+        $this->assertEntity($msg, 'Message');
         $this->assertObjectHasAttribute('body', $msg);
         $this->assertObjectHasAttribute('_links', $msg->body);
         $this->assertInternalType('boolean', $msg->body->track_clicks);
@@ -35,5 +36,4 @@ class MessagesResourceTest extends \Crunchmail\Tests\TestCase
         $client = $this->quickMock(['domains_invalid_mx', '400']);
         $result = $client->messages->post([]);
     }
-
 }

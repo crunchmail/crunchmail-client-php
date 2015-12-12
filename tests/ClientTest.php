@@ -2,10 +2,14 @@
 /**
  * Test class for Crunchmail\Client
  *
- * @license MIT
- * @copyright (C) 2015 Oasis Work
- * @author Yannick Huerre <dev@sheoak.fr>
+ * @author    Yannick Huerre <dev@sheoak.fr>
+ * @copyright 2015 (c) Oasiswork
+ * @license   https://opensource.org/licenses/MIT MIT
  */
+
+namespace Crunchmail\Tests;
+
+use Crunchmail\Client;
 
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -16,7 +20,7 @@ use GuzzleHttp\HandlerStack;
  * @covers \Crunchmail\Client
  * @coversDefaultClass \Crunchmail\Client
  */
-class ClientTest extends \Crunchmail\Tests\TestCase
+class ClientTest extends TestCase
 {
     /* ---------------------------------------------------------------------
      * Providers
@@ -46,7 +50,7 @@ class ClientTest extends \Crunchmail\Tests\TestCase
     public function resourceProvider()
     {
         $list = [];
-        foreach (\Crunchmail\Client::$paths as $path => $v)
+        foreach (Client::$paths as $path => $v)
         {
             $list[] = [$path];
         }
@@ -67,8 +71,8 @@ class ClientTest extends \Crunchmail\Tests\TestCase
      */
     public function testEmptyClientReturnsAResponse()
     {
-        $client = new Crunchmail\Client(['base_uri' => '']);
-        $this->assertInstanceOf('\Crunchmail\Client', $client);
+        $client = new Client(['base_uri' => '']);
+        $this->assertInstanceOf('Crunchmail\Client', $client);
         return $client;
     }
 
@@ -80,7 +84,7 @@ class ClientTest extends \Crunchmail\Tests\TestCase
      */
     public function testInvalidConfigurationThrowsAnException()
     {
-        $client = new Crunchmail\Client([]);
+        $client = new Client([]);
     }
 
     /**
@@ -122,8 +126,7 @@ class ClientTest extends \Crunchmail\Tests\TestCase
         $handler = $this->mockHandler(['empty', '200']);
         $client  = $this->mockClient($handler);
 
-        $this->assertInstanceOf('\Crunchmail\Resources\GenericResource',
-            $client->$resource);
+        $this->assertResource($client->$resource);
     }
 
     /**
@@ -134,7 +137,7 @@ class ClientTest extends \Crunchmail\Tests\TestCase
      */
     public function testUnexpectedErrorsThrowsRuntimeException()
     {
-        $responses = [ new MockHandler([ new RuntimeException('Oops!') ]) ];
+        $responses = [ new MockHandler([ new \RuntimeException('Oops!') ]) ];
         $mock      = new MockHandler($responses);
         $handler   = HandlerStack::create($mock);
 
@@ -215,5 +218,4 @@ class ClientTest extends \Crunchmail\Tests\TestCase
         }
         $this->fail('An expected exception has not been raised');
     }
-
 }

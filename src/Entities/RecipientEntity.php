@@ -2,9 +2,9 @@
 /**
  * Recipient subclass for Crunchmail API
  *
- * @license MIT
- * @copyright (C) 2015 Oasiswork
- * @author Yannick Huerre <dev@sheoak.fr>
+ * @author    Yannick Huerre <dev@sheoak.fr>
+ * @copyright 2015 (c) Oasiswork
+ * @license   https://opensource.org/licenses/MIT MIT
  */
 namespace Crunchmail\Entities;
 

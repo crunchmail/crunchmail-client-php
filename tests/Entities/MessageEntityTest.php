@@ -2,10 +2,14 @@
 /**
  * Test class for Crunchmail\Entity\MessageEntity
  *
- * @license MIT
- * @copyright (C) 2015 Oasiswork
- * @author Yannick Huerre <dev@sheoak.fr>
+ * @author    Yannick Huerre <dev@sheoak.fr>
+ * @copyright 2015 (c) Oasiswork
+ * @license   https://opensource.org/licenses/MIT MIT
  */
+
+namespace Crunchmail\Tests;
+
+use Crunchmail;
 
 /**
  * Test class
@@ -13,7 +17,7 @@
  * @covers \Crunchmail\Entities\MessageEntity
  * @coversDefaultClass \Crunchmail\Entities\MessageEntity
  */
-class MessageEntityTest extends \Crunchmail\Tests\TestCase
+class MessageEntityTest extends TestCase
 {
     /**
      * File to test error about unreadable files
@@ -50,13 +54,13 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
 
     public function checkMessage($msg)
     {
-        $this->assertInstanceOf('\Crunchmail\Entities\MessageEntity', $msg);
+        $this->assertEntity($msg, 'Message');
         $this->assertObjectHasAttribute('_links', $msg->getBody());
         $this->assertInternalType('boolean', $msg->getBody()->track_clicks);
         $this->assertEquals('message_ok', $msg->getBody()->status);
     }
 
-    public function checkSentHistory($method, $i=1, $reg='#.*/messages/[0-9]+/$#')
+    public function checkSentHistory($method, $i = 1, $reg = '#.*/messages/[0-9]+/$#')
     {
         $req = $this->getHistoryRequest(1);
         $this->assertEquals($method, $req->getMethod());
@@ -119,7 +123,7 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
     {
         $cli = $this->quickMock(['message_ok', '200']);
         $msg = $cli->messages->get('https://fake');
-        $this->assertEquals( (string) $msg, $msg->getBody()->name);
+        $this->assertEquals((string) $msg, $msg->getBody()->name);
     }
 
     /**
@@ -234,10 +238,7 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
      */
     public function testAccessingResourceWorksProperly($path, $msg)
     {
-        $resource = $msg->$path;
-
-        $this->assertInstanceOf('\Crunchmail\Resources\GenericResource',
-            $resource);
+        $this->assertResource($msg->$path);
     }
 
     /**
@@ -394,7 +395,7 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
         $this->assertEquals($result->file, (string) $result);
 
         // checking result
-        $this->assertInstanceOf('\Crunchmail\Entities\GenericEntity', $result);
+        $this->assertEntity($result);
         $this->assertObjectHasAttribute('body', $result);
         $this->assertObjectHasAttribute('file', $result->getBody());
         $this->assertInternalType('string', $result->getBody()->file);
@@ -464,8 +465,7 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
         // check file is not readable first
         if (!file_exists($filepath) || is_readable($filepath))
         {
-           $this->markTestSkipped('The unreadable file is missing or is
-             readable');
+            $this->markTestSkipped('The unreadable file is missing or readable');
         }
 
         $result = $message->addAttachment($filepath);
@@ -493,5 +493,4 @@ class MessageEntityTest extends \Crunchmail\Tests\TestCase
         $this->assertInternalType('array', $invalid);
         $this->assertCount(1, $invalid);
     }
-
 }

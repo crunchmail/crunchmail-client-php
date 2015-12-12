@@ -2,9 +2,9 @@
 /**
  * Exception class for Crunchmail classes
  *
- * @license MIT
- * @copyright (C) 2015 Oasis Work
- * @author Yannick Huerre <dev@sheoak.fr>
+ * @author    Yannick Huerre <dev@sheoak.fr>
+ * @copyright 2015 (c) Oasiswork
+ * @license   https://opensource.org/licenses/MIT MIT
  *
  * @link https://github.com/crunchmail/crunchmail-client-php
  */
@@ -42,7 +42,7 @@ class ApiException extends \Exception
      * @param boolean $showErrorKey Show the key of each error
      * @return string
      */
-    public function toHtml($showErrorKey=true)
+    public function toHtml($showErrorKey = true)
     {
         $body = $this->getDetail();
 
@@ -73,7 +73,7 @@ class ApiException extends \Exception
         }
 
         // if body was empty, we need to return the exception message instead
-        if (!isset($msg) || count( (array) $msg ) === 0)
+        if (!isset($msg) || count((array) $msg) === 0)
         {
             $msg = new \stdClass();
             $msg->error = [$previous->getMessage()];
@@ -93,7 +93,7 @@ class ApiException extends \Exception
      *
      * @todo add string sanitize
      */
-    public static function formatResponseOutput($body, $showErrorKey=true)
+    public static function formatResponseOutput($body, $showErrorKey = true)
     {
         // invalid error, it's a string, we handle the error
         if (is_string($body))
@@ -115,7 +115,7 @@ class ApiException extends \Exception
             $out .= '<p>';
             if ($showErrorKey)
             {
-               $out .= $k . ' : ';
+                $out .= $k . ' : ';
             }
             foreach ($v as $str)
             {

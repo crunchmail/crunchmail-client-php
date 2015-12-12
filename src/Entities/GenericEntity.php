@@ -2,11 +2,13 @@
 /**
  * Generic entity
  *
- * @license MIT
- * @copyright (C) 2015 Oasiswork
- * @author Yannick Huerre <dev@sheoak.fr>
+ * @author    Yannick Huerre <dev@sheoak.fr>
+ * @copyright 2015 (c) Oasiswork
+ * @license   https://opensource.org/licenses/MIT MIT
  */
 namespace Crunchmail\Entities;
+
+use Crunchmail\Client;
 
 /**
  * Generic entity class
@@ -55,7 +57,7 @@ class GenericEntity
      * @param stdClass $data entity data
      * @return Crunchmail\Entity\GenericEntity
      */
-    public function __construct(\Crunchmail\Client $client, \stdClass $data)
+    public function __construct(Client $client, \stdClass $data)
     {
         $this->client = $client;
         return $this->body = $data;
@@ -83,7 +85,7 @@ class GenericEntity
         // registered url is the first parameter
         array_unshift($args, $this->url);
 
-        if (!in_array($name, \Crunchmail\Client::$methods))
+        if (!in_array($name, Client::$methods))
         {
             throw new \RuntimeException("Unknow method: $name");
         }
@@ -144,5 +146,4 @@ class GenericEntity
     {
         return new static($this->client, json_decode($result->getBody()));
     }
-
 }

@@ -2,12 +2,16 @@
 /**
  * Test class for Crunchmail\Entity\GenericEntity
  *
- * @license MIT
- * @copyright (C) 2015 Oasiswork
- * @author Yannick Huerre <dev@sheoak.fr>
+ * @author    Yannick Huerre <dev@sheoak.fr>
+ * @copyright 2015 (c) Oasiswork
+ * @license   https://opensource.org/licenses/MIT MIT
  *
  * @todo test accessing resource on linkless entity (optout)
  */
+
+namespace Crunchmail\Tests;
+
+use Crunchmail;
 
 /**
  * Test class
@@ -15,7 +19,7 @@
  * @covers \Crunchmail\Entities\GenericEntity
  * @coversDefaultClass \Crunchmail\Entities\GenericEntity
  */
-class GenericEntityTest extends \Crunchmail\Tests\TestCase
+class GenericEntityTest extends TestCase
 {
     /* ---------------------------------------------------------------------
      * Providers
@@ -44,7 +48,7 @@ class GenericEntityTest extends \Crunchmail\Tests\TestCase
         $client  = $this->mockClient($handler);
         $entity = $client->messages->get('https://fake');
 
-        $this->assertInstanceOf('\Crunchmail\Entities\MessageEntity', $entity);
+        $this->assertEntity($entity, 'Message');
         return $entity;
     }
 
@@ -60,8 +64,7 @@ class GenericEntityTest extends \Crunchmail\Tests\TestCase
 
         $entity  = $client->$path->get('https://fake');
 
-        $this->assertInstanceOf('\Crunchmail\Entities\\'. $entityName .
-            'Entity', $entity);
+        $this->assertEntity($entity, $entityName);
     }
 
     /**
@@ -140,5 +143,4 @@ class GenericEntityTest extends \Crunchmail\Tests\TestCase
     {
         $resource = $entity->stupidresource;
     }
-
 }

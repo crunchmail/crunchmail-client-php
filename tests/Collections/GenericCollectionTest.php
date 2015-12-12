@@ -2,10 +2,14 @@
 /**
  * Test class for Crunchmail\Collections\GenericCollection
  *
- * @license MIT
- * @copyright (C) 2015 Oasiswork
- * @author Yannick Huerre <dev@sheoak.fr>
+ * @author    Yannick Huerre <dev@sheoak.fr>
+ * @copyright 2015 (c) Oasiswork
+ * @license   https://opensource.org/licenses/MIT MIT
  */
+
+namespace Crunchmail\Tests;
+
+use Crunchmail;
 
 /**
  * Test class
@@ -13,7 +17,7 @@
  * @covers \Crunchmail\Collections\GenericCollection
  * @coversDefaultClass \Crunchmail\Collections\GenericCollection
  */
-class GenericCollectionTest extends \Crunchmail\Tests\TestCase
+class GenericCollectionTest extends TestCase
 {
 
     /* ---------------------------------------------------------------------
@@ -52,8 +56,6 @@ class GenericCollectionTest extends \Crunchmail\Tests\TestCase
         $body = $this->getSentBody(0);
         $this->assertSame($body->count, $collection->count());
         $this->assertSame($body->page_count, $collection->pageCount());
-        $this->assertContainsOnlyInstancesOf(
-            '\Crunchmail\Entities\MessageEntity', $arr);
     }
 
     /**
@@ -120,5 +122,4 @@ class GenericCollectionTest extends \Crunchmail\Tests\TestCase
         $this->assertCount(2, $history);
         $this->assertNotEquals($collection, $res);
     }
-
 }

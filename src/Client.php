@@ -2,9 +2,11 @@
 /**
  * Handle crunchmail REST API in php
  *
- * @license MIT
- * @copyright (C) 2015 Oasiswork
- * @author Yannick Huerre <dev@sheoak.fr>
+ * PHP version 5.5+
+ *
+ * @author    Yannick Huerre <dev@sheoak.fr>
+ * @copyright 2015 (c) Oasiswork
+ * @license   https://opensource.org/licenses/MIT MIT
  *
  * @link https://github.com/crunchmail/crunchmail-client-php
  * @link http://docs.guzzlephp.org/en/latest/
@@ -80,6 +82,7 @@ class Client extends \GuzzleHttp\Client
       * Initilialize the client, extends guzzle constructor
       *
       * @param array $config API configuration
+      *
       * @return object
      */
     public function __construct(array $config = [])
@@ -95,11 +98,13 @@ class Client extends \GuzzleHttp\Client
     /**
      * Create a resource when accessing client properties and returns it
      *
-     * @example $client->messages
-     * @example $messageEntity->recipients
+     * Example:
+     * $client->messages
+     * $messageEntity->recipients
      *
-     * @param string $name
-     * @return \Crunchmail\Resources\GenericResource
+     * @param string $name property
+     *
+     * @return Crunchmail\Resources\GenericResource
      */
     public function __get($name)
     {
@@ -120,10 +125,12 @@ class Client extends \GuzzleHttp\Client
      * Forcing an url is usefull when creating a sub-resource from an
      * entity object, because the base url is then specific
      *
-     * @param string $name   name of the resource (ie: attachments)
-     * @param string $url    force an url for the resource
+     * @param string $name name of the resource (ie: attachments)
+     * @param string $url  force an url for the resource
+     *
+     * @return mixed
      */
-    public function createResource($name, $url='')
+    public function createResource($name, $url = '')
     {
         $className = '\\Crunchmail\\Resources\\' . ucfirst($name) . 'Resource';
 
@@ -145,14 +152,15 @@ class Client extends \GuzzleHttp\Client
      * @param string  $method    method to test
      * @param string  $url       url id
      * @param array   $values    data
+     * @param array   $filters   filters to apply
      * @param boolean $multipart send as multipart/form-data
+     *
      * @return stdClass
      *
      * @link http://docs.guzzlephp.org/en/latest/quickstart.html?highlight=multipart#sending-form-files
      * @link http://docs.guzzlephp.org/en/latest/request-options.html?highlight=query#query
      */
-    public function apiRequest($method, $url='', $values=[], $filters=[],
-        $multipart=false)
+    public function apiRequest($method, $url = '', $values = [], $filters = [], $multipart = false)
     {
         try
         {
@@ -187,7 +195,9 @@ class Client extends \GuzzleHttp\Client
     /**
      * Catch all guzzle exception types and execute proper action
      *
-     * @param mixed $e
+     * @param mixed $e guzzle exception
+     *
+     * @return null
      */
     protected function catchGuzzleException($e)
     {
@@ -201,4 +211,3 @@ class Client extends \GuzzleHttp\Client
         throw new Exception\ApiException($e->getMessage(), $e->getCode(), $e);
     }
 }
-

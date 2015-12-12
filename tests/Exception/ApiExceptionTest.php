@@ -2,19 +2,21 @@
 /**
  * Test class for Crunchmail\Exception\ApiException
  *
- * @license MIT
- * @copyright (C) 2015 Oasis Work
- * @author Yannick Huerre <dev@sheoak.fr>
+ * @author    Yannick Huerre <dev@sheoak.fr>
+ * @copyright 2015 (c) Oasiswork
+ * @license   https://opensource.org/licenses/MIT MIT
  */
 
-require_once( __DIR__ . '/../helpers/cm_mock.php');
+namespace Crunchmail\Tests;
+
+use \Crunchmail\Exception\ApiException;
 
 /**
  * Test class
  *
  * @coversDefaultClass \Crunchmail\Exception\ApiException
  */
-class ApiExceptionTest extends PHPUnit_Framework_TestCase
+class ApiExceptionTest extends TestCase
 {
     /**
      * @testdox getDetail() returns the last exception
@@ -25,10 +27,10 @@ class ApiExceptionTest extends PHPUnit_Framework_TestCase
     {
         try
         {
-            $client = cm_mock_client([['message_error', '400']]);
+            $client = $this->quickMock(['message_error', 400]);
             $client->messages->get('http://fake');
         }
-        catch (Crunchmail\Exception\ApiException $e)
+        catch (ApiException $e)
         {
             $err = $e->getDetail();
         }
@@ -46,10 +48,10 @@ class ApiExceptionTest extends PHPUnit_Framework_TestCase
     {
         try
         {
-            $client = cm_mock_client([['empty', '500']]);
+            $client = $this->quickMock(['empty', 500]);
             $client->messages->delete('http://fake');
         }
-        catch (Crunchmail\Exception\ApiException $e)
+        catch (ApiException $e)
         {
             $err  = $e->toHtml();
             $code = $e->getCode();
@@ -70,10 +72,10 @@ class ApiExceptionTest extends PHPUnit_Framework_TestCase
     {
         try
         {
-            $client = cm_mock_client([['message_invalid', '400']]);
+            $client = $this->quickMock(['message_invalid', 400]);
             $client->messages->post([]);
         }
-        catch (Crunchmail\Exception\ApiException $e)
+        catch (ApiException $e)
         {
             $code = $e->getCode();
             $err  = $e->toHtml();
@@ -92,15 +94,14 @@ class ApiExceptionTest extends PHPUnit_Framework_TestCase
     {
         try
         {
-            $client = cm_mock_client([['message_invalid', '400']]);
+            $client = $this->quickMock(['message_invalid', 400]);
             $client->messages->post([]);
         }
-        catch (Crunchmail\Exception\ApiException $e)
+        catch (ApiException $e)
         {
             $err  = $e->toHtml(false);
         }
 
         $this->assertNotContains('sender_email', $err);
     }
-
 }

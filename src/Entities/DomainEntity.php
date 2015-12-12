@@ -2,9 +2,9 @@
 /**
  * Domains entity
  *
- * @license MIT
- * @copyright (C) 2015 Oasis Work
- * @author Yannick Huerre <dev@sheoak.fr>
+ * @author    Yannick Huerre <dev@sheoak.fr>
+ * @copyright 2015 (c) Oasiswork
+ * @license   https://opensource.org/licenses/MIT MIT
  */
 namespace Crunchmail\Entities;
 
@@ -52,5 +52,4 @@ class DomainEntity extends GenericEntity
     {
         return $this->checkMx() && $this->checkDkim();
     }
-
 }

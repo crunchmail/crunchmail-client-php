@@ -2,10 +2,12 @@
 /**
  * Test class for Crunchmail\Resources\GenericResource
  *
- * @license MIT
- * @copyright (C) 2015 Oasiswork
- * @author Yannick Huerre <dev@sheoak.fr>
+ * @author    Yannick Huerre <dev@sheoak.fr>
+ * @copyright 2015 (c) Oasiswork
+ * @license   https://opensource.org/licenses/MIT MIT
  */
+
+namespace Crunchmail\Tests;
 
 /**
  * Test class
@@ -13,7 +15,7 @@
  * @covers \Crunchmail\Resources\GenericResource
  * @coversDefaultClass \Crunchmail\Resources\GenericResource
  */
-class GenericResourceTest extends \Crunchmail\Tests\TestCase
+class GenericResourceTest extends TestCase
 {
     /**
      * Provider : methods that are sending data
@@ -163,7 +165,7 @@ class GenericResourceTest extends \Crunchmail\Tests\TestCase
 
         // because our response is message_ok, we shoul always get
         // a message entity
-        $this->assertInstanceOf('\Crunchmail\Entities\MessageEntity', $res);
+        $this->assertEntity($res, 'Message');
     }
 
     /**
@@ -180,7 +182,7 @@ class GenericResourceTest extends \Crunchmail\Tests\TestCase
 
         // because our response is messages, we shoul always get
         // a collection
-        $this->assertInstanceOf('\Crunchmail\Collections\GenericCollection', $res);
+        $this->assertCollection($res);
     }
 
     /**
@@ -227,5 +229,4 @@ class GenericResourceTest extends \Crunchmail\Tests\TestCase
         );
         $collection = $client->messages->page('error');
     }
-
 }
