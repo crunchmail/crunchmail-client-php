@@ -1,6 +1,7 @@
 PU=./vendor/bin/phpunit
 PHPCS=./vendor/bin/phpcs
 PHPCBF=./vendor/bin/phpcbf
+PHPMD=./vendor/bin/phpmd
 
 help:
 	@echo "Use \`make <target>' where <target> is one of"
@@ -12,6 +13,7 @@ help:
 	@echo "  show-coverage 	show code coverage report"
 	@echo "  phpcs			run phpcs to check PHP code"
 	@echo "  phpcbf			run phpcbf to fix PHP code"
+	@echo "  phpmd			run phpmd to check PHP code"
 
 docs:
 	phpdoc -d src -t docs/phpdoc --force
@@ -36,3 +38,13 @@ phpcs:
 
 phpcbf:
 	$(PHPCBF) --standard=ruleset.xml -v
+
+phpmd:
+	$(PHPMD) tests/ text naming
+	$(PHPMD) tests/ text cleancode
+	$(PHPMD) tests/ text unusedcode
+	$(PHPMD) tests/ text controversial
+	$(PHPMD) src/ text naming
+	$(PHPMD) src/ text cleancode
+	$(PHPMD) src/ text unusedcode
+	$(PHPMD) src/ text controversial
