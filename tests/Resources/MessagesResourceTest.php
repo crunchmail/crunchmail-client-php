@@ -34,6 +34,6 @@ class MessagesResourceTest extends TestCase
     public function testCreateWithInvalidDomain()
     {
         $client = $this->quickMock(['domains_invalid_mx', '400']);
-        $result = $client->messages->post([]);
+        $client->messages->post([]);
     }
 }

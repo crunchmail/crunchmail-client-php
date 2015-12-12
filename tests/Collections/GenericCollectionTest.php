@@ -77,7 +77,7 @@ class GenericCollectionTest extends TestCase
 
         $nextUrl = $collection->getResponse()->$direction;
 
-        $next = $collection->$direction();
+        $collection->$direction();
 
         $request = $this->getHistoryRequest(1);
 

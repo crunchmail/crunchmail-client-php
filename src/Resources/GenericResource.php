@@ -76,19 +76,14 @@ class GenericResource
      *
      * @fixme autoload does not work with use Crunchmail\Path\Class
      */
-    private function getResultClass($isCollection = true)
+    private function getResultClass($classPrefix)
     {
-        $classPrefix = '\\Crunchmail\\';
+        // default: collections
+        $classPath    = $this->path;
+        $classType    = 'Collection';
 
         // collection have a "results" field
-        if ($isCollection)
-        {
-            $classPrefix  .= 'Collections';
-            $classPath    = $this->path;
-            $classType    = 'Collection';
-        }
-        // entities otherwise
-        else
+        if ('Entities' === $classPrefix)
         {
             if (empty(Client::$entities[$this->path]))
             {
@@ -96,12 +91,11 @@ class GenericResource
                     $this->path);
             }
 
-            $classPrefix  .= 'Entities';
             $classPath    = Client::$entities[$this->path];
             $classType    = 'Entity';
         }
 
-        $classPrefix .= '\\';
+        $classPrefix  = '\\Crunchmail\\' . $classPrefix . '\\';
         $className     = ucfirst($classPath) . $classType;
 
         if (!class_exists($classPrefix . $className))
@@ -153,15 +147,13 @@ class GenericResource
         // collection have a "results" field
         if (isset($data->results))
         {
-            $class = $this->getResultClass();
+            $class = $this->getResultClass('Collections');
             return new $class($this, $data);
         }
+
         // entities otherwise
-        else
-        {
-            $class = $this->getResultClass(false);
-            return new $class($this->client, $data);
-        }
+        $class = $this->getResultClass('Entities');
+        return new $class($this->client, $data);
     }
 
     /**
@@ -182,18 +174,18 @@ class GenericResource
     /**
      * Direct acces to a specific page (shortcut)
      *
-     * @param int $n page number
+     * @param int $page page number
      *
      * @return Crunchmail\Collection\GenericCollection
      */
-    public function page($n)
+    public function page($page)
     {
-        if (!is_numeric($n) || $n < 0)
+        if (!is_numeric($page) || $page < 0)
         {
             throw new \RuntimeException('Invalid page number');
         }
 
-        $this->filters['page'] = (int) $n;
+        $this->filters['page'] = (int) $page;
         return $this->get();
     }
 
@@ -207,7 +199,7 @@ class GenericResource
      *
      * @return mixed
      */
-    public function request($method, $url = null, $values = [], $multipart = false)
+    public function request($method, $url = null, $values = [], $format = 'json')
     {
         if (!in_array($method, Client::$methods))
         {
@@ -220,7 +212,7 @@ class GenericResource
         // guzzle call to the api, including the applied filters
         // for the current collection
         $data = $this->client->apiRequest(
-            $method, $url, $values, $this->filters, $multipart
+            $method, $url, $values, $this->filters, $format
         );
 
         // collection of entity or single entity

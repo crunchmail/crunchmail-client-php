@@ -153,20 +153,17 @@ class Client extends \GuzzleHttp\Client
      * @param string  $url       url id
      * @param array   $values    data
      * @param array   $filters   filters to apply
-     * @param boolean $multipart send as multipart/form-data
+     * @param string  $format    change default json format
      *
      * @return stdClass
      *
      * @link http://docs.guzzlephp.org/en/latest/quickstart.html?highlight=multipart#sending-form-files
      * @link http://docs.guzzlephp.org/en/latest/request-options.html?highlight=query#query
      */
-    public function apiRequest($method, $url = '', $values = [], $filters = [], $multipart = false)
+    public function apiRequest($method, $url = '', $values = [], $filters = [], $format = 'json')
     {
         try
         {
-            // default is json
-            $format = $multipart ? 'multipart' : 'json';
-
             $parse = parse_url($url);
 
             // if url contains a query string, we have to merge it to avoid
@@ -199,15 +196,15 @@ class Client extends \GuzzleHttp\Client
      *
      * @return null
      */
-    protected function catchGuzzleException($e)
+    protected function catchGuzzleException($exc)
     {
         // not a guzzle exception
-        if (strpos(get_class($e), 'GuzzleHttp\\') !== 0)
+        if (strpos(get_class($exc), 'GuzzleHttp\\') !== 0)
         {
-            throw $e;
+            throw $exc;
         }
 
         // guzzle exceptions
-        throw new Exception\ApiException($e->getMessage(), $e->getCode(), $e);
+        throw new Exception\ApiException($exc->getMessage(), $exc->getCode(), $exc);
     }
 }

@@ -99,7 +99,7 @@ class ApiExceptionTest extends TestCase
         }
         catch (ApiException $e)
         {
-            $err  = $e->toHtml(false);
+            $err  = $e->toHtml(['showErrorKey' => false]);
         }
 
         $this->assertNotContains('sender_email', $err);

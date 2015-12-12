@@ -66,7 +66,7 @@ class DomainsTest extends TestCase
     public function testVerifyInternalServerError()
     {
         $client = $this->quickMock(['empty', 500]);
-        $res = $client->domains->verify('fake.com');
+        $client->domains->verify('fake.com');
     }
 
     /**
@@ -78,7 +78,7 @@ class DomainsTest extends TestCase
     public function testSearchInternalServerError()
     {
         $client = $this->quickMock(['empty', 500]);
-        $res = $client->domains->search('fake.com');
+        $client->domains->search('fake.com');
     }
 
     /**
@@ -123,11 +123,8 @@ class DomainsTest extends TestCase
 
         if ($expected)
         {
-            $this->assertTrue($res);
+            return $this->assertTrue($res);
         }
-        else
-        {
-            $this->assertFalse($res);
-        }
+        $this->assertFalse($res);
     }
 }

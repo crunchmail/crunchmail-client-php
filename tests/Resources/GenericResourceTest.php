@@ -70,7 +70,7 @@ class GenericResourceTest extends TestCase
         $uri = 'https://fake';
 
         $cli = $this->quickMock(['message_ok', '200']);
-        $res = $cli->messages->get($uri);
+        $cli->messages->get($uri);
 
         $history = $this->getHistory();
 
@@ -115,7 +115,7 @@ class GenericResourceTest extends TestCase
         $values = ['test' => '1'];
 
         $cli = $this->quickMock(['message_ok', '200']);
-        $res = $cli->messages->$method($values);
+        $cli->messages->$method($values);
 
         $history = $this->getHistory();
         $content = $history[0]['request']->getBody()->getContents();
@@ -142,7 +142,7 @@ class GenericResourceTest extends TestCase
         ];
 
         $cli = $this->quickMock(['message_ok', '200']);
-        $res = $cli->messages->$method($values, true);
+        $cli->messages->$method($values, 'multipart');
 
         $history = $this->getHistory();
         $content = $history[0]['request']->getBody()->getContents();
@@ -193,7 +193,7 @@ class GenericResourceTest extends TestCase
         $cli = $this->quickMock(['messages', 200]);
 
         $collection = $cli->messages->filter(['search' => 'fake'])->get();
-        $arr = $collection->current();
+        $collection->current();
 
         $history = $this->getHistory();
         $req = $history[0]['request'];
@@ -209,7 +209,7 @@ class GenericResourceTest extends TestCase
         $client = $this->quickMock(
             ['messages', 200]
         );
-        $collection = $client->messages->page(2);
+        $client->messages->page(2);
         $request = $this->getHistoryRequest(0);
         $query = $request->getUri()->getQuery();
 
@@ -227,6 +227,6 @@ class GenericResourceTest extends TestCase
         $client = $this->quickMock(
             ['messages', 200]
         );
-        $collection = $client->messages->page('error');
+        $client->messages->page('error');
     }
 }

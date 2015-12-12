@@ -50,7 +50,7 @@ class ClientTest extends TestCase
     public function resourceProvider()
     {
         $list = [];
-        foreach (Client::$paths as $path => $v)
+        foreach (array_keys(Client::$paths) as $path)
         {
             $list[] = [$path];
         }
@@ -84,7 +84,7 @@ class ClientTest extends TestCase
      */
     public function testInvalidConfigurationThrowsAnException()
     {
-        $client = new Client([]);
+        new Client([]);
     }
 
     /**

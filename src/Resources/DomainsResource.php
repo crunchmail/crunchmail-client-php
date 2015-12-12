@@ -45,7 +45,7 @@ class DomainsResource extends GenericResource
     public function verify($domain)
     {
         // get a collection of domains and retrieve the array
-        $l = $this->search($domain)->current();
-        return (count($l) > 0 && $l[0]->verify());
+        $list = $this->search($domain)->current();
+        return (count($list) > 0 && $list[0]->verify());
     }
 }

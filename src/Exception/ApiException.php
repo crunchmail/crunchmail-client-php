@@ -42,7 +42,7 @@ class ApiException extends \Exception
      * @param boolean $showErrorKey Show the key of each error
      * @return string
      */
-    public function toHtml($showErrorKey = true)
+    public function toHtml($params=[])
     {
         $body = $this->getDetail();
 
@@ -51,7 +51,7 @@ class ApiException extends \Exception
             return $body;
         }
 
-        return self::formatResponseOutput($body, $showErrorKey);
+        return self::formatResponseOutput($body, $params);
     }
 
     /**
@@ -67,9 +67,8 @@ class ApiException extends \Exception
         // in case we have a response, we try to format it as a string
         if ($previous->hasResponse())
         {
-            $Response = $previous->getResponse();
-            $Body     = $Response->getBody();
-            $msg      = json_decode($Response->getBody());
+            $response = $previous->getResponse();
+            $msg      = json_decode($response->getBody());
         }
 
         // if body was empty, we need to return the exception message instead
@@ -93,8 +92,11 @@ class ApiException extends \Exception
      *
      * @todo add string sanitize
      */
-    public static function formatResponseOutput($body, $showErrorKey = true)
+    public static function formatResponseOutput($body, $params=[])
     {
+        $defaultParams = ['showErrorKey' => true];
+        $params        = array_merge($defaultParams, $params);
+
         // invalid error, it's a string, we handle the error
         if (is_string($body))
         {
@@ -113,7 +115,7 @@ class ApiException extends \Exception
         {
             // list of error fields with error messages
             $out .= '<p>';
-            if ($showErrorKey)
+            if ($params['showErrorKey'])
             {
                 $out .= $k . ' : ';
             }

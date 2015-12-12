@@ -32,8 +32,8 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      */
     public function quickMock()
     {
-        $h = call_user_func_array([$this, 'mockHandler'], func_get_args());
-        return $this->mockClient($h);
+        $handler = call_user_func_array([$this, 'mockHandler'], func_get_args());
+        return $this->mockClient($handler);
     }
 
     /**
@@ -95,13 +95,15 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * undocumented function
+     * Return the $ind body sent in the history
+     *
+     * @param int $ind indice
      *
      * @return void
      */
-    public function getSentBody($n)
+    public function getSentBody($ind)
     {
-        return $this->bodyHistory[$n];
+        return $this->bodyHistory[$ind];
     }
 
     public function getHistory()
@@ -119,34 +121,34 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         return $data;
     }
 
-    public function getHistoryRequest($i)
+    public function getHistoryRequest($ind)
     {
         $history = $this->getHistory();
-        return $history[$i]['request'];
+        return $history[$ind]['request'];
     }
 
-    public function getHistoryContent($i, $decode = true)
+    public function getHistoryContent($ind, $decode = true)
     {
-        $req = $this->getHistoryRequest($i);
+        $req = $this->getHistoryRequest($ind);
         $content = $req->getBody()->getContents();
         return $decode ? json_decode($content) : $content;
     }
 
-    public function assertCollection($e, $name = 'Generic')
+    public function assertCollection($ent, $name = 'Generic')
     {
         $name = '\Crunchmail\Collections\\' . $name . 'Collection';
-        $this->assertInstanceOf($name, $e);
+        $this->assertInstanceOf($name, $ent);
     }
 
-    public function assertResource($e, $name = 'Generic')
+    public function assertResource($ent, $name = 'Generic')
     {
         $name = '\Crunchmail\Resources\\' . $name . 'Resource';
-        $this->assertInstanceOf($name, $e);
+        $this->assertInstanceOf($name, $ent);
     }
 
-    public function assertEntity($e, $name = 'Generic')
+    public function assertEntity($ent, $name = 'Generic')
     {
         $name = '\Crunchmail\Entities\\' . $name . 'Entity';
-        $this->assertInstanceOf($name, $e);
+        $this->assertInstanceOf($name, $ent);
     }
 }

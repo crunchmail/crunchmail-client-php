@@ -44,9 +44,9 @@ class GenericCollection
       * @param array $config API configuration
       * @return object
      */
-    public function __construct(GenericResource $Resource, $data)
+    public function __construct(GenericResource $resource, $data)
     {
-        $this->resource = $Resource;
+        $this->resource = $resource;
         $this->response = $data;
         $this->setCollection();
     }

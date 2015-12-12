@@ -60,21 +60,21 @@ class MessageEntityTest extends TestCase
         $this->assertEquals('message_ok', $msg->getBody()->status);
     }
 
-    public function checkSentHistory($method, $i = 1, $reg = '#.*/messages/[0-9]+/$#')
+    public function checkSentHistory($method, $ind = 1, $reg = '#.*/messages/[0-9]+/$#')
     {
-        $req = $this->getHistoryRequest(1);
+        $req = $this->getHistoryRequest($ind);
         $this->assertEquals($method, $req->getMethod());
         $this->assertRegExp($reg, (string) $req->getUri());
     }
 
-    public function addRecipients($to)
+    public function addRecipients($recipients)
     {
         $client = $this->quickMock(
             ['message_ok'   , '200'],
             ['mail_push_ok' , '200']
         );
         $msg = $client->messages->get('http://fakeid');
-        return $msg->addRecipients($to);
+        return $msg->addRecipients($recipients);
     }
 
     /* ---------------------------------------------------------------------
@@ -132,10 +132,10 @@ class MessageEntityTest extends TestCase
      * @covers ::add
      * @dataProvider addEmailProvider
      */
-    public function testAddingValidEmailReturnsProperCount($to)
+    public function testAddingValidEmailReturnsProperCount($recipients)
     {
         // string
-        $res = $this->addRecipients($to);
+        $res = $this->addRecipients($recipients);
         $this->assertEquals(1, $res->success_count);
     }
 
@@ -143,18 +143,18 @@ class MessageEntityTest extends TestCase
      * @covers ::add
      * @dataProvider addEmailProvider
      */
-    public function testAddingRecipientSendExpectedParameters($to)
+    public function testAddingRecipientSendExpectedParameters($recipients)
     {
-        $this->addRecipients($to);
+        $this->addRecipients($recipients);
         $content = $this->getHistoryContent(1);
 
-        $to = is_array($to) ? $to : [$to];
+        $recipients = is_array($recipients) ? $recipients : [$recipients];
 
-        $this->assertCount(count($to), $content);
+        $this->assertCount(count($recipients), $content);
 
         foreach ($content as $k => $row)
         {
-            $this->assertEquals($to[$k], $row->to);
+            $this->assertEquals($recipients[$k], $row->to);
             $this->assertRegExp('#^https://.+/messages/[0-9]+/$#', $content[0]->message);
         }
     }
@@ -209,20 +209,18 @@ class MessageEntityTest extends TestCase
     }
 
     /**
-     * @depends testGet
      * @covers ::html
      */
-    public function testRetrievingHtmlContent($msg)
+    public function testRetrievingHtmlContent()
     {
         $result = $this->retrievePreview('html');
         $this->assertStringStartsWith('<!DOCTYPE html', (string) $result);
     }
 
     /**
-     * @depends testGet
      * @covers ::txt
      */
-    public function testRetrievingTxtContent($msg)
+    public function testRetrievingTxtContent()
     {
         $result = $this->retrievePreview('txt');
 
@@ -428,7 +426,7 @@ class MessageEntityTest extends TestCase
         $message = $client->messages->get('https://fake');
 
         $filepath= realpath(__DIR__ . '/../files/test.svg');
-        $result = $message->addAttachment($filepath);
+        $message->addAttachment($filepath);
     }
 
     /**
@@ -444,7 +442,7 @@ class MessageEntityTest extends TestCase
             ['attachment_error', '400']
         );
         $message = $client->messages->get('https://fake');
-        $result = $message->addAttachment('missing_file.svg');
+        $message->addAttachment('missing_file.svg');
     }
 
     /**
@@ -468,7 +466,7 @@ class MessageEntityTest extends TestCase
             $this->markTestSkipped('The unreadable file is missing or readable');
         }
 
-        $result = $message->addAttachment($filepath);
+        $message->addAttachment($filepath);
     }
 
     /**

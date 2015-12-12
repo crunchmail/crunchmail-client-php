@@ -141,6 +141,6 @@ class GenericEntityTest extends TestCase
      */
     public function testAccessingUnknowResourceThrowsAnExceptiion($entity)
     {
-        $resource = $entity->stupidresource;
+        $entity->stupidresource;
     }
 }
