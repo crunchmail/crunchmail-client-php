@@ -28,6 +28,8 @@ class MessagesResourceTest extends TestCase
     /**
      * @testdox Method post() throws an exception on invalid domain
      *
+     * @covers ::post
+     *
      * @expectedException Crunchmail\Exception\ApiException
      * @expectedExceptionCode 400
      */

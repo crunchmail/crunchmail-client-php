@@ -40,6 +40,8 @@ class GenericEntityTest extends TestCase
     /**
      * A simple test to use as dependencie when needing a message entity
      *
+     * @covers ::__construct
+     *
      * @return \Crunchmail\Entities\MessageEntity
      */
     public function testRetrivingAnEntity()
@@ -54,7 +56,6 @@ class GenericEntityTest extends TestCase
 
     /**
      * @covers ::__construct
-     * @covers \Crunchmail\Resources\GenericResource::__call
      * @dataProvider entitiesProvider
      */
     public function testAllEntitesCanBeRetrieve($path, $entityName, $tpl)
@@ -136,6 +137,7 @@ class GenericEntityTest extends TestCase
      * @depends testRetrivingAnEntity
      * @covers ::__construct
      * @covers ::__get
+     *
      * @expectedException RuntimeException
      * @expectedExceptionCode 0
      */

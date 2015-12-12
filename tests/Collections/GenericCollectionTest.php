@@ -63,7 +63,6 @@ class GenericCollectionTest extends TestCase
      * @covers ::next
      * @covers ::getAdjacent
      * @covers ::getResponse
-     * @covers \Crunchmail\Client::apiRequest
      *
      * @dataProvider directionProvider
      */
@@ -88,7 +87,6 @@ class GenericCollectionTest extends TestCase
      * @covers ::previous
      * @covers ::next
      * @covers ::getAdjacent
-     * @covers \Crunchmail\Client::apiRequest
      *
      * @dataProvider directionProvider
      */

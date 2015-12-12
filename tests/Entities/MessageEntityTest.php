@@ -377,7 +377,6 @@ class MessageEntityTest extends TestCase
 
     /**
      * @covers ::addAttachment
-     * @covers \Crunchmail\Entities\AttachmentEntity::__toString
      */
     public function testAddingAFile()
     {
@@ -407,16 +406,12 @@ class MessageEntityTest extends TestCase
 
     /**
      * @depends testAddingAFile
+     * @covers ::addAttachment
      */
     public function testAddingAttachmentReturnsAProperEntity($attachment)
     {
-
         // checking attachment
         $this->assertEntity($attachment);
-        $this->assertEquals($attachment->file, (string) $attachment);
-        $this->assertObjectHasAttribute('body', $attachment);
-        $this->assertObjectHasAttribute('file', $attachment->getBody());
-        $this->assertInternalType('string', $attachment->getBody()->file);
     }
 
     /**

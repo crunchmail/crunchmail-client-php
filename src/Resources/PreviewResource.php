@@ -22,7 +22,7 @@ class PreviewResource extends GenericResource
      * @example $message->preview->send($email)
      *
      * @param array $recipients list of recipients for the test
-     * @return \Crunchmail\Entity\GenericEntity
+     * @return Crunchmail\Entity\GenericEntity
      *
      * @fixme move somewhere else, resolve conflict
      */
