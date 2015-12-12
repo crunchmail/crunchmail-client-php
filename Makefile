@@ -1,4 +1,6 @@
 PU=./vendor/bin/phpunit
+PHPCS=./vendor/bin/phpcs
+PHPCBF=./vendor/bin/phpcbf
 
 help:
 	@echo "Use \`make <target>' where <target> is one of"
@@ -8,6 +10,8 @@ help:
 	@echo "  show-testdox 	run unit tests in testdox format"
 	@echo "  coverage 		generate code coverage report"
 	@echo "  show-coverage 	show code coverage report"
+	@echo "  phpcs			run phpcs to check PHP code"
+	@echo "  phpcbf			run phpcbf to fix PHP code"
 
 docs:
 	phpdoc -d src -t docs/phpdoc --force
@@ -26,3 +30,9 @@ coverage:
 
 show-coverage:
 	$(PU) --coverage-text
+
+phpcs:
+	$(PHPCS) --standard=ruleset.xml -v
+
+phpcbf:
+	$(PHPCBF) --standard=ruleset.xml -v
