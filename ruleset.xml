@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<ruleset name="Custom Standard">
+    <description>Crunchmail PHP Client coding standards</description>
+
+    <file>./src</file>
+    <file>./tests</file>
+
+    <rule ref="PSR2">
+        <exclude name="Squiz.ControlStructures.ControlSignature"/>
+        <exclude name="PSR2.Methods.FunctionCallSignature.Indent"/>
+        <exclude name="PSR2.Methods.FunctionCallSignature.MultipleArguments"/>
+    </rule>
+    <rule ref="Generic.ControlStructures.InlineControlStructure"/>
+
+</ruleset>
