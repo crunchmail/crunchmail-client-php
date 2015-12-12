@@ -51,6 +51,8 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      * Create a mocked handler
      *
      * @return void
+     *
+     * @SuppressWarnings(PHPMD)
      */
     public function mockHandler()
     {
@@ -127,6 +129,9 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         return $history[$ind]['request'];
     }
 
+    /**
+     * @SuppressWarnings(PHPMD)
+     */
     public function getHistoryContent($ind, $decode = true)
     {
         $req = $this->getHistoryRequest($ind);

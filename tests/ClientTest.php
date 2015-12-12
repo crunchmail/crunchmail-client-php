@@ -134,6 +134,8 @@ class ClientTest extends TestCase
      *
      * @expectedExceptionCode 0
      * @expectedException RuntimeException
+     *
+     * @SuppressWarnings(PHPMD)
      */
     public function testUnexpectedErrorsThrowsRuntimeException()
     {
