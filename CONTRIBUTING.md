@@ -33,6 +33,9 @@ Before submitting your changes, make sure to:
 - Add the proper phpdoc comments to your code.
 - Check the code coverage and _CRAP_ score.
 
+It is highly recommended to use the git hooks in hooks/ directory to run the
+test before each commit.
+
 Be sure to follow [this
 convention](https://github.com/erlang/otp/wiki/Writing-good-commit-messages)
 for your commit messages.
