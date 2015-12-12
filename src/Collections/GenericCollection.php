@@ -88,7 +88,7 @@ class GenericCollection
             }
 
             // add the new entity to collection
-            $this->collection[] = new $class($this->resource->client, $row);
+            $this->collection[] = new $class($this->resource, $row);
         }
     }
 

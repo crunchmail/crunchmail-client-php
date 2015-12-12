@@ -27,6 +27,7 @@ class MessageEntity extends \Crunchmail\Entities\GenericEntity
      * Return a human readable status from int status
      *
      * @param int $status
+     *
      * @return string
      *
      * @deprecated this should be handle by application
@@ -59,6 +60,7 @@ class MessageEntity extends \Crunchmail\Entities\GenericEntity
      * Add an attachment to the message
      *
      * @param string $path File path
+     *
      * @return stdClass
      */
     public function addAttachment($path)
@@ -75,7 +77,7 @@ class MessageEntity extends \Crunchmail\Entities\GenericEntity
 
         $body = fopen($path, 'r');
 
-        return $this->client->attachments->post([
+        return $this->resource->client->attachments->post([
             [
                 'name' => 'file',
                 'contents' => $body
@@ -91,6 +93,7 @@ class MessageEntity extends \Crunchmail\Entities\GenericEntity
      * Overwrite post for this resource, because of its special format
      *
      * @param mixed recipients, string or array
+     *
      * @return Crunchmail\Entity\RecipientEntity
      */
     public function addRecipients($recipients)

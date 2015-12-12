@@ -9,6 +9,7 @@
 namespace Crunchmail\Entities;
 
 use Crunchmail\Client;
+use Crunchmail\Resources\GenericResource;
 
 /**
  * Generic entity class
@@ -16,11 +17,11 @@ use Crunchmail\Client;
 class GenericEntity
 {
     /**
-     * Guzzle client object
+     * Caller resource
      *
      * @var object
      */
-    protected $client;
+    protected $resource;
 
     /**
      * Entity body
@@ -53,13 +54,14 @@ class GenericEntity
     /**
      * Create a new entity
      *
-     * @param Crunchmail\Client $Client api client
+     * @param Crunchmail\Resource\GenericResource $resource caller resource
      * @param stdClass $data entity data
+     *
      * @return Crunchmail\Entity\GenericEntity
      */
-    public function __construct(Client $client, \stdClass $data)
+    public function __construct(GenericResource $resource, $data)
     {
-        $this->client = $client;
+        $this->resource = $resource;
         return $this->body = $data;
     }
 
@@ -78,6 +80,7 @@ class GenericEntity
      *
      * @param string $name method name
      * @param array $args arguments
+     *
      * @return Crunchmail\Entity\GenericEntity
      */
     public function __call($name, $args)
@@ -90,7 +93,7 @@ class GenericEntity
             throw new \RuntimeException("Unknow method: $name");
         }
 
-        $result = call_user_func_array([$this->client, $name], $args);
+        $result = call_user_func_array([$this->resource->client, $name], $args);
 
         // transform the guzzle result
         return $this->toEntity($result);
@@ -102,10 +105,12 @@ class GenericEntity
      * Note that this technic could lead to conflict if a resource and a body
      * field have the same name
      *
-     * @example echo $message->title
-     * @example $arr = $message->recipients->current();
+     * Ex:
+     * echo $message->title
+     * $arr = $message->recipients->current();
      *
      * @param string $name resource name
+     *
      * @return mixed resource
      */
     public function __get($name)
@@ -124,7 +129,7 @@ class GenericEntity
         if (isset($this->body->_links->$map))
         {
             $url = $this->body->_links->$map->href;
-            return $this->client->createResource($name, $url, $this);
+            return $this->resource->client->createResource($name, $url, $this);
         }
 
         // shortcut to body fields, when no resource was found
@@ -140,10 +145,11 @@ class GenericEntity
      * Convert guzzle result to an entity, using current class
      *
      * @param object $result
+     *
      * @return mixed
      */
     private function toEntity($result)
     {
-        return new static($this->client, json_decode($result->getBody()));
+        return new static($this->resource, json_decode($result->getBody()));
     }
 }

@@ -132,11 +132,13 @@ class Client extends \GuzzleHttp\Client
      */
     public function createResource($name, $url = '')
     {
-        $className = '\\Crunchmail\\Resources\\' . ucfirst($name) . 'Resource';
+        // TODO: find a way to make namespace "use" works with this
+        $classPrefix = '\\Crunchmail\\Resources\\';
+        $className = $classPrefix . ucfirst($name) . 'Resource';
 
         if (!class_exists($className))
         {
-            $className = '\\Crunchmail\\Resources\\GenericResource';
+            $className = $classPrefix . 'GenericResource';
         }
 
         return new $className($this, $name, $url);
@@ -162,19 +164,19 @@ class Client extends \GuzzleHttp\Client
      */
     public function apiRequest($method, $url = '', $values = [], $filters = [], $format = 'json')
     {
+        $parse = parse_url($url);
+
+        // if url contains a query string, we have to merge it to avoid
+        // any conflict with filters
+        if (isset($parse['query']))
+        {
+            $query = $parse['query'];
+            parse_str($query, $output);
+            $filters = array_merge($filters, $output);
+        }
+
         try
         {
-            $parse = parse_url($url);
-
-            // if url contains a query string, we have to merge it to avoid
-            // any conflict with filters
-            if (isset($parse['query']))
-            {
-                $query = $parse['query'];
-                parse_str($query, $output);
-                $filters = array_merge($filters, $output);
-            }
-
             // making the guzzle call, json or multipart
             $result = $this->$method($url, [
                 $format => $values,

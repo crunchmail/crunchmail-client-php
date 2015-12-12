@@ -69,47 +69,10 @@ class GenericResource
     }
 
     /**
-     * Return a collection or a resource class name
-     *
-     * @param boolean $isCollection return a collection
-     * @return string
-     *
-     * @fixme autoload does not work with use Crunchmail\Path\Class
-     */
-    private function getResultClass($classPrefix)
-    {
-        // default: collections
-        $classPath    = $this->path;
-        $classType    = 'Collection';
-
-        // collection have a "results" field
-        if ('Entities' === $classPrefix)
-        {
-            if (empty(Client::$entities[$this->path]))
-            {
-                throw new \RuntimeException('Unknow entity for  ' .
-                    $this->path);
-            }
-
-            $classPath    = Client::$entities[$this->path];
-            $classType    = 'Entity';
-        }
-
-        $classPrefix  = '\\Crunchmail\\' . $classPrefix . '\\';
-        $className     = ucfirst($classPath) . $classType;
-
-        if (!class_exists($classPrefix . $className))
-        {
-            $className = 'Generic' . $classType;
-        }
-
-        return $classPrefix . $className;
-    }
-
-    /**
      * Transform url depending on context
      *
      * @param string url
+     *
      * @return string
      */
     private function prepareUrl($url = null)
@@ -134,26 +97,6 @@ class GenericResource
         }
 
         return $result;
-    }
-
-    /**
-     * Transform data into entity, depending on resource type
-     *
-     * @param stdClass $data
-     * @return mixed
-     */
-    private function dataToObject($data)
-    {
-        // collection have a "results" field
-        if (isset($data->results))
-        {
-            $class = $this->getResultClass('Collections');
-            return new $class($this, $data);
-        }
-
-        // entities otherwise
-        $class = $this->getResultClass('Entities');
-        return new $class($this->client, $data);
     }
 
     /**
@@ -199,13 +142,8 @@ class GenericResource
      *
      * @return mixed
      */
-    public function request($method, $url = null, $values = [], $format = 'json')
+    private function request($method, $url = null, $values = [], $format = 'json')
     {
-        if (!in_array($method, Client::$methods))
-        {
-            throw new \RuntimeException("Unknow method: $method");
-        }
-
         // handle different cases with url
         $url = $this->prepareUrl($url);
 
@@ -215,29 +153,97 @@ class GenericResource
             $method, $url, $values, $this->filters, $format
         );
 
-        // collection of entity or single entity
-        return $this->dataToObject($data);
+        // if the response has a results field, we create a collection
+        // otherwise we create an entity
+        $method = isset($data->results) ? 'getCollectionClass' : 'getEntityClass';
+        $class  = $this->$method();
+
+        return new $class($this, $data);
     }
 
     /**
-     * Catch get, post, put… methods
+     * Return the class name for collection, depending on resource path
      *
-     * @example $this->messages->post($values)
+     * @return string
+     */
+    private function getCollectionClass()
+    {
+        return $this->getClass($this->path, 'Collections', 'Collection');
+    }
+
+    /**
+     * Return the class name for the entity, depending on resource path
+     *
+     * @return string
+     */
+    private function getEntityClass()
+    {
+        if (empty(Client::$entities[$this->path]))
+        {
+            throw new \RuntimeException('Unknow entity for  ' . $this->path);
+        }
+
+        $path = Client::$entities[$this->path];
+        return $this->getClass($path, 'Entities', 'Entity');
+    }
+
+    /**
+     * Return the class name for the given type, group and suffix
+     *
+     * @param string $type          class type
+     * @param string $group         class group
+     * @param string $classSuffix   class suffix
+     *
+     * @return string
+     */
+    private function getClass($type, $classGroup, $classSuffix)
+    {
+        $classPrefix = '\\Crunchmail\\' . $classGroup . '\\';
+        $className   = ucfirst($type) . $classSuffix;
+
+        if (!class_exists($classPrefix . $className))
+        {
+            $className = 'Generic' . $classSuffix;
+        }
+
+        return $classPrefix . $className;
+    }
+
+    /**
+     * Get method is different that post, patch… because the first parameter
+     * is an url (or null)
+     *
+     * @param string $url resource url
+     *
+     * @return mixed
+     */
+    public function get($url = null)
+    {
+        return $this->request('get', $url);
+    }
+
+    /**
+     * Catch post, put… methods but no get
+     *
+     * Ex: $this->messages->post($values)
      *
      * @param string $name method name
      * @param array $args arguments
+     *
      * @return mixed
      */
-    public function __call($name, $args)
+    public function __call($method, $args)
     {
-        // get first parameter is different (forced url)
-        if ('get' !== $name)
+        if (!in_array($method, Client::$methods))
         {
-            array_unshift($args, null);
+            throw new \RuntimeException("Unknow method: $method");
         }
 
+        // null url
+        array_unshift($args, null);
+
         // method is the first parameter
-        array_unshift($args, $name);
+        array_unshift($args, $method);
 
         return call_user_func_array([$this, 'request'], $args);
     }
