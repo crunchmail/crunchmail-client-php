@@ -23,7 +23,6 @@ class DomainEntityTest extends TestCase
     {
         return [
             ['domains_ok', true],
-            ['domains_empty', false],
             ['domains_invalid_dkim', false],
             ['domains_invalid_mx', false]
         ];
