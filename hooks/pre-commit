@@ -6,7 +6,7 @@ $testSuite = 'tests';
 
 // Tell the commiter what the hook is doing
 echo PHP_EOL;
-echo 'Starting unit tests...'.PHP_EOL;
+echo 'Starting unit tests…'.PHP_EOL;
 
 // Execute project unit tests
 exec('phpunit '.$testSuite, $output, $returnCode);
@@ -28,7 +28,7 @@ if ($returnCode !== 0)
     echo $minimalTestSummary;
     echo chr(27).'[0m'.PHP_EOL; // disable colors and add a line break
     echo PHP_EOL;
-    echo 'Run "make test" for details' . PHP_EOL;
+    echo 'Run "make test" to see full report' . PHP_EOL;
     exit(1);
 }
 
