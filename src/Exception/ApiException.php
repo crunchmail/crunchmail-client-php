@@ -42,7 +42,7 @@ class ApiException extends \Exception
      * @param boolean $showErrorKey Show the key of each error
      * @return string
      */
-    public function toHtml($params=[])
+    public function toHtml($params = [])
     {
         $body = $this->getDetail();
 
@@ -92,7 +92,7 @@ class ApiException extends \Exception
      *
      * @todo add string sanitize
      */
-    public static function formatResponseOutput($body, $params=[])
+    public static function formatResponseOutput($body, $params = [])
     {
         $defaultParams = ['showErrorKey' => true];
         $params        = array_merge($defaultParams, $params);
