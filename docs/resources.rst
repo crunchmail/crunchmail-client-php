@@ -21,7 +21,12 @@ GET request
 :Summary: Send a ``GET`` request to the API using the current resource uri, or
           the uri given in parameter.
 :Parameters: ``String $uri`` : forced url
-:Return: Collection of Entities or Entitiy of the matching type
+:Return: Collection of entities or entity of the matching type
+
+.. code-block:: php
+
+    $collection = $client->messages->get();
+    $message = $client->messages->get($message_uri);
 
 
 PATCH request
@@ -34,6 +39,10 @@ PATCH request
     - ``String $format`` : multipart or json (default)
 :Return: Entity of the same type
 
+.. code-block:: php
+
+    $entity = $client->resource_name->patch($values);
+
 
 POST request
 ------------
@@ -44,6 +53,10 @@ POST request
     - ``Array  $values`` : associative array of values to post
     - ``String $format`` : multipart or json (default)
 :Return: Entity of the same type
+
+.. code-block:: php
+
+    $message = $client->messages->post($values);
 
 
 PUT request
@@ -62,8 +75,11 @@ DELETE Request
 
 :Method: ``delete()``
 :Summary: Send a DELETE request to the API to delete the current resource uri.
-:Note: Be very careful as you can delete several API resources using this
-       method!
+
+.. warning::
+
+    Be very careful as you can delete several API resources using this
+    method!
 
 
 Filtering the resource
