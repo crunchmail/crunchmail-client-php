@@ -3,6 +3,7 @@
 ## Testing
 
 To run the Test suite, you will need PHP 5.6+.
+This might work with lower versions but has not been tested.
 
     cd /path/to/project
     # run all tests
