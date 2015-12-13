@@ -33,7 +33,7 @@ GET request
 -----------
 
 :Method: ``get()``
-:Summary: send a ``GET`` request to the API using the current entity uri.
+:Summary: Send a ``GET`` request to the API using the current entity uri.
 :Return: Entity of the same type
 
 
@@ -41,7 +41,7 @@ PATCH request
 -------------
 
 :Method: ``patch()``
-:Summary: send a ``PATCH`` request to the API using the current entity uri.
+:Summary: Send a ``PATCH`` request to the API using the current entity uri.
 :Parameters:
     - ``Array  $values`` : associative array of values to post
     - ``String $format`` : multipart or json (default)
@@ -52,7 +52,7 @@ POST request
 ------------
 
 :Method: ``post()``
-:Summary: send a ``POST`` request to the API using the current entity uri.
+:Summary: Send a ``POST`` request to the API using the current entity uri.
 :Parameters:
     - ``Array  $values`` : associative array of values to post
     - ``String $format`` : multipart or json (default)
@@ -63,7 +63,7 @@ PUT request
 -----------
 
 :Method: ``put()``
-:Summary: send a ``PUT`` request to the API using the current entity uri.
+:Summary: Send a ``PUT`` request to the API using the current entity uri.
 :Parameters:
     - ``Array  $values`` : associative array of values to put
     - ``String $format`` : multipart or json (default)
@@ -74,7 +74,7 @@ DELETE Request
 --------------
 
 :Method: ``delete()``
-:Summary: send a DELETE request to the API to delete the current entity.
+:Summary: Send a DELETE request to the API to delete the current entity.
 
 
 MessageEntity
@@ -95,7 +95,7 @@ Sending a message
 -----------------
 
 :Method: ``send()``
-:Summary: ask the API to send the message using a ``PATCH`` request.
+:Summary: Ask the API to send the message using a ``PATCH`` request.
 :Return: MessageEntity
 
 .. code-block:: php
@@ -107,7 +107,7 @@ Adding recipients
 -----------------
 
 :Method: ``addRecipients($recipient)``
-:Summary: ask the API to add the recipient(s) to the list of message's
+:Summary: Ask the API to add the recipient(s) to the list of message's
           recipients.
 :Parameters:
     - ``Mixed $recipient`` either a string or an array of recipients
@@ -127,7 +127,7 @@ Adding an attachment
 --------------------
 
 :Method: ``addAttachment($filepath)``
-:Summary: adds the given attachement to the message.
+:Summary: Adds the given attachement to the message.
 :Parameters:
     - ``String $filepath`` path to the file
 :Returns: AttachmentEntity

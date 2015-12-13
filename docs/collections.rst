@@ -24,7 +24,7 @@ Get the number of total results
 
 :Method: ``count()``
 :Summary: Returns the total number of results, including other pages
-:Return: int
+:Return: Int
 
 .. code-block:: php
 
@@ -37,7 +37,7 @@ Get the number of pages
 
 :Method: ``pageCount()``
 :Summary: Returns the total number of pages
-:Return: int
+:Return: Int
 
 .. code-block:: php
 
