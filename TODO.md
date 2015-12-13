@@ -29,9 +29,7 @@
     $client->bounces->get()
     $message->bounces->get()
 
-- verify delete tests
-
-- unset(\$message->title) throws an error
+- unset(\$message->title) throws an error (magic method missing)
 - test raw requests
 
 
