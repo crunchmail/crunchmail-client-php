@@ -144,6 +144,10 @@ Preview HTML
 :Summary: Returns the message html content.
 :Returns: string
 
+.. code-block:: php
+
+    echo $message->html();
+
 .. note::
     A request will be made to the API, as it's a shortcut to the ``preview``
     sub-resource.
@@ -155,6 +159,10 @@ Preview text
 :Method: ``txt()``
 :Summary: Returns the message text content.
 :Returns: string
+
+.. code-block:: php
+
+    echo $message->txt();
 
 .. note::
     A request will be made to the API, as it's a shortcut to the ``preview``
@@ -168,6 +176,13 @@ Is the message ready?
 :Summary: Returns true if the message is ready to be sent, false otherwise.
 :Returns: boolean
 
+.. code-block:: php
+
+    if ($message->isReady())
+    {
+        // do something
+    }
+
 
 Has the message issues?
 -----------------------
@@ -175,6 +190,13 @@ Has the message issues?
 :Method: ``hasIssue()``
 :Summary: Returns true if the message has issues, false otherwise.
 :Returns: boolean
+
+.. code-block:: php
+
+    if ($message->hasIssue())
+    {
+        // do something
+    }
 
 
 Has the message been sent?
@@ -184,6 +206,12 @@ Has the message been sent?
 :Summary: Returns true if the message has been sent, false otherwise.
 :Returns: boolean
 
+.. code-block:: php
+
+    if ($message->hasBeenSent())
+    {
+        // do something
+    }
 
 Is the message being sent?
 --------------------------
@@ -191,6 +219,13 @@ Is the message being sent?
 :Method: ``isSending()``
 :Summary: Returns true if the message is currently sending, false otherwise.
 :Returns: boolean
+
+.. code-block:: php
+
+    if ($message->isSending())
+    {
+        // do something
+    }
 
 
 DomainEntity
