@@ -118,7 +118,9 @@ Adding recipients
     $message->addRecipients('hello@validdomain.td');
     $message->addRecipients(['hello@validdomain.td', 'second@otherdomain.td']);
 
-:Note: If one or several emails are invalid, the valid emails are still added.
+.. note::
+
+    If one or several emails are invalid, the valid emails are still added.
 
 
 Adding an attachment
@@ -142,6 +144,10 @@ Preview HTML
 :Summary: Returns the message html content.
 :Returns: string
 
+.. note::
+    A request will be made to the API, as it's a shortcut to the ``preview``
+    sub-resource.
+
 
 Preview text
 ------------
@@ -149,6 +155,10 @@ Preview text
 :Method: ``txt()``
 :Summary: Returns the message text content.
 :Returns: string
+
+.. note::
+    A request will be made to the API, as it's a shortcut to the ``preview``
+    sub-resource.
 
 
 Is the message ready?
