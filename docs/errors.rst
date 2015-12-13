@@ -3,11 +3,11 @@
 Error handling
 ==============
 
-The Crunchmail API Client simplify the exceptions that Guzzle will throw in
-different scenarios, and always throw an ApiException for API errors.
+The Crunchmail API Client simplifies the exceptions that Guzzle will throw in
+different scenarios, and always throws an ApiException for API errors.
 
 For other errors, the client will throw a RuntimeException most of the time.
-This will most likely happen when using the client in a wrong way.
+This will most likely happens when using the client in a wrong way.
 
 The ApiException Class
 ======================
@@ -16,7 +16,7 @@ Get error message
 -----------------
 
 :Method: ``getMessage()``
-:Summary: return the http error message sent by the API
+:Summary: Returns the error message sent by the API
 :Return: String
 
 .. code-block:: php
@@ -39,7 +39,7 @@ Get error code
 --------------
 
 :Method: ``getCode()``
-:Summary: return the http error code
+:Summary: Return the http error code
 :Return: String
 
 .. code-block:: php
@@ -58,7 +58,7 @@ Get detail about an error
 -------------------------
 
 :Method: ``getDetail()``
-:Summary: return details about the exception
+:Summary: Return details about the exception
 :Return: stdClass
 
 .. code-block:: php
@@ -77,7 +77,7 @@ Get debug output
 ----------------
 
 :Method: ``toHtml()``
-:Summary: return a debug string, in HTML format
+:Summary: Return a debug string, in HTML format
 :Return: String
 
 .. code-block:: php
