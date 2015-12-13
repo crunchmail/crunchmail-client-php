@@ -28,21 +28,21 @@ class GenericResource
      *
      * @var string
      */
-    protected $path;
+    protected $_path;
 
     /**
      * Forced url to resource
      *
      * @var string
      */
-    protected $url;
+    protected $_url;
 
     /**
      * Applied filters
      *
      * @var array
      */
-    private $filters = [];
+    private $_filters = [];
 
     /**
      * Instanciate a new resource
@@ -54,8 +54,8 @@ class GenericResource
     public function __construct($client, $path, $url = '')
     {
         $this->client = $client;
-        $this->path   = $path;
-        $this->url    = empty($url) ? $this->path . '/' : $url;
+        $this->_path   = $path;
+        $this->_url    = empty($url) ? $this->_path . '/' : $url;
     }
 
     /**
@@ -65,7 +65,7 @@ class GenericResource
      */
     public function getPath()
     {
-        return $this->path;
+        return $this->_path;
     }
 
     /**
@@ -79,7 +79,7 @@ class GenericResource
      */
     public function filter(array $filters)
     {
-        $this->filters = $filters;
+        $this->_filters = $filters;
         return $this;
     }
 
@@ -97,7 +97,7 @@ class GenericResource
             throw new \RuntimeException('Invalid page number');
         }
 
-        $this->filters['page'] = (int) $page;
+        $this->_filters['page'] = (int) $page;
         return $this->get();
     }
 
@@ -108,7 +108,7 @@ class GenericResource
      */
     public function getCollectionClass()
     {
-        return $this->getClass($this->path, 'Collections', 'Collection');
+        return $this->getClass($this->_path, 'Collections', 'Collection');
     }
 
     /**
@@ -118,12 +118,12 @@ class GenericResource
      */
     public function getEntityClass()
     {
-        if (empty(Client::$entities[$this->path]))
+        if (empty(Client::$entities[$this->_path]))
         {
-            throw new \RuntimeException('Unknow entity for  ' . $this->path);
+            throw new \RuntimeException('Unknow entity for  ' . $this->_path);
         }
 
-        $path = Client::$entities[$this->path];
+        $path = Client::$entities[$this->_path];
         return $this->getClass($path, 'Entities', 'Entity');
     }
 
@@ -166,12 +166,12 @@ class GenericResource
     public function request($method, $url = null, $values = [], $format = 'json')
     {
         // forced url, or resource url
-        $url = is_null($url) ? $this->url : $url;
+        $url = is_null($url) ? $this->_url : $url;
 
         // guzzle call to the api, including the applied filters
         // for the current collection
         $data = $this->client->apiRequest(
-            $method, $url, $values, $this->filters, $format
+            $method, $url, $values, $this->_filters, $format
         );
 
         // if the response has a results field, we create a collection
