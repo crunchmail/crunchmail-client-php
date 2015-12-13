@@ -23,6 +23,8 @@ The configuration uses the format used by Guzzle, so you use any of the
 parameter that Guzzle offers. Just be careful not to use parameters that would
 not be compatible with the Crunchmail API, like 'http_errors'.
 
+Example of Guzzle additionnal parameters:
+
 .. code-block:: php
 
     $config = array(
@@ -54,9 +56,9 @@ Raw Guzzle request
 
 You may need at one point to request the API directly, without the abstraction
 offered by the client. And it would be a shame to have to use another tool for
-that. Hopefully you can request directly the API via the Guzzle Client register
-in the Client. (in fact the Crunchmail PHP Client extends the Guzzle\Client
-class).
+that. Hopefully you can request directly the API via the Guzzle Client
+registered in the Client. (in fact the Crunchmail PHP Client extends the
+Guzzle\Client class).
 
 Be careful, as you will NOT get an entity or a collection, but a raw Guzzle
 object. See Guzzle documentation for more details about the parameters for each

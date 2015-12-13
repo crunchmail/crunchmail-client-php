@@ -12,7 +12,7 @@ page.
 Making a Request
 ================
 
-This library helps you send request to the crunchmail API.
+This library helps you send requests to the crunchmail API.
 
 
 Creating a Client
@@ -56,11 +56,15 @@ Magic properties will return a Resource object.
     // or sometimes special methods
     $messageResource = $client->messages;
 
-    // request GET /messages/, returns a MessageEntity object
-    $messageEntity = $client->messages->get();
+    // request GET /messages/, returns a collection object
+    $messageCollection = $client->messages->get();
 
-    // request GET /attachments/ returns a AttachmentEntity object
-    $attachmentEntity = $client->attachments->get();
+    // request GET $uri, returns an entity object
+    // $uri contains the url of a message
+    $messageEntity = $client->messages->get($uri);
+
+    // request GET /attachments/ returns a collection object
+    $attachmentCollection = $client->attachments->get();
 
     // request POST /messages/ (create a new message)
     $values = ['subject' => 'This is the subject'];
@@ -69,10 +73,11 @@ Magic properties will return a Resource object.
     // special methods allowed only on DomainsResource objects:
     $verifyBoolean = $client->domains->verify('hello@readthedocs.org');
 
+
 Using Resources
 ===============
 
-You can use resources to access the root of the corresponding resource :
+You can use resources to access the root path of the corresponding resource:
 
 .. code-block:: php
 
@@ -88,13 +93,13 @@ Or to directly access a resource when you know its id:
     $entity = $client->messages->get('https://api.crunchmail.net/messages/1234/');
 
 
-Resources can also be accesed from some entites who have sub-resources:
+Resources can also be access from some entities who have sub-resources:
 
     // get a message
     $message = $client->messages->get($uri);
 
     // all messages attachment
-    $collection = $messag->attachements->get();
+    $collection = $message->attachements->get();
 
 
 Using Entities

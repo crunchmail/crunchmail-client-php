@@ -17,7 +17,7 @@ Installation
 The easiest way to install crunchail-client-php is with
 `Composer <http://getcomposer.org>`_.
 
-After installing composer run the follownig command to install
+After installing composer run the following command to install
 crunchmail-client-php:
 
 .. code-block:: bash
