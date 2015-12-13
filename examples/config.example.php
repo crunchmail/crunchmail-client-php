@@ -12,7 +12,7 @@ $config = array(
     // for the testing, disable the SSL verification
     // don't do it in production!
     'verify' => false,
-    // Edit with your Murch API key
+    // Edit with your Munch API key
     'auth'        => array( 'api', 'my-super-secret-key' )
 );
 
