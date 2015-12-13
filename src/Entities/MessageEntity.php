@@ -20,7 +20,7 @@ class MessageEntity extends \Crunchmail\Entities\GenericEntity
      */
     public function __toString()
     {
-        return $this->body->name;
+        return $this->name;
     }
 
     /**
@@ -77,7 +77,7 @@ class MessageEntity extends \Crunchmail\Entities\GenericEntity
 
         $body = fopen($path, 'r');
 
-        return $this->resource->client->attachments->post([
+        return $this->_resource->client->attachments->post([
             [
                 'name' => 'file',
                 'contents' => $body

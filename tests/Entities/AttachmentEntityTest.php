@@ -42,7 +42,6 @@ class AttachmentEntityTest extends TestCase
      */
     public function testAttachmentAreProperlyFormed($attachment)
     {
-        $this->assertObjectHasAttribute('body', $attachment);
         $this->assertObjectHasAttribute('file', $attachment->getBody());
         $this->assertInternalType('string', $attachment->getBody()->file);
     }

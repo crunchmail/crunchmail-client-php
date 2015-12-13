@@ -32,21 +32,6 @@ class GenericResourceTest extends TestCase
     }
 
     /**
-     * Accessing a relative url is forbidden on resources
-     *
-     * @covers ::__call
-     * @covers ::request
-     *
-     * @expectedException \RuntimeException
-     * @expectedExceptionCode 0
-     */
-    public function testAccessingRelativeUrlThrowsAnException()
-    {
-        $cli = $this->quickMock(['message_ok', '200']);
-        $cli->messages->get('invalid');
-    }
-
-    /**
      * @covers ::__call
      * @covers ::request
      *
@@ -72,9 +57,9 @@ class GenericResourceTest extends TestCase
         $cli = $this->quickMock(['message_ok', '200']);
         $cli->messages->get($uri);
 
-        $history = $this->getHistory();
+        $req = $this->getHistoryRequest(0);
 
-        $this->assertEquals($uri, $history[0]['request']->getUri());
+        $this->assertEquals($uri, $req->getUri());
     }
 
     /**
@@ -98,9 +83,9 @@ class GenericResourceTest extends TestCase
 
         $res = $res->get();
 
-        $history = $this->getHistory();
+        $req = $this->getHistoryRequest(1);
 
-        $this->assertEquals($uri, $history[1]['request']->getUri());
+        $this->assertEquals($uri, $req->getUri());
     }
 
     /**
@@ -117,9 +102,7 @@ class GenericResourceTest extends TestCase
         $cli = $this->quickMock(['message_ok', '200']);
         $cli->messages->$method($values);
 
-        $history = $this->getHistory();
-        $content = $history[0]['request']->getBody()->getContents();
-        $content = json_decode($content);
+        $content = $this->getHistoryContent(0);
 
         $this->assertObjectHasAttribute('test', $content);
         $this->assertEquals($values['test'], $content->test);
@@ -144,8 +127,7 @@ class GenericResourceTest extends TestCase
         $cli = $this->quickMock(['message_ok', '200']);
         $cli->messages->$method($values, 'multipart');
 
-        $history = $this->getHistory();
-        $content = $history[0]['request']->getBody()->getContents();
+        $content = $this->getHistoryContent(0, false);
 
         $this->assertContains('fieldname', $content);
         $this->assertContains('fieldvalue', $content);
@@ -195,8 +177,7 @@ class GenericResourceTest extends TestCase
         $collection = $cli->messages->filter(['search' => 'fake'])->get();
         $collection->current();
 
-        $history = $this->getHistory();
-        $req = $history[0]['request'];
+        $req = $this->getHistorRequest();
 
         $this->assertEquals('search=fake', $req->getUri()->getQuery());
     }

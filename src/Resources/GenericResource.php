@@ -55,7 +55,7 @@ class GenericResource
     {
         $this->client = $client;
         $this->path   = $path;
-        $this->url    = $url;
+        $this->url    = empty($url) ? $this->path . '/' : $url;
     }
 
     /**
@@ -66,37 +66,6 @@ class GenericResource
     public function getPath()
     {
         return $this->path;
-    }
-
-    /**
-     * Transform url depending on context
-     *
-     * @param string url
-     *
-     * @return string
-     */
-    private function prepareUrl($url = null)
-    {
-        if (!is_null($url) && strpos($url, 'http') !== 0)
-        {
-            throw new \RuntimeException('Only absolute URI are allowed');
-        }
-
-        // default url is the relative path
-        $result = $this->path . '/';
-
-        // url was forced on call
-        if (!is_null($url))
-        {
-            $result = $url;
-        }
-        // url was predefined on construction as an absolute url
-        elseif (!empty($this->url))
-        {
-            $result = $this->url;
-        }
-
-        return $result;
     }
 
     /**
@@ -130,35 +99,6 @@ class GenericResource
 
         $this->filters['page'] = (int) $page;
         return $this->get();
-    }
-
-    /**
-     * Execute a client request and return an entity or a collection of
-     * entities
-     *
-     * @param string $method get, post, put…
-     * @param string $url forced url
-     * @param array $values data
-     *
-     * @return mixed
-     */
-    public function request($method, $url = null, $values = [], $format = 'json')
-    {
-        // handle different cases with url
-        $url = $this->prepareUrl($url);
-
-        // guzzle call to the api, including the applied filters
-        // for the current collection
-        $data = $this->client->apiRequest(
-            $method, $url, $values, $this->filters, $format
-        );
-
-        // if the response has a results field, we create a collection
-        // otherwise we create an entity
-        $method = isset($data->results) ? 'getCollectionClass' : 'getEntityClass';
-        $class  = $this->$method();
-
-        return new $class($this, $data);
     }
 
     /**
@@ -210,8 +150,68 @@ class GenericResource
     }
 
     /**
+     * Execute a client request and return an entity or a collection of
+     * entities
+     *
+     * @param string $method get, post, put…
+     * @param string $url forced url
+     * @param array $values data
+     *
+     * @return mixed
+     *
+     * message->get(url)
+     * message->put($values, 'multipart', url)
+     * message->post($values, $options=['url' => force, 'format' => 'json]so
+     */
+    public function request($method, $url = null, $values = [], $format = 'json')
+    {
+        // forced url, or resource url
+        $url = is_null($url) ? $this->url : $url;
+
+        // guzzle call to the api, including the applied filters
+        // for the current collection
+        $data = $this->client->apiRequest(
+            $method, $url, $values, $this->filters, $format
+        );
+
+        // if the response has a results field, we create a collection
+        // otherwise we create an entity
+        $method = isset($data->results) ? 'getCollectionClass' : 'getEntityClass';
+        $class  = $this->$method();
+
+        return new $class($this, $data);
+    }
+
+    /**
+     * Call the request() with the given method and arguments
+     *
+     * @param string $method method name
+     * @param array  $args   arguments (values, format)
+     * @param string $url    force url
+     *
+     * @return mixed
+     */
+    public function callRequest($method, $args, $url = null)
+    {
+        if (!in_array($method, Client::$methods))
+        {
+            throw new \RuntimeException("Unknow method: $method");
+        }
+
+        // url
+        array_unshift($args, $url);
+
+        // method is the first parameter
+        array_unshift($args, $method);
+
+        return call_user_func_array([$this, 'request'], $args);
+    }
+
+    /**
      * Get method is different that post, patch… because the first parameter
      * is an url (or null)
+     *
+     * Ex: $message->get($url);
      *
      * @param string $url resource url
      *
@@ -225,7 +225,8 @@ class GenericResource
     /**
      * Catch post, put… methods but no get
      *
-     * Ex: $this->messages->post($values)
+     * Ex: $cli->messages->post($values)
+     * Ex: $cli->messages->post($values, 'multipart')
      *
      * @param string $name method name
      * @param array $args arguments
@@ -234,17 +235,6 @@ class GenericResource
      */
     public function __call($method, $args)
     {
-        if (!in_array($method, Client::$methods))
-        {
-            throw new \RuntimeException("Unknow method: $method");
-        }
-
-        // null url
-        array_unshift($args, null);
-
-        // method is the first parameter
-        array_unshift($args, $method);
-
-        return call_user_func_array([$this, 'request'], $args);
+        return $this->callRequest($method, $args);
     }
 }

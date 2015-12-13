@@ -21,14 +21,14 @@ class GenericEntity
      *
      * @var object
      */
-    protected $resource;
+    protected $_resource;
 
     /**
      * Entity body
      *
      * @var stdClass
      */
-    protected $body;
+    protected $_body;
 
     /**
      * Links remapping
@@ -61,8 +61,8 @@ class GenericEntity
      */
     public function __construct(GenericResource $resource, $data)
     {
-        $this->resource = $resource;
-        return $this->body = $data;
+        $this->_resource = $resource;
+        $this->_body     = $data;
     }
 
     /**
@@ -72,7 +72,7 @@ class GenericEntity
      */
     public function getBody()
     {
-        return $this->body;
+        return $this->_body;
     }
 
     /**
@@ -85,16 +85,7 @@ class GenericEntity
      */
     public function __call($method, $args)
     {
-        if (!in_array($method, Client::$methods))
-        {
-            throw new \RuntimeException("Unknow method: $method");
-        }
-
-        // registered url is the first parameter
-        array_unshift($args, $this->url);
-        array_unshift($args, $method);
-
-        return call_user_func_array([$this->resource, 'request'], $args);
+        return $this->_resource->callRequest($method, $args, $this->url);
     }
 
     /**
@@ -113,29 +104,36 @@ class GenericEntity
      */
     public function __get($name)
     {
-        // access to collections
-        $map = isset(self::$links[$name]) ? self::$links[$name] : $name;
-
         // forbidden resource
-        if (in_array($map, self::$blacklistLinks))
+        if (in_array($name, self::$blacklistLinks))
         {
-            throw new \RuntimeException('Direct access to ' . $map . ' is
+            throw new \RuntimeException('Direct access to ' . $name . ' is
                 prohibited');
         }
 
         // a subresource was found, create and return it
-        if (isset($this->body->_links->$map))
+        if ($url = $this->getLink($name))
         {
-            $url = $this->body->_links->$map->href;
-            return $this->resource->client->createResource($name, $url);
+            // save it, no need to create a new one each time
+            $this->$name = $this->_resource->client->createResource($name, $url);
+            return $this->$name;
         }
 
         // shortcut to body fields, when no resource was found
-        if (property_exists($this->body, $name))
+        if (property_exists($this->_body, $name))
         {
-            return $this->body->$name;
+            return $this->_body->$name;
         }
 
         throw new \RuntimeException('Entity has no resource "' . $name . '"');
+    }
+
+    public function getLink($name)
+    {
+        // access to collections
+        $map = isset(self::$links[$name]) ? self::$links[$name] : $name;
+
+        return isset($this->_body->_links->$map) ?
+            $this->_body->_links->$map->href : false;
     }
 }

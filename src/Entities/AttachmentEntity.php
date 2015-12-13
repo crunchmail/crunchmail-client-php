@@ -20,6 +20,6 @@ class AttachmentEntity extends \Crunchmail\Entities\GenericEntity
      */
     public function __toString()
     {
-        return $this->body->file;
+        return $this->file;
     }
 }

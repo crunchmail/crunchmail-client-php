@@ -20,7 +20,7 @@ class DomainEntity extends GenericEntity
      */
     public function __toString()
     {
-        return $this->body->name;
+        return $this->name;
     }
 
     /**
