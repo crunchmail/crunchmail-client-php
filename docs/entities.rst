@@ -208,6 +208,8 @@ Searching for a domain
         $domain = $current[0];
     }
 
+Verifying  a domain
+--------------------
 
 :Method: ``verify($query)``
 :Summary: Verify the domain
