@@ -42,8 +42,8 @@ PATCH request
 :Method: ``patch()``
 :Summary: send a ``PATCH`` request to the API using the current entity uri.
 :Parameters:
-    - Array  $values : associative array of values to post
-    - String $format : multipart or json (default)
+    - ``Array  $values`` : associative array of values to post
+    - ``String $format`` : multipart or json (default)
 :Return: Entity of the same type
 
 
@@ -53,8 +53,8 @@ POST request
 :Method: ``post()``
 :Summary: send a ``POST`` request to the API using the current entity uri.
 :Parameters:
-    - Array  $values : associative array of values to post
-    - String $format : multipart or json (default)
+    - ``Array  $values`` : associative array of values to post
+    - ``String $format`` : multipart or json (default)
 :Return: Entity of the same type
 
 
@@ -64,8 +64,8 @@ PUT request
 :Method: ``put()``
 :Summary: send a ``PUT`` request to the API using the current entity uri.
 :Parameters:
-    - Array  $values : associative array of values to put
-    - String $format : multipart or json (default)
+    - ``Array  $values`` : associative array of values to put
+    - ``String $format`` : multipart or json (default)
 :Return: Entity of the same type
 
 
@@ -90,8 +90,8 @@ single object.
 It is also accessible in collections of messages (see Collections).
 
 
-Send a message
---------------
+Sending a message
+-----------------
 
 :Method: ``send()``
 :Summary: ask the API to send the message using a ``PATCH`` request.
@@ -109,7 +109,7 @@ Adding recipients
 :Summary: ask the API to add the recipient(s) to the list of message's
           recipients.
 :Parameters:
-    - mixed $recipient either a string or an array of recipients
+    - ``Mixed $recipient`` either a string or an array of recipients
 :Return: RecipientsCollection
 
 .. code-block:: php
@@ -126,7 +126,7 @@ Adding an attachment
 :Method: ``addAttachment($filepath)``
 :Summary: adds the given attachement to the message.
 :Parameters:
-    - string $filepath path to the file
+    - ``String $filepath`` path to the file
 :Returns: AttachmentEntity
 
 .. code-block:: php
@@ -142,8 +142,8 @@ Preview HTML
 :Returns: string
 
 
-Preview TXT
------------
+Preview text
+------------
 
 :Method: ``txt()``
 :Summary: Returns the message text content.
@@ -193,7 +193,7 @@ Searching for a domain
 :Method: ``search($query)``
 :Summary: Search for the domain
 :Parameters:
-    - string $query: search string
+    - ``String $query`` : search string
 :Returns: GenericCollection
 
 .. code-block:: php
@@ -212,7 +212,7 @@ Searching for a domain
 :Method: ``verify($query)``
 :Summary: Verify the domain
 :Parameters:
-    - string $query: search string
+    - ``String $query`` : search string
 :Returns: GenericCollection
 
 .. code-block:: php
