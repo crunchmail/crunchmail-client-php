@@ -95,6 +95,8 @@ Or to directly access a resource when you know its id:
 
 Resources can also be access from some entities who have sub-resources:
 
+.. code-block:: php
+
     // get a message
     $message = $client->messages->get($uri);
 
