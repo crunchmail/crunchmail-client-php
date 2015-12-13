@@ -1,30 +1,21 @@
 
 # Rethink
 
-
 - Exception system : RuntimeException vs Exception\ClientException
+- Add underscore to private properties to avoid conflicts
 
 # Missing
 
-- Domain validate ?
 - Domain revalidate
 
     $domain->revalidate()
 
 - Stats
 - Category stats
-- Archive => send content ?
+- Archives
 - Spam details
-- preview links test
-
 - More filter() tests
 - More request sent tests
-
-- Put on current object with current values:
-
-    $message->title = 'Hello';
-    $edit = $message->put();
-    $edit = $message->put($values);
 
 # Missing tests
 
@@ -41,8 +32,7 @@
 - verify delete tests
 
 - unset(\$message->title) throws an error
-- body protected ?
-- raw requests
+- test raw requests
 
 
 # fix
