@@ -83,20 +83,18 @@ class GenericEntity
      *
      * @return Crunchmail\Entity\GenericEntity
      */
-    public function __call($name, $args)
+    public function __call($method, $args)
     {
-        // registered url is the first parameter
-        array_unshift($args, $this->url);
-
-        if (!in_array($name, Client::$methods))
+        if (!in_array($method, Client::$methods))
         {
-            throw new \RuntimeException("Unknow method: $name");
+            throw new \RuntimeException("Unknow method: $method");
         }
 
-        $result = call_user_func_array([$this->resource->client, $name], $args);
+        // registered url is the first parameter
+        array_unshift($args, $this->url);
+        array_unshift($args, $method);
 
-        // transform the guzzle result
-        return $this->toEntity($result);
+        return call_user_func_array([$this->resource, 'request'], $args);
     }
 
     /**
@@ -121,7 +119,7 @@ class GenericEntity
         // forbidden resource
         if (in_array($map, self::$blacklistLinks))
         {
-            throw new \RuntimeException('Direct access to ' . $map . ' is 
+            throw new \RuntimeException('Direct access to ' . $map . ' is
                 prohibited');
         }
 
@@ -129,7 +127,7 @@ class GenericEntity
         if (isset($this->body->_links->$map))
         {
             $url = $this->body->_links->$map->href;
-            return $this->resource->client->createResource($name, $url, $this);
+            return $this->resource->client->createResource($name, $url);
         }
 
         // shortcut to body fields, when no resource was found
@@ -139,17 +137,5 @@ class GenericEntity
         }
 
         throw new \RuntimeException('Entity has no resource "' . $name . '"');
-    }
-
-    /**
-     * Convert guzzle result to an entity, using current class
-     *
-     * @param object $result
-     *
-     * @return mixed
-     */
-    private function toEntity($result)
-    {
-        return new static($this->resource, json_decode($result->getBody()));
     }
 }

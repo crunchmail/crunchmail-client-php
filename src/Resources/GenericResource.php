@@ -142,7 +142,7 @@ class GenericResource
      *
      * @return mixed
      */
-    private function request($method, $url = null, $values = [], $format = 'json')
+    public function request($method, $url = null, $values = [], $format = 'json')
     {
         // handle different cases with url
         $url = $this->prepareUrl($url);
