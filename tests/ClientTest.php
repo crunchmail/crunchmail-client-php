@@ -47,6 +47,19 @@ class ClientTest extends TestCase
         ];
     }
 
+    public function uriProvider()
+    {
+        return [
+            ['http://unsecure.url'],
+            ['https://secure.url'],
+            ['relative'],
+            ['/relative'],
+            ['/relative/'],
+            ['relative/'],
+            ['']
+        ];
+    }
+
     public function resourceProvider()
     {
         $list = [];
@@ -153,8 +166,7 @@ class ClientTest extends TestCase
      */
     public function testAbsoluteUriRequestReturnAValidObject()
     {
-        $handler = $this->mockHandler(['message_ok', '200']);
-        $client  = $this->mockClient($handler);
+        $client = $this->quickMock(['message_ok', 200]);
 
         $result = $client->apiRequest('get', 'https://fake');
 
@@ -163,14 +175,16 @@ class ClientTest extends TestCase
 
     /**
      * @covers ::apiRequest
+     * @dataProvider uriProvider
      */
-    public function testRelativeUriRequestReturnAValidObject()
+    public function testUrlAreSentProperly($uri)
     {
-        $handler = $this->mockHandler(['message_ok', '200']);
-        $client  = $this->mockClient($handler);
+        $client = $this->quickMock(['message_ok', 200]);
 
-        $result = $client->apiRequest('get', 'fake');
+        $result = $client->apiRequest('get', $uri);
 
+        $req = $this->getHistoryRequest(0);
+        $this->assertEquals((string) $req->getUri(), $uri);
         $this->assertInstanceOf('stdClass', $result);
     }
 
@@ -196,8 +210,7 @@ class ClientTest extends TestCase
      */
     public function testResponseErrorThrowsAnException($tpl, $code, $method)
     {
-        $handler = $this->mockHandler([$tpl, $code]);
-        $client  = $this->mockClient($handler);
+        $client = $this->quickMock([$tpl, $code]);
         $client->apiRequest($method, '/fake');
     }
 
@@ -209,8 +222,7 @@ class ClientTest extends TestCase
     {
         try
         {
-            $handler = $this->mockHandler([$tpl, $code]);
-            $client  = $this->mockClient($handler);
+            $client = $this->quickMock([$tpl, $code]);
             $client->apiRequest($method, '/fake');
         }
         catch (\Exception $e)

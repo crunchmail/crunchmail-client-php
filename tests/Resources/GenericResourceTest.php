@@ -177,9 +177,24 @@ class GenericResourceTest extends TestCase
         $collection = $cli->messages->filter(['search' => 'fake'])->get();
         $collection->current();
 
-        $req = $this->getHistorRequest();
+        $req = $this->getHistoryRequest(0);
 
         $this->assertEquals('search=fake', $req->getUri()->getQuery());
+    }
+
+    /**
+     * @covers ::filter
+     */
+    public function testEmptyFilter()
+    {
+        $cli = $this->quickMock(['messages', 200]);
+
+        $collection = $cli->messages->filter([])->get();
+        $collection->current();
+
+        $req = $this->getHistoryRequest(0);
+
+        $this->assertEquals('', $req->getUri()->getQuery());
     }
 
     /**
