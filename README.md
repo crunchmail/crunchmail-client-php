@@ -21,6 +21,12 @@ Then install:
 
     composer require crunchmail/crunchmail-client-php
 
+After installing, you need to require Composer's autoloader:
+
+```php
+    require 'vendor/autoload.php';
+```
+
 ## Manually
 
 If you wish to install the client manually, you will need to first install
