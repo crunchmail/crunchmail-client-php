@@ -14,6 +14,9 @@
 ini_set('display_errors', '1');
 error_reporting(E_ALL);
 
+use Crunchmail\Client;
+use Crunchmail\Exception\ApiException;
+
 // require composer deps
 require 'vendor/autoload.php';
 
@@ -22,17 +25,17 @@ require 'config.php';
 
 // a fake post
 $post = array(
-    'name'          => 'test',
-    'subject'       => 'test subject',
-    'sender_name'   => 'test sender',
-    'sender_email'  => 'sender@verifieddomain.fr',
+    'name'          => 'A subject for testing : crunch',
+    'subject'       => 'Crunch crunch!',
+    'sender_name'   => 'Bob Crunchmail',
+    'sender_email'  => $demo['sender'],
     'html'          => '<p>fantastic!</p>',
     'track_open'    => true,
     'track_clicks'  => true
 );
 
-// create a new client using the config
-$Client = new Crunchmail\Client($config);
+// post a new client using the config
+$cli = new Client($config);
 
 /******************************************************************************
  * WORKING EXAMPLES
@@ -51,81 +54,97 @@ if (empty($yourmail))
     throw new Exception('Please configure your email in <em>$youremail</em> var.');
 }
 
-$message = $Client->messages->create($post);
-$Client->messages->sendPreview($message->url, $yourmail);
+$msg = $cli->messages->post($post);
+//FIXME
+//$msg->sendPreview($msg->url, $yourmail);
 
 // Confirm sending
-$Client->mails->push($message->url, $yourmail);
-$Client->messages->sendMessage($message->url);
+$msg->addRecipients($yourmail);
+$msg->send();
 
 */
 
 echo '<h2>Messages</h2>';
 
-// create a message
-echo '<h3>Creating…</h3>';
-$message = $Client->messages->create($post);
-var_dump($message);
+try
+{
+    // post a message
+    echo '<h3>Creating…</h3>';
+
+    // create a message
+    $coolMsg = $cli->messages->post($post);
+}
+catch (ApiException $e)
+{
+    echo '<h2>Error</h2>';
+    var_dump($e->getDetail());
+    exit;
+}
 
 echo '<h3>Attachment…</h3>';
 // add an attachment to it
 $file = realpath(__DIR__ . '/test.png');
-$res = $Client->attachments->upload($message->url, $file);
-var_dump($res);
+// return an attachment entity
+$res = $coolMsg->addAttachment($file);
+var_dump($res->getBody());
 
 echo '<h3>Retrieve…</h3>';
-// retrieve a message
-$other = $Client->retrieve($message->url);
-var_dump($other);
+// retrieve a message from it's id
+$other = $cli->messages->get($coolMsg->url);
+echo "Subject is: " . $other->subject;
 
+// FIXME: api format correct?
+/*
 echo '<h3>Verify attachment is there:</h3>';
-$other = $Client->messages->getAttachments($message->url);
+$other = $msg->attachments->get();
 var_dump($other);
+var_dump($other->getBody());
+ */
 
 echo '<h3>Verify domain…</h3>';
 // verify a domain
-$verify = $Client->domains->verify('fakedomain.com');
+$verify = $cli->domains->verify('fakedomain.com');
 var_dump($verify);
-$verify = $Client->domains->verify('verifieddomain.fr');
+$verify = $cli->domains->verify('verifieddomain.fr');
 var_dump($verify);
 
 echo '<h3>Search domain…</h3>';
 // search a domain
-$search = $Client->domains->search('fakedomain.com');
-var_dump($search);
-$search = $Client->domains->search('verifieddomain.fr');
-var_dump($search[0]);
+$search = $cli->domains->search('fakedomain.com');
+var_dump($search->current());
+$search = $cli->domains->search($demo['sender']);
+var_dump($search->current()[0]->getBody());
 
 // add a recipient
+// if the result is empty, the domain is probably not configured
 echo '<h3>Add a recipient…</h3>';
-$adding = $Client->mails->push($message->url, 'tintin@moulinsart.fakeext');
-var_dump($adding);
+$adding = $coolMsg->addRecipients('tintin@' . $demo['domain']);
 
 // add several recipients
 $recipients = [
-    'milou@moulinsart.fakeext',
-    'archibald@moulinsart.fakeext',
+    'milou@' . $demo['domain'],
+    'archibald@' . $demo['domain'],
     'oops!'
     ];
 
 echo '<h3>Add several recipients…</h3>';
-$adding = $Client->mails->push($message->url, $recipients);
-var_dump($adding);
+$adding = $coolMsg->addRecipients($recipients);
 
 // retrieve message recipients
 echo '<h3>Retrieve recipients…</h3>';
-$recipients = $Client->mails->retrieve($message->_links->mails->href);
-var_dump($recipients);
+$recipients = $coolMsg->recipients->get();
+var_dump($recipients->current());
 
 // ready?
-if (Crunchmail\Messages::isReady($message))
+if ($coolMsg->isReady())
 {
     echo '<p><strong>Message is ready to be sent!</strong></p>';
 }
 
-echo '<h3>Delete message…</h3>';
-// delete it
-$Client->remove($message->url);
+echo "<h2>Other stuff…</h2>";
+var_dump($coolMsg->bounces->get()->current());
+var_dump($coolMsg->html());
+var_dump($coolMsg->txt());
 
 /******************************************************************************
  * ERRORS EXAMPLES
@@ -136,14 +155,14 @@ $Client->remove($message->url);
 echo '<h2>Error handling</h2>';
 
 echo '<h3>Creation error</h3>';
-// create a message with an invalid domain
+// post a message with an invalid domain
 try
 {
     $errPost = $post;
     $errPost['sender_email'] = '';
-    $Client->messages->create($errPost);
+    $cli->messages->post($errPost);
 }
-catch (Crunchmail\Exception\ApiException $e)
+catch (ApiException $e)
 {
     echo '<h4>Error <em>' . $e->getCode() . '</em></h4>';
     // this is for debug usage
@@ -159,18 +178,15 @@ catch (Exception $e)
     // do smth
 }
 
-/*
- * FIXME: API bugguée, format incorrect
- */
 echo '<h3>Creation error on domain</h3>';
-// create a message with an invalid domain
+// post a message with an invalid domain
 try
 {
     $errPost = $post;
     $errPost['sender_email'] = 'sender@fake.fakeext';
-    $Client->messages->create($errPost);
+    $cli->messages->post($errPost);
 }
-catch (Crunchmail\Exception\ApiException $e)
+catch (ApiException $e)
 {
     echo '<h4>Error <em>' . $e->getCode() . '</em></h4>';
     echo "<p>Message=" . htmlentities($e->getMessage()) . '</p>';
@@ -185,34 +201,32 @@ catch (RuntimeException $e)
 }
 
 echo '<h3>Retrieve error</h3>';
-// create a message with an invalid domain
+// post a message with an invalid domain
 try
 {
     // accessing an unknow resource
-    $other = $Client->retrieve('fake');
+    $other = $cli->invalid->get('fake');
 }
-catch (Crunchmail\Exception\ApiException $e)
+catch (ApiException $e)
 {
-    echo '<h4>Error <em>' . $e->getCode() . '</em></h4>';
-    echo "<p>Message=" . htmlentities($e->getMessage()) . '</p>';
-    // this is for debug usage
-    echo '<p>Html=</p>' . $e->toHtml();
+    echo '<h4>Error <em>' . htmlentities($e->getMessage()) . '</em></h4>';
 }
 
-// create a message with issues (html is empty)
+// post a message with issues (html is empty)
 echo '<h3>Creating a message without HTML…</h3>';
 $errPost = $post;
 $errPost['html'] = '';
-$message = $Client->messages->create($errPost);
-var_dump($message);
+$msg = $cli->messages->post($errPost);
+//var_dump($msg);
 
 // check status
-echo "<p>Status is : " . $message->status . '<p>';
+echo "<p>Status is : " . $msg->status . '<p>';
 echo "<p>isReady() returns : </p>";
-var_dump(Crunchmail\Messages::isReady($message));
+var_dump($msg->isReady());
 echo "<p>hasIssue() returns : </p>";
-var_dump(Crunchmail\Messages::hasIssue($message));
+var_dump($msg->hasIssue());
 
+$msg->delete();
 
 /******************************************************************************
  * OTHER EXAMPLES
@@ -220,19 +234,51 @@ var_dump(Crunchmail\Messages::hasIssue($message));
 
 // list of messages
 echo '<h2>List of messages</h2>';
-$list = $Client->messages->retrieve();
+$list = $cli->messages->get();
 
 echo '<ul>';
-foreach ($list->results as $email)
+foreach ($list->current() as $m)
 {
     echo '<li>';
-    echo '<h3>' . $email->name . '</h3>';
-    echo '<p class="cm-status">' . 
-        Crunchmail\Client::readableMessageStatus($email->status) . '</p>';
-    echo '<p>PREVIEW= ' . $Client->messages->getPreviewUrl($email->url) .
-        '</p>';
+    echo '<h3>' . $m->name . '</h3>';
+    echo '<p class="cm-status">' . $m->readableStatus() . '</p>';
     echo '</li>';
 }
 echo '</ul>';
 
+
+$page2 = $list->next();
+
+if (!is_null($page2))
+{
+    echo '<h2>List of messages, page 2</h2>';
+    echo '<ul>';
+    foreach ($page2->current() as $m)
+    {
+        echo '<li>';
+        echo '<h3>' . $m->name . '</h3>';
+        echo '<p class="cm-status">' . $m->readableStatus() . '</p>';
+        echo '</li>';
+    }
+    echo '</ul>';
+}
+
+// list of messages
+echo '<h2>List of filtered messages</h2>';
+$filter = [
+    'sender_email' => $demo['sender']
+];
+$list = $cli->messages->filter($filter)->get();
+
+echo '<ul>';
+foreach ($list->current() as $msg)
+{
+    echo '<li>';
+    echo '<h3>' . $msg->name . '</h3>';
+    echo '<p class="cm-status">' . $msg->readableStatus() . '</p>';
+    echo '</li>';
+}
+echo '</ul>';
+
+$coolMsg->delete();
 
