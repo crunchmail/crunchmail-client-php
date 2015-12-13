@@ -62,11 +62,11 @@ Getting the current values
     }
 
 
-Getting the next values
------------------------
+Getting the next set
+--------------------
 
 :Method: ``next()``
-:Summary: Request the next page and returns the collection.
+:Summary: Request the next page to the API and returns the collection.
 :Return: Array of entities matching the collection type, null if empty
 
 .. code-block:: php
@@ -75,11 +75,11 @@ Getting the next values
     $page2    = $messages->next();
 
 
-Getting the previous values
----------------------------
+Getting the previous set
+------------------------
 
 :Method: ``previous()``
-:Summary: Request the next page and returns the collection.
+:Summary: Request the next page to the API and returns the collection.
 :Return: Array of entities matching the collection type, null if empty
 
 .. code-block:: php
