@@ -132,6 +132,13 @@ class Client extends \GuzzleHttp\Client
         return new $className($this, $name, $url);
     }
 
+    /**
+     * Convert resource path if map is found, path otherwise
+     *
+     * @param string $path
+     *
+     * @return string
+     */
     public function mapPath($path)
     {
         return isset(self::$paths[$path]) ? self::$paths[$path] : $path;
@@ -181,6 +188,7 @@ class Client extends \GuzzleHttp\Client
             $this->catchGuzzleException($e);
         }
 
+        //echo $result->getBody() . PHP_EOL;
         return json_decode($result->getBody());
     }
 

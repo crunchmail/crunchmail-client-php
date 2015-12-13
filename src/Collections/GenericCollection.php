@@ -43,6 +43,7 @@ class GenericCollection
       * Initilialize the collection by populating the collection as an array of
       * entities
       *
+      * @param GenericResource $resource parent resource
       * @param array $config API configuration
       *
       * @return object

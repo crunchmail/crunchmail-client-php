@@ -54,7 +54,7 @@ class GenericEntity
     /**
      * Create a new entity
      *
-     * @param Crunchmail\Resource\GenericResource $resource caller resource
+     * @param GenericResource $resource caller resource
      * @param stdClass $data entity data
      *
      * @return Crunchmail\Entity\GenericEntity
@@ -130,6 +130,13 @@ class GenericEntity
         throw new \RuntimeException('Entity has no resource "' . $name . '"');
     }
 
+    /**
+     * Get the content of the links attribute, mapping the name first
+     *
+     * @param string $name name of the field
+     *
+     * @return string
+     */
     public function getLink($name)
     {
         // access to collections

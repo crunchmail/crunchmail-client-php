@@ -19,7 +19,7 @@ class GenericResource
     /**
      * The client object
      *
-     * @var Crunchmail\client
+     * @var Client
      */
     public $client;
 
@@ -47,7 +47,7 @@ class GenericResource
     /**
      * Instanciate a new resource
      *
-     * @param Crunchmail\Client               $client Client object
+     * @param Client               $client Client object
      * @param string                          $path resource path
      * @param string                          $url forced url
      */
@@ -155,7 +155,8 @@ class GenericResource
      *
      * @param string $method get, post, put…
      * @param string $url forced url
-     * @param array $values data
+     * @param array  $values data
+     * @param string $format json or multipart
      *
      * @return mixed
      *
