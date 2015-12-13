@@ -69,6 +69,34 @@ Magic properties will return a Resource object.
     // special methods allowed only on DomainsResource objects:
     $verifyBoolean = $client->domains->verify('hello@readthedocs.org');
 
+Using Resources
+===============
+
+You can use resources to access the root of the corresponding resource :
+
+.. code-block:: php
+
+    // all messages
+    $collection = $client->messages->get();
+
+
+Or to directly access a resource when you know its id:
+
+.. code-block:: php
+
+    // unique message by its url
+    $entity = $client->messages->get('https://api.crunchmail.net/messages/1234/');
+
+
+Resources can also be accesed from some entites who have sub-resources:
+
+    // get a message
+    $message = $client->messages->get($uri);
+
+    // all messages attachment
+    $collection = $messag->attachements->get();
+
+
 Using Entities
 ==============
 
