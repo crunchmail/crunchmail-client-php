@@ -39,7 +39,6 @@ class GenericCollectionTest extends TestCase
      * @covers ::current
      * @covers ::count
      * @covers ::pageCount
-     * @covers ::setCollection
      *
      * @todo test generic collection
      */

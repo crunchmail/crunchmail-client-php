@@ -229,4 +229,18 @@ class GenericResourceTest extends TestCase
         );
         $client->messages->page('error');
     }
+
+    /**
+     * @testdox Method post() throws an exception on invalid domain
+     *
+     * @covers ::__call
+     *
+     * @expectedException Crunchmail\Exception\ApiException
+     * @expectedExceptionCode 400
+     */
+    public function testCreateWithInvalidDomain()
+    {
+        $client = $this->quickMock(['domains_invalid_mx', '400']);
+        $client->messages->post([]);
+    }
 }

@@ -86,7 +86,6 @@ class GenericEntityTest extends TestCase
 
     /**
      * @covers ::__call
-     * @covers ::toEntity
      */
     public function testGetMethodsReturnsTheSameEntity()
     {
@@ -104,7 +103,6 @@ class GenericEntityTest extends TestCase
 
     /**
      * @covers ::__call
-     * @covers ::toEntity
      */
     public function testGetMethodActuallyRefreshTheEntity()
     {
@@ -123,7 +121,6 @@ class GenericEntityTest extends TestCase
     /**
      * @depends testRetrivingAnEntity
      * @covers ::__call
-     * @covers ::toEntity
      *
      * @expectedException RuntimeException
      * @expectedExceptionCode 0

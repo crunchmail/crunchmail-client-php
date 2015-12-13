@@ -129,7 +129,7 @@ class MessageEntityTest extends TestCase
     /**
      * Test adding a proper recipient
      *
-     * @covers ::add
+     * @covers ::addRecipients
      * @dataProvider addEmailProvider
      */
     public function testAddingValidEmailReturnsProperCount($recipients)
@@ -140,7 +140,7 @@ class MessageEntityTest extends TestCase
     }
 
     /**
-     * @covers ::add
+     * @covers ::addRecipients
      * @dataProvider addEmailProvider
      */
     public function testAddingRecipientSendExpectedParameters($recipients)
