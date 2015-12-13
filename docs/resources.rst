@@ -94,7 +94,8 @@ Filtering the resource
 
 .. code-block:: php
 
-    $client->messages->filter(['sender_name' => 'tintin@crunchmail.net']);
+    $resource = $client->messages->filter(['sender_name' => 'tintin@crunchmail.net']);
+    $collection = $resource->get();
 
 
 Direct acces to a page
