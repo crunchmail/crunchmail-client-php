@@ -224,20 +224,6 @@ class GenericResourceTest extends TestCase
     }
 
     /**
-     * @covers ::page
-     *
-     * @expectedExceptionCode 0
-     * @expectedException \RuntimeException
-     */
-    public function testAccessingAnInvalidPageThrowsAnException()
-    {
-        $client = $this->quickMock(
-            ['messages', 200]
-        );
-        $client->messages->page('error');
-    }
-
-    /**
      * @testdox Method post() throws an exception on invalid domain
      *
      * @covers ::__call

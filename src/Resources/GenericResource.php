@@ -92,11 +92,6 @@ class GenericResource
      */
     public function page($page)
     {
-        if (!is_numeric($page) || $page < 0)
-        {
-            throw new \RuntimeException('Invalid page number');
-        }
-
         $this->_filters['page'] = (int) $page;
         return $this->get();
     }
