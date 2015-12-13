@@ -63,6 +63,17 @@ class GenericResourceTest extends TestCase
     }
 
     /**
+     * @covers ::__call
+     */
+    public function testAddingAMessage()
+    {
+        $cli = $this->quickMock(['message_ok', '200']);
+        $msg = $cli->messages->post([]);
+        $this->assertEntity($msg, 'Message');
+    }
+
+
+    /**
      * When creating a sub-resource, we need te be able to force the url
      * of the new resource
      *

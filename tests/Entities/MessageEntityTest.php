@@ -55,7 +55,7 @@ class MessageEntityTest extends TestCase
     public function checkMessage($msg)
     {
         $this->assertEntity($msg, 'Message');
-        $this->assertObjectHasAttribute('_links', $msg->getBody());
+        $this->assertObjectNotHasAttribute('_links', $msg->getBody());
         $this->assertInternalType('boolean', $msg->getBody()->track_clicks);
         $this->assertEquals('message_ok', $msg->getBody()->status);
     }
@@ -137,6 +137,7 @@ class MessageEntityTest extends TestCase
         // string
         $res = $this->addRecipients($recipients);
         $this->assertEquals(1, $res->success_count);
+        $this->assertEntity($res, 'Recipient');
     }
 
     /**

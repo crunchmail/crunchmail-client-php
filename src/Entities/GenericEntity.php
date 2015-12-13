@@ -72,7 +72,9 @@ class GenericEntity
      */
     public function getBody()
     {
-        return $this->_body;
+        $copy = clone $this->_body;
+        unset($copy->_links);
+        return $copy;
     }
 
     /**

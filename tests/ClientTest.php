@@ -116,14 +116,14 @@ class ClientTest extends TestCase
      * @depends testEmptyClientReturnsAResponse
      * @covers ::__get
      *
-     * @expectedException RuntimeException
-     * @expectedExceptionCode 0
+     * @expectedException Crunchmail\Exception\ApiException
+     * @expectedExceptionCode 404
      */
     public function testAccessingAnUnknowResourceThrowsAnException()
     {
-        $handler = $this->mockHandler(['empty', '200']);
+        $handler = $this->mockHandler(['empty', '404']);
         $client  = $this->mockClient($handler);
-        $client->invalid->test = 1;
+        $client->invalid->get();
     }
 
     /**
@@ -232,4 +232,14 @@ class ClientTest extends TestCase
         }
         $this->fail('An expected exception has not been raised');
     }
+
+    public function testThatMappedPathWork()
+    {
+        $cli = $this->quickMock(['message_ok', 200]);
+        $resource = $cli->recipients->get();
+
+        $req = $this->getHistoryRequest(0);
+        $this->assertEquals('mails/', (string) $req->getUri());
+    }
+
 }

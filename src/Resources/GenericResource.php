@@ -55,7 +55,7 @@ class GenericResource
     {
         $this->client = $client;
         $this->_path   = $path;
-        $this->_url    = empty($url) ? $this->_path . '/' : $url;
+        $this->_url    = empty($url) ? $this->client->mapPath($path) . '/' : $url;
     }
 
     /**

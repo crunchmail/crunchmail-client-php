@@ -32,15 +32,8 @@ class Client extends \GuzzleHttp\Client
      * @var array
      */
     public static $paths = [
-        'messages'    => 'messages',
-        "customers"   => 'customers',
-        'domains'     => 'domains',
-        "categories"  => 'categories',
         'recipients'  => 'mails',
-        "bounces"     => 'bounces',
-        'attachments' => 'attachments',
-        "optouts"     => 'opt-outs',
-        "users"       => 'users'
+        "optouts"     => 'opt-outs'
     ];
 
     /**
@@ -108,11 +101,6 @@ class Client extends \GuzzleHttp\Client
      */
     public function __get($name)
     {
-        if (!in_array($name, array_keys(self::$paths)))
-        {
-            throw new \RuntimeException('Unknow path: ' . $name);
-        }
-
         return $this->createResource($name);
     }
 
@@ -142,6 +130,11 @@ class Client extends \GuzzleHttp\Client
         }
 
         return new $className($this, $name, $url);
+    }
+
+    public function mapPath($path)
+    {
+        return isset(self::$paths[$path]) ? self::$paths[$path] : $path;
     }
 
     /**

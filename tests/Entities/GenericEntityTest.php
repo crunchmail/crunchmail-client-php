@@ -33,6 +33,16 @@ class GenericEntityTest extends TestCase
         ];
     }
 
+    public function methodProvider()
+    {
+        return [
+            ['get'],
+            ['post'],
+            ['put'],
+            ['patch']
+        ];
+    }
+
     /* ---------------------------------------------------------------------
      * Tests
      * --------------------------------------------------------------------- */
@@ -141,5 +151,24 @@ class GenericEntityTest extends TestCase
     public function testAccessingUnknowResourceThrowsAnExceptiion($entity)
     {
         $entity->stupidresource;
+    }
+
+    /**
+     * @covers ::__call
+     * @dataProvider methodProvider
+     */
+    public function testAllMethodSendTheProperMethod($method)
+    {
+        $cli = $this->quickMock(
+            ['message_ok', 200],
+            ['message_ok', 200]
+        );
+        $msg = $cli->messages->get('https://fake');
+
+        $msg->$method();
+
+        $req = $this->getHistoryRequest(1);
+        $this->assertEquals(strtoupper($method), (string) $req->getMethod());
+        $this->assertEquals($msg->url, (string) $req->getUri());
     }
 }

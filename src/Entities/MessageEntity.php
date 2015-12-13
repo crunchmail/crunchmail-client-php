@@ -110,10 +110,10 @@ class MessageEntity extends \Crunchmail\Entities\GenericEntity
             $format[] = [
                 'to'        => $mail,
                 'message'   => $this->url
-                ];
+            ];
         }
 
-        return $this->recipients->post($format);
+        return $this->_resource->client->recipients->post($format);
     }
 
     /**
