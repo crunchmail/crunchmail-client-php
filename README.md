@@ -15,9 +15,8 @@ This API is **under development**. Do not use in production!
 
 Crunchmail-client uses [composer](https://getcomposer.org/).
 
-First [install composer](https://getcomposer.org/doc/00-intro.md) if needed.
-
-Then install:
+First [install composer](https://getcomposer.org/doc/00-intro.md) if needed,
+then install crunchmail-php-client into your project directory:
 
     composer require crunchmail/crunchmail-client-php
 
