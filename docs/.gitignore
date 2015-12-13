@@ -1,6 +1,3 @@
 # Ignore everything in this directory
-*
 # Except this files/dirs
 !.gitignore
-!coverage
-!phpdocs

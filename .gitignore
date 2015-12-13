@@ -1,5 +1,6 @@
 vendor/**
 composer.phar
 examples/config.php
+reports/*
 *.swp
 *.log

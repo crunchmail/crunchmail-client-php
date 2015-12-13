@@ -5,9 +5,9 @@ PHPMD=./vendor/bin/phpmd
 
 help:
 	@echo "Use \`make <target>' where <target> is one of"
-	@echo "  docs 			build the documentation in docs/coverage/"
+	@echo "  docs 			build the documentation in reports/coverage/"
 	@echo "  test 			run unit tests"
-	@echo "  testdox 		gerenate testdox report in docs/"
+	@echo "  testdox 		gerenate testdox report in reports/"
 	@echo "  show-testdox 	run unit tests in testdox format"
 	@echo "  coverage 		generate code coverage report"
 	@echo "  show-coverage 	show code coverage report"
@@ -16,7 +16,7 @@ help:
 	@echo "  phpmd			run phpmd to check PHP code"
 
 docs:
-	phpdoc -d src -t docs/phpdoc --force
+	phpdoc -d src -t reports/phpdoc --force
 
 test:
 	$(PU)
@@ -25,10 +25,10 @@ show-testdox:
 	$(PU) --testdox
 
 testdox:
-	$(PU) --testdox-text docs/agile-doc.txt
+	$(PU) --testdox-text reports/agile-doc.txt
 
 coverage:
-	$(PU) --coverage-html docs/coverage
+	$(PU) --coverage-html reports/coverage
 
 show-coverage:
 	$(PU) --coverage-text
