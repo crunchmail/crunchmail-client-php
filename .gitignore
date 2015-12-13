@@ -1,4 +1,5 @@
 vendor/**
+docs/_build
 composer.phar
 examples/config.php
 reports/*
