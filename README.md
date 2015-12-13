@@ -32,6 +32,12 @@ autoload for you in that case.
 
 See [example script](./examples/index.php) to see how to use the API.
 
+
+# Documentation
+
+[Crunchmail PHP Client documentation](http://crunchmail-api-php-client.readthedocs.org/en/latest/)
+
+
 # Contributing
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md).
