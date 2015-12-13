@@ -19,9 +19,10 @@ Creating a simple client is very easy:
     $client = new Client($config);
 
 
-The configuration uses the format used by Guzzle, so you use any of the
-parameter that Guzzle offers. Just be careful not to use parameters that would
-not be compatible with the Crunchmail API, like 'http_errors'.
+The configuration uses the format used by
+`Guzzle <https://github.com/guzzle/guzzle>`_, so you use any of the parameter
+that Guzzle offers. Just be careful not to use parameters that would not be
+compatible with the Crunchmail API, like 'http_errors'.
 
 Example of Guzzle additionnal parameters:
 
@@ -61,8 +62,8 @@ registered in the Client. (in fact the Crunchmail PHP Client extends the
 Guzzle\Client class).
 
 Be careful, as you will NOT get an entity or a collection, but a raw Guzzle
-object. See Guzzle documentation for more details about the parameters for each
-methods.
+object. See `Guzzle documentation <http://docs.guzzlephp.org/en/latest/>`_ for
+more details about the parameters for each methods.
 
 .. code-block:: php
 
