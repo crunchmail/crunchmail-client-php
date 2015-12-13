@@ -40,16 +40,25 @@ class GenericCollection
     private $response;
 
     /**
-      * Initilialize the collection
+      * Initilialize the collection by populating the collection as an array of
+      * entities
       *
       * @param array $config API configuration
+      *
       * @return object
      */
     public function __construct(GenericResource $resource, $data)
     {
         $this->resource = $resource;
         $this->response = $data;
-        $this->setCollection();
+
+        $class = $this->resource->getEntityClass();
+
+        foreach ($this->response->results as $row)
+        {
+            // add the new entity to collection
+            $this->collection[] = new $class($this->resource, $row);
+        }
     }
 
     /**
@@ -60,36 +69,6 @@ class GenericCollection
     public function getResponse()
     {
         return $this->response;
-    }
-
-    /**
-     * Populate the collection as an array of entities
-     */
-    private function setCollection()
-    {
-        // mapping collection name to entity name
-        $map = Client::$entities;
-
-        foreach ($this->response->results as $row)
-        {
-            $class = '';
-
-            // this resource has a mapping
-            if (isset($map[$this->resource->getPath()]))
-            {
-                $name = $map[$this->resource->getPath()];
-                $class = '\\Crunchmail\\Entities\\' . ucfirst($name) . 'Entity';
-            }
-
-            // class as not been found, use generic class
-            if (empty($class) || !class_exists($class))
-            {
-                $class = '\\Crunchmail\\Entities\\GenericEntity';
-            }
-
-            // add the new entity to collection
-            $this->collection[] = new $class($this->resource, $row);
-        }
     }
 
     /**
@@ -146,6 +125,7 @@ class GenericCollection
      * Return next or previous page
      *
      * @param string $direction next or previous
+     *
      * @return Crunchmail\Collections\GenericCollection
      */
     public function getAdjacent($direction)

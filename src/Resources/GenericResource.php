@@ -166,7 +166,7 @@ class GenericResource
      *
      * @return string
      */
-    private function getCollectionClass()
+    public function getCollectionClass()
     {
         return $this->getClass($this->path, 'Collections', 'Collection');
     }
@@ -176,7 +176,7 @@ class GenericResource
      *
      * @return string
      */
-    private function getEntityClass()
+    public function getEntityClass()
     {
         if (empty(Client::$entities[$this->path]))
         {
