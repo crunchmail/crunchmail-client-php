@@ -33,13 +33,14 @@ Creating a Client
     $client = new Client($config);
 
 The client constructor accepts an associative array of options that match the
-guzzle format. See Guzzle documentation.
+Guzzle format. See Guzzle documentation.
 
 
 Sending Requests
 ----------------
 
-The client allow you to quickly request the API by abstracting the REST logic.
+The client allow you to quickly request the API by abstracting the REST logic
+as well as some of the API specific logic.
 
 All of the client request methods will return you one of this 2 types of object:
 
@@ -68,6 +69,9 @@ Magic properties will return a Resource object.
     // special methods allowed only on DomainsResource objects:
     $verifyBoolean = $client->domains->verify('hello@readthedocs.org');
 
+Using Entities
+==============
+
 You can use the entities objects to handle the corresponding API resource:
 
 .. code-block:: php
@@ -76,9 +80,15 @@ You can use the entities objects to handle the corresponding API resource:
     $values = ['subject' => 'This is the subject'];
     $message->put($values);
 
+    $message->addRecipient('ilove@readthedocs.org');
+    $message->addAttachment('/path/to/a/cat/picture.jpg');
+
     // request DELETE /messages/123/
     $message->delete();
 
+
+Using Collections
+=================
 
 You can use the collections to browse the result of a request and easily
 navigate to previous and next page:
@@ -98,9 +108,12 @@ navigate to previous and next page:
     }
 
 
+Handling errors
+===============
+
 In the previous examples, you may have notice that we do not handle errors, and
-of course we should! Crunchmail PHP client simplify the errors send by guzzle
-in an unique exception of type Crunmchail\Exception\ApiException.
+of course we should! Crunchmail PHP client simplifies the errors send by guzzle
+in an unique exception of type `Crunchmail\Exception\ApiException`.
 
 .. code-block:: php
 
@@ -115,6 +128,9 @@ in an unique exception of type Crunmchail\Exception\ApiException.
         echo 'Error: ' . htmlentities($e->getMessage());
         var_dump($e->getDetail());
     }
+
+Filtering resources
+===================
 
 One common operation is also to filter the resource, which is also easy with
 the client, using the filter() method on the resource :
