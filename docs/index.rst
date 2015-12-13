@@ -37,4 +37,5 @@ User Guide
     resources
     collections
     entities
+    errors
     faq
