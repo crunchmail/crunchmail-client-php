@@ -136,6 +136,23 @@ Adding an attachment
 
     $message->addAttachment('/path/to/my/file.jpg');
 
+Sending the preview
+-------------------
+
+:Method: ``previewSend($recipients)``
+:Summary: Send the preview to the recipient(s)
+:Parameters:
+    - ``mixed$recipients`` string or array of recipients
+:Returns: GenericEntitiy
+
+.. code-block:: php
+
+    $message->previewSend('ilove@crunchmail.net');
+
+.. note::
+
+    This is a shortcut to $message->preview_send->send() method.
+
 
 Preview HTML
 ------------
