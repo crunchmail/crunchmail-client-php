@@ -47,15 +47,15 @@ class GenericResource
     /**
      * Instanciate a new resource
      *
-     * @param Client               $client Client object
-     * @param string                          $path resource path
-     * @param string                          $url forced url
+     * @param Client $client Client object
+     * @param string $path resource path
+     * @param string $url forced url
      */
-    public function __construct($client, $path, $url = '')
+    public function __construct(Client $client, $path, $url = '')
     {
         $this->client = $client;
-        $this->_path   = $path;
-        $this->_url    = empty($url) ? $this->client->mapPath($path) . '/' : $url;
+        $this->_path  = $path;
+        $this->_url   = empty($url) ? $this->client->mapPath($path) . '/' : $url;
     }
 
     /**

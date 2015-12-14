@@ -13,6 +13,8 @@ namespace Crunchmail\Tests;
 
 use Crunchmail;
 
+use Crunchmail\Entities\GenericEntity;
+
 /**
  * Test class
  *
@@ -24,14 +26,6 @@ class GenericEntityTest extends TestCase
     /* ---------------------------------------------------------------------
      * Providers
      * --------------------------------------------------------------------- */
-
-    public function entitiesProvider()
-    {
-        return [
-            ['messages',    'Message',    'message_ok'],
-            ['attachments', 'Attachment', 'attachment_ok']
-        ];
-    }
 
     public function methodProvider()
     {
@@ -48,44 +42,29 @@ class GenericEntityTest extends TestCase
      * --------------------------------------------------------------------- */
 
     /**
-     * A simple test to use as dependencie when needing a message entity
-     *
      * @covers ::__construct
-     *
-     * @return \Crunchmail\Entities\MessageEntity
      */
     public function testRetrivingAnEntity()
     {
-        $handler = $this->mockHandler(['message_ok', '200']);
-        $client  = $this->mockClient($handler);
-        $entity = $client->messages->get('https://fake');
+        $cli  = $this->quickMock();
+        $data = $this->getStdTemplate('message_error');
+        $entity = new GenericEntity($cli->messages, $data);
 
-        $this->assertEntity($entity, 'Message');
+        $this->assertEntity($entity);
+
         return $entity;
     }
 
     /**
      * @covers ::__construct
-     * @dataProvider entitiesProvider
-     */
-    public function testAllEntitesCanBeRetrieve($path, $entityName, $tpl)
-    {
-        $handler = $this->mockHandler([$tpl, '200']);
-        $client  = $this->mockClient($handler);
-
-        $entity  = $client->$path->get('https://fake');
-
-        $this->assertEntity($entity, $entityName);
-    }
-
-    /**
-     * @depends testRetrivingAnEntity
-     * @covers ::__construct
      * @covers ::__get
      * @covers ::getBody
      */
-    public function testEntityFieldsCanBeAccessed($entity)
+    public function testEntityFieldsCanBeAccessed()
     {
+        $data   = $this->getStdTemplate('message_ok');
+        $entity = new GenericEntity($this->quickMock()->messages, $data);
+
         $this->assertInstanceOf('stdClass', $entity->getBody());
 
         foreach ((array) $entity->getBody() as $k => $v)
@@ -99,16 +78,13 @@ class GenericEntityTest extends TestCase
      */
     public function testGetMethodsReturnsTheSameEntity()
     {
-        $handler = $this->mockHandler(
-            ['message_ok', '200'],
-            ['message_ok', '200']
-        );
-        $client  = $this->mockClient($handler);
+        $cli  = $this->quickMock(['message_ok', '200']);
+        $data = $this->getStdTemplate('message_ok');
+        $entity = new GenericEntity($cli->messages, $data);
 
-        $entity = $client->messages->get('https://fake');
         $refresh = $entity->get();
 
-        $this->assertEquals($entity, $refresh);
+        $this->assertEquals($entity->getBody(), $refresh->getBody());
     }
 
     /**
@@ -116,13 +92,10 @@ class GenericEntityTest extends TestCase
      */
     public function testGetMethodActuallyRefreshTheEntity()
     {
-        $handler = $this->mockHandler(
-            ['message_ok', '200'],
-            ['message_error', '200']
-        );
-        $client  = $this->mockClient($handler);
+        $cli  = $this->quickMock(['message_ok', '200']);
+        $data = $this->getStdTemplate('message_error');
+        $entity = new GenericEntity($cli->messages, $data);
 
-        $entity = $client->messages->get('https://fake');
         $refresh = $entity->get();
 
         $this->assertNotEquals($entity, $refresh);
@@ -162,9 +135,8 @@ class GenericEntityTest extends TestCase
      */
     public function testAccessingAnEmptyEntityMethodThrowsAnException()
     {
-        $handler = $this->mockHandler(['message_ok', '200']);
-        $client  = $this->mockClient($handler);
-        $entity = $client->messages->get('https://fake');
+        $cli    = $this->quickMock();
+        $entity = new GenericEntity($cli->messages, new \stdClass());
 
         $entity->get();
     }
@@ -173,17 +145,18 @@ class GenericEntityTest extends TestCase
      * @covers ::__call
      * @dataProvider methodProvider
      */
-    public function testAllMethodSendTheProperMethod($method)
+    public function testAllMethodRequestTheProperMethod($method)
     {
         $cli = $this->quickMock(
-            ['message_ok', 200],
             ['message_ok', 200]
         );
-        $msg = $cli->messages->get('https://fake');
+
+        $data = $this->getStdTemplate('message_ok');
+        $msg  = new GenericEntity($cli->messages, $data);
 
         $msg->$method();
 
-        $req = $this->getHistoryRequest(1);
+        $req = $this->getHistoryRequest(0);
         $this->assertEquals(strtoupper($method), (string) $req->getMethod());
         $this->assertEquals($msg->url, (string) $req->getUri());
     }

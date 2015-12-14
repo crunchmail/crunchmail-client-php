@@ -31,6 +31,14 @@ class GenericResourceTest extends TestCase
         ];
     }
 
+    public function entitiesProvider()
+    {
+        return [
+            ['messages',    'Message',    'message_ok'],
+            ['attachments', 'Attachment', 'attachment_ok']
+        ];
+    }
+
     /**
      * @covers ::__call
      * @covers ::request
@@ -43,6 +51,38 @@ class GenericResourceTest extends TestCase
         $cli = $this->quickMock(['message_ok', '200']);
         $cli->messages->studidcall();
     }
+
+    /**
+     * A simple test to use as dependencie when needing a message entity
+     *
+     * @covers ::__construct
+     *
+     * @return \Crunchmail\Entities\MessageEntity
+     */
+    public function testRetrivingAnEntity()
+    {
+        $handler = $this->mockHandler(['message_ok', '200']);
+        $client  = $this->mockClient($handler);
+        $entity = $client->messages->get('https://fake');
+
+        $this->assertEntity($entity, 'Message');
+        return $entity;
+    }
+
+    /**
+     * @covers ::__construct
+     * @dataProvider entitiesProvider
+     */
+    public function testAllEntitesCanBeRetrieve($path, $entityName, $tpl)
+    {
+        $handler = $this->mockHandler([$tpl, '200']);
+        $client  = $this->mockClient($handler);
+
+        $entity  = $client->$path->get('https://fake');
+
+        $this->assertEntity($entity, $entityName);
+    }
+
 
     /**
      * Resource path can be override by an absolute url

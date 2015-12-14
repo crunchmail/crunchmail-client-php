@@ -59,26 +59,12 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $responses = [];
         $this->bodyHistory = [];
 
-        $dir = __DIR__ . '/responses/';
-
         foreach (func_get_args() as $r)
         {
             list($tpl, $code) = $r;
 
-            $path = $dir . $tpl;
-
-            // automatic json extension
-            if (! preg_match('#\.[a-z]+$#', $tpl))
-            {
-                $path .= '.json';
-                $body = file_get_contents($path);
-                $this->bodyHistory[] = json_decode($body);
-            }
-            else
-            {
-                $body = file_get_contents($path);
-                $this->bodyHistory[] = $body;
-            }
+            $body = $this->getTemplate($tpl);
+            $this->bodyHistory[] = $body;
 
             $responses[] = new MockHandler([ new Response($code, [], $body) ]);
         }
@@ -96,6 +82,24 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         return $handler;
     }
 
+    public function getTemplate($tpl)
+    {
+        $dir = __DIR__ . '/responses/';
+        $path = $dir . $tpl;
+
+        // automatic json extension
+        if (! preg_match('#\.[a-z]+$#', $tpl))
+        {
+            $path .= '.json';
+        }
+        return file_get_contents($path);
+    }
+
+    public function getStdTemplate($tpl)
+    {
+        return json_decode($this->getTemplate($tpl));
+    }
+
     /**
      * Return the $ind body sent in the history
      *
@@ -105,7 +109,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      */
     public function getSentBody($ind)
     {
-        return $this->bodyHistory[$ind];
+        return json_decode($this->bodyHistory[$ind]);
     }
 
     public function getHistory()
