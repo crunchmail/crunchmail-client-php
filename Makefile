@@ -8,11 +8,11 @@ help:
 	@echo "  docs 			build the documentation in reports/coverage/"
 	@echo "  test 			run unit tests"
 	@echo "  testdox 		gerenate testdox report in reports/"
-	@echo "  show-testdox 	run unit tests in testdox format"
+	@echo "  show-testdox		run unit tests in testdox format"
 	@echo "  coverage 		generate code coverage report"
 	@echo "  show-coverage 	show code coverage report"
 	@echo "  phpcs			run phpcs to check PHP code"
-	@echo "  phpcbf			run phpcbf to fix PHP code"
+	@echo "  phpcbf		run phpcbf to fix PHP code"
 	@echo "  phpmd			run phpmd to check PHP code"
 
 docs:
