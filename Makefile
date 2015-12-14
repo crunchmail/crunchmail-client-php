@@ -40,11 +40,4 @@ phpcbf:
 	$(PHPCBF) --standard=ruleset.xml -v
 
 phpmd:
-	$(PHPMD) tests/ text naming
-	$(PHPMD) tests/ text cleancode
-	$(PHPMD) tests/ text unusedcode
-	$(PHPMD) tests/ text controversial
-	$(PHPMD) src/ text naming
-	$(PHPMD) src/ text cleancode
-	$(PHPMD) src/ text unusedcode
-	$(PHPMD) src/ text controversial
+	$(PHPMD) src/   text ruleset.phpmd.xml
