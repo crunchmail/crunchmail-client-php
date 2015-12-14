@@ -103,19 +103,13 @@ class ApiException extends \Exception
             return $body;
         }
 
-        // neither a string, nor a stdClass, we cannot handle the error
-        if (!is_object($body) || get_class($body) !== 'stdClass')
-        {
-            throw new \RuntimeException('Invalid error format');
-        }
-
         // build a string from the complex response
         $out = "";
         foreach ((array) $body as $k => $v)
         {
             // list of error fields with error messages
             $out .= '<p>';
-            if ($params['showErrorKey'])
+            if (!is_numeric($k) && $params['showErrorKey'])
             {
                 $out .= $k . ' : ';
             }

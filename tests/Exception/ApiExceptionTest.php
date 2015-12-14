@@ -22,6 +22,7 @@ class ApiExceptionTest extends TestCase
      * @testdox getDetail() returns the last exception
      *
      * @covers ::getDetail
+     * @todo test error format
      */
     public function testGetDetail()
     {
@@ -36,15 +37,20 @@ class ApiExceptionTest extends TestCase
         }
 
         $this->assertInstanceOf('\stdClass', $err);
+
+        return $e;
     }
 
     /**
      * @testdox toHtml() method returns a proper string and code (500)
      *
+     * @depends testGetDetail
+     *
      * @covers ::toHtml
      * @covers ::getCode
+     *
      */
-    public function testExceptionToHtmlFor500()
+    public function testExceptionToHtmlFor500($exception)
     {
         try
         {
@@ -60,6 +66,29 @@ class ApiExceptionTest extends TestCase
         $this->assertInternalType('string', $err);
         $this->assertContains('500 Internal Server Error', $err);
         $this->assertEquals(500, $code);
+    }
+
+    /**
+     * @testdox toHtml() method can format domain verify errors
+     *
+     * @covers ::toHtml
+     */
+    public function testDomainErrorFormatting()
+    {
+        try
+        {
+            $cli = $this->quickMock(
+                ['message_ok', '200'],
+                ['domain_error', 500]
+            );
+            $msg = $cli->messages->get('http://fake');
+            $msg->post([]);
+        }
+        catch (ApiException $e)
+        {
+            $err = $e->toHtml();
+            $this->assertEquals(500, $e->getCode());
+        }
     }
 
     /**
@@ -86,22 +115,10 @@ class ApiExceptionTest extends TestCase
     }
 
     /**
-     * @testdox Receiving an invalid error does not breaks formatting
-     *
-     * @group bug-2030
+     * @depends testGetDetail
      */
-    public function testReceivingAnInvalidError()
+    public function testExceptionIsConvertedToString($exception)
     {
-        try
-        {
-            $client = $this->quickMock(['message_invalid', 400]);
-            $client->messages->post([]);
-        }
-        catch (ApiException $e)
-        {
-            $err  = $e->toHtml(['showErrorKey' => false]);
-        }
-
-        $this->assertNotContains('sender_email', $err);
+        $this->assertContains('400', (string) $exception);
     }
 }
