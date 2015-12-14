@@ -43,15 +43,16 @@ class Client extends \GuzzleHttp\Client
      * @var array
      */
     public static $entities = [
-        'domains'     => 'domain',
-        'messages'    => 'message',
-        'recipients'  => 'recipient',
-        'attachments' => 'attachment',
-        "customers"   => 'customer',
-        "categories"  => 'category',
-        "bounces"     => 'bounce',
-        "users"       => 'user',
-        'preview'     => 'preview'
+        'domains'      => 'domain',
+        'messages'     => 'message',
+        'recipients'   => 'recipient',
+        'attachments'  => 'attachment',
+        "customers"    => 'customer',
+        "categories"   => 'category',
+        "bounces"      => 'bounce',
+        "users"        => 'user',
+        'preview'      => 'preview',
+        'preview_send' => 'preview_send'
     ];
 
     /**
@@ -105,6 +106,18 @@ class Client extends \GuzzleHttp\Client
     }
 
     /**
+     * Translate resource to class name, camelcased
+     *
+     * @param string $str resource name
+     *
+     * @return string
+     */
+    private function toCamelCase($str)
+    {
+        return preg_replace('/(?:^|_)(.?)/e',"strtoupper('$1')", $str);
+    }
+
+    /**
      * Create a resource depending on name
      *
      * If a specific class exists for this type of ressource (ie:
@@ -120,9 +133,11 @@ class Client extends \GuzzleHttp\Client
      */
     public function createResource($name, $url = '')
     {
+        $camelCase = $this->toCamelCase($name);
+
         // TODO: find a way to make namespace "use" works with this
         $classPrefix = '\\Crunchmail\\Resources\\';
-        $className = $classPrefix . ucfirst($name) . 'Resource';
+        $className = $classPrefix . $camelCase . 'Resource';
 
         if (!class_exists($className))
         {

@@ -57,6 +57,22 @@ class MessageEntity extends \Crunchmail\Entities\GenericEntity
     }
 
     /**
+     * Send the preview to the given recipients.
+     * You can only call it from a message entity
+     *
+     * @example $message->preview->send($email)
+     *
+     * @param array $recipients list of recipients for the test
+     * @return Crunchmail\Entity\GenericEntity
+     *
+     * @fixme move somewhere else, resolve conflict
+     */
+    public function previewSend($recipients)
+    {
+        return $this->preview_send->send($recipients);
+    }
+
+    /**
      * Add an attachment to the message
      *
      * @param string $path File path

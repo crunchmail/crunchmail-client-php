@@ -36,19 +36,23 @@ class GenericEntity
      * @var array
      */
     private static $links = [
-        'recipients'   => 'mails',
-//        'preview'      => 'preview_send'
+        'recipients'   => 'mails'
     ];
 
     /**
      * Some links could lead to confusion, because they would not return
      * a proper resource: let's blacklist them
      *
+     * Untested resources are also here
+     *
      * @var array
      */
     private static $blacklistLinks = [
-        'preview.html', 'preview.txt', 'archive_url', 'opt_outs',
-        'spam_details'
+        'preview.html',
+        'preview.txt',
+        'archive_url',
+        'spam_details',
+        'opt_outs'
     ];
 
     /**
