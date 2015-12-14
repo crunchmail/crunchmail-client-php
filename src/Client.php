@@ -203,8 +203,7 @@ class Client extends \GuzzleHttp\Client
             $this->catchGuzzleException($e);
         }
 
-        //echo $result->getBody() . PHP_EOL;
-        return json_decode($result->getBody());
+        return json_decode((string) $result->getBody());
     }
 
     /**
