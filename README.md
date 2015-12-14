@@ -3,6 +3,8 @@
 
 Official PHP wrapper for Crunchmail API
 
+[![Build Status](https://travis-ci.org/crunchmail/crunchmail-client-php.svg?branch=master)](https://travis-ci.org/crunchmail/crunchmail-client-php)
+
 
 # Important Notice
 
