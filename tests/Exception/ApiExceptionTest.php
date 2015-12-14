@@ -44,13 +44,11 @@ class ApiExceptionTest extends TestCase
     /**
      * @testdox toHtml() method returns a proper string and code (500)
      *
-     * @depends testGetDetail
-     *
      * @covers ::toHtml
      * @covers ::getCode
      *
      */
-    public function testExceptionToHtmlFor500($exception)
+    public function testExceptionToHtmlFor500()
     {
         try
         {
@@ -86,7 +84,7 @@ class ApiExceptionTest extends TestCase
         }
         catch (ApiException $e)
         {
-            $err = $e->toHtml();
+            $this->assertInternalType('string', $e->toHtml());
             $this->assertEquals(500, $e->getCode());
         }
     }

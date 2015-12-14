@@ -236,10 +236,9 @@ class ClientTest extends TestCase
     public function testThatMappedPathWork()
     {
         $cli = $this->quickMock(['message_ok', 200]);
-        $resource = $cli->recipients->get();
+        $cli->recipients->get();
 
         $req = $this->getHistoryRequest(0);
         $this->assertEquals('mails/', (string) $req->getUri());
     }
-
 }
