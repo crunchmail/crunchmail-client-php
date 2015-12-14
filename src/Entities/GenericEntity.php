@@ -126,7 +126,7 @@ class GenericEntity
         }
 
         // shortcut to body fields, when no resource was found
-        if (property_exists($this->_body, $name))
+        if (is_object($this->_body) && property_exists($this->_body, $name))
         {
             return $this->_body->$name;
         }
