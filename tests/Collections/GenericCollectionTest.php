@@ -36,19 +36,27 @@ class GenericCollectionTest extends TestCase
      * --------------------------------------------------------------------- */
 
     /**
+     * @covers ::__construct
+     */
+    public function testResponseWithResultsFieldReturnACollection()
+    {
+        $client = $this->quickMock(['messages', 200]);
+        $collection = $client->messages->get();
+        $this->assertCollection($collection);
+    }
+
+    /**
+     * @depends testResponseWithResultsFieldReturnACollection
+     *
      * @covers ::current
      * @covers ::count
      * @covers ::pageCount
-     *
-     * @todo test generic collection
      */
     public function testCollectionCanBeRetrieveAsAnArray()
     {
         $client = $this->quickMock(['messages', 200]);
-
         $collection = $client->messages->get();
-
-        var_dump($collection);
+        $this->assertCollection($collection);
 
         $arr = $collection->current();
 
@@ -60,12 +68,13 @@ class GenericCollectionTest extends TestCase
     }
 
     /**
+     * @depends testResponseWithResultsFieldReturnACollection
+     * @dataProvider directionProvider
+     *
      * @covers ::previous
      * @covers ::next
      * @covers ::getAdjacent
      * @covers ::getResponse
-     *
-     * @dataProvider directionProvider
      */
     public function testRetrievingNextPage($direction, $msg1, $msg2)
     {
@@ -85,11 +94,12 @@ class GenericCollectionTest extends TestCase
     }
 
     /**
+     * @depends testResponseWithResultsFieldReturnACollection
+     * @dataProvider directionProvider
+     *
      * @covers ::previous
      * @covers ::next
      * @covers ::getAdjacent
-     *
-     * @dataProvider directionProvider
      */
     public function testRetrievingEmptyPageReturnsNull($direction)
     {
@@ -104,6 +114,8 @@ class GenericCollectionTest extends TestCase
     }
 
     /**
+     * @depends testResponseWithResultsFieldReturnACollection
+     *
      * @covers ::refresh
      */
     public function testRefreshActuallyCallTheApi()
