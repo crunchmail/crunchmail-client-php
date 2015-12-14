@@ -233,27 +233,6 @@ DomainEntity
 
 DomainEntity correspond to the registered domains:
 
-Searching for a domain
-----------------------
-
-:Method: ``search($query)``
-:Summary: Search for the domain
-:Parameters:
-    - ``String $query`` : search string
-:Returns: GenericCollection
-
-.. code-block:: php
-
-    // search for domain
-    $collection = $client->domains->search('crunchmail.net');
-
-    if ($collection->count() > 0)
-    {
-        $current = $collection->current();
-        // the is one result
-        $domain = $current[0];
-    }
-
 Verifying  a domain
 --------------------
 
@@ -265,15 +244,11 @@ Verifying  a domain
 
 .. code-block:: php
 
-    // search for domain
-    if ($client->domains->verify('crunchmail.net'))
-    {
-        echo "Domain verified";
-    }
+    $bool = $domainEntity->verify('contact@crunchmail.net');
 
-    if ($client->domains->verify('contact@crunchmail.net'))
-    {
-        echo "Domain verified";
-    }
+.. note::
+
+    You can use the shortcut in the DomainsResource:
+    $client->domains->verify($domain);
 
 
