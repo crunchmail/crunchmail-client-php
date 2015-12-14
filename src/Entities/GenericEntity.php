@@ -131,6 +131,7 @@ class GenericEntity
             return $this->_body->$name;
         }
 
+        var_dump($this);
         throw new \RuntimeException('Entity has no resource "' . $name . '"');
     }
 
