@@ -114,7 +114,7 @@ class Client extends \GuzzleHttp\Client
      */
     private function toCamelCase($str)
     {
-        return preg_replace('/(?:^|_)(.?)/e',"strtoupper('$1')", $str);
+        return str_replace(' ', '', ucwords(str_replace('_', ' ', $str)));
     }
 
     /**
