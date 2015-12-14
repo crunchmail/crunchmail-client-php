@@ -48,6 +48,8 @@ class GenericCollectionTest extends TestCase
 
         $collection = $client->messages->get();
 
+        var_dump($collection);
+
         $arr = $collection->current();
 
         $this->assertInternalType('array', $arr);

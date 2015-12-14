@@ -136,7 +136,7 @@ class ClientTest extends TestCase
      */
     public function testAccessingAResourceReturnsAResource($resource)
     {
-        $handler = $this->mockHandler(['empty', '200']);
+        $handler = $this->mockHandler(['message_ok', '200']);
         $client  = $this->mockClient($handler);
 
         $this->assertResource($client->$resource);

@@ -154,6 +154,22 @@ class GenericEntityTest extends TestCase
     }
 
     /**
+     * @covers ::__construct
+     * @covers ::__call
+     *
+     * @expectedException RuntimeException
+     * @expectedExceptionCode 0
+     */
+    public function testAccessingAnEmptyEntityMethodThrowsAnException()
+    {
+        $handler = $this->mockHandler(['message_ok', '200']);
+        $client  = $this->mockClient($handler);
+        $entity = $client->messages->get('https://fake');
+
+        $entity->get();
+    }
+
+    /**
      * @covers ::__call
      * @dataProvider methodProvider
      */

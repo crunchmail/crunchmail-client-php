@@ -91,6 +91,10 @@ class GenericEntity
      */
     public function __call($method, $args)
     {
+        if (!isset($this->_body->url))
+        {
+            throw new \RuntimeException('Entity has no url');
+        }
         return $this->_resource->callRequest($method, $args, $this->url);
     }
 
@@ -131,7 +135,6 @@ class GenericEntity
             return $this->_body->$name;
         }
 
-        var_dump($this);
         throw new \RuntimeException('Entity has no resource "' . $name . '"');
     }
 
