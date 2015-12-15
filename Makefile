@@ -15,7 +15,8 @@ help:
 	@echo "  phpcbf		fix PHP Code with PHP_CodeSniffer"
 	@echo "  phpmd			check for code mess"
 	@echo "  changelog		generate CHANGELOG.md"
-	@echo "  clean		delete build/ folder content"
+	@echo "  release VERSION=x.x.x	create a new release, running changelog and git bump"
+	@echo "  clean			delete build/ folder content"
 
 doc:
 	apigen generate --source src --destination build/api
@@ -44,8 +45,14 @@ phpcbf:
 phpmd:
 	$(PHPMD) src/   text ruleset.phpmd.xml
 
-changelog:
-	$(CHGLOG) github_changelog_generator
+bump: changelog
+	git bump
+
+bump-minor: changelog
+	git bump minor
+
+bump-major: changelog
+	git bump major
 
 clean:
 	rm -rf build/*
