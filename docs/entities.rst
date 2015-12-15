@@ -10,9 +10,9 @@ The requests you send via the Crunchmail PHP Client will either return
 collections of entities or a single entities.
 
 In case of entities, the object returned might be a generic one (class
-Entities\GenericEntity) or specific, like Entities\MessageEntity for the
-messages. Specific entities will have special methods that abstract the use of
-the API.
+Crunchmail\Entities\GenericEntity) or a specific, like
+Crunchmail\Entities\MessageEntity for the messages. Specific entities will have
+special methods that abstract the use of the API.
 
 You will be able to access the fields returned by the API directly, using the
 magic properties of the entitiy:
@@ -35,6 +35,11 @@ GET request
 :Method: ``get()``
 :Summary: Send a ``GET`` request to the API using the current entity uri.
 :Return: Entity of the same type
+
+.. code-block:: php
+
+    // refresh the message
+    $messages = $message->get();
 
 
 PATCH request
@@ -69,12 +74,23 @@ PUT request
     - ``String $format`` : multipart or json (default)
 :Return: Entity of the same type
 
+.. code-block:: php
+
+    // edit the sender_name field
+    $values = ['sender_name' => 'Edited'];
+    $messages = $message->put($values);
+
 
 DELETE Request
 --------------
 
 :Method: ``delete()``
 :Summary: Send a DELETE request to the API to delete the current entity.
+
+.. code-block:: php
+
+    // edit the sender_name field
+    $messages = $message->delete();
 
 
 MessageEntity
@@ -88,7 +104,7 @@ single object.
 
     $message = $client->messages->get($message_uri);
 
-It is also accessible in collections of messages (see Collections).
+It is also accessible in collections of messages (see :ref:`collections`).
 
 
 Sending a message
@@ -135,6 +151,7 @@ Adding an attachment
 .. code-block:: php
 
     $message->addAttachment('/path/to/my/file.jpg');
+
 
 Sending the preview
 -------------------
@@ -230,6 +247,7 @@ Has the message been sent?
         // do something
     }
 
+
 Is the message being sent?
 --------------------------
 
@@ -249,6 +267,7 @@ DomainEntity
 =============
 
 DomainEntity correspond to the registered domains:
+
 
 Verifying  a domain
 --------------------

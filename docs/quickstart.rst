@@ -32,23 +32,25 @@ Creating a Client
     );
     $client = new Client($config);
 
-The client constructor accepts an associative array of options that match the
-Guzzle format. See Guzzle documentation.
+The client constructor accepts an associative array of options that matches the
+Guzzle format.
+`See Guzzle documentation <http://docs.guzzlephp.org/en/latest/testing.html>`.
 
 
 Sending Requests
 ----------------
 
-The client allow you to quickly request the API by abstracting the REST logic
-as well as some of the API specific logic.
+The client allows you to quickly request the API by abstracting the REST logic
+as well as some of the API's specific logic.
 
-All of the client request methods will return you one of this 2 types of object:
+All of the client request methods will return you one of this 2 types of
+objects:
 
-- An entity
-- A collection of entities
+- An :ref:`entity <entities>`
+- A :ref:`collection <collections>` of entities
 
 You can access an api resource using the magic properties of the client object.
-Magic properties will return a Resource object.
+Magic properties will return a :ref:`Resource object <resources>`.
 
 .. code-block:: php
 
