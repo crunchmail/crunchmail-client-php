@@ -14,4 +14,7 @@ namespace Crunchmail\Tests\PHPUnit;
  */
 class TestCaseTest extends \PHPUnit_Framework_TestCase
 {
+    public function testNothing()
+    {
+    }
 }

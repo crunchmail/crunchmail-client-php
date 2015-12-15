@@ -5,6 +5,9 @@ class testIsResourceConstraint extends TestCase
 {
     private $constraint;
 
+    public function testNothing()
+    {
+    }
     /*
     public function setUp()
     {
