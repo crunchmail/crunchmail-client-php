@@ -521,7 +521,7 @@ class MessageEntityTest extends TestCase
     }
 
     /**
-     * @covers ::sendPreview
+     * @covers ::previewSend
      */
     public function testPreviewSend()
     {

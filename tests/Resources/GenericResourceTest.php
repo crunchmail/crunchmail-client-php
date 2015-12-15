@@ -278,4 +278,25 @@ class GenericResourceTest extends TestCase
         $client = $this->quickMock(['domains_invalid_mx', '400']);
         $client->messages->post([]);
     }
+
+    /**
+     * @covers ::getPath
+     */
+    public function testGetPath()
+    {
+        $cli = $this->quickMock();
+        $this->assertEquals('messages', $cli->messages->getPath());
+    }
+
+    /**
+     * @covers ::getEntityClass
+     *
+     * @expectedException RuntimeException
+     * @expectedExceptionCode 0
+     */
+    public function testGetClassThrowsAnExceptionOnUnknowEntities()
+    {
+        $cli = $this->quickMock();
+        $cli->fake->getEntityClass();
+    }
 }
