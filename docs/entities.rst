@@ -12,8 +12,8 @@ The requests you send via the Crunchmail PHP Client will either return
 collections of entities or a single entities.
 
 In case of entities, the object returned might be a generic one (class
-Crunchmail\Entities\GenericEntity) or a specific, like
-Crunchmail\Entities\MessageEntity for the messages. Specific entities will have
+``Crunchmail\Entities\GenericEntity``) or a specific, like
+``Crunchmail\Entities\MessageEntity`` for the messages. Specific entities will have
 special methods that abstract the use of the API.
 
 You will be able to access the fields returned by the API directly, using the

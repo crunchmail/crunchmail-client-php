@@ -50,7 +50,7 @@ objects:
 - A :ref:`collection <collections>` of entities
 
 You can access an api resource using the magic properties of the client object.
-Magic properties will return a :ref:`Resource object <resources>`.
+Magic properties will return a :ref:`resource <resources>`.
 
 .. code-block:: php
 
@@ -150,7 +150,7 @@ Handling errors
 
 In the previous examples, you may have notice that we do not handle errors, and
 of course we should! Crunchmail PHP client simplifies the errors send by guzzle
-in an unique exception of type `Crunchmail\Exception\ApiException`.
+in an unique exception of type ``Crunchmail\Exception\ApiException``.
 
 .. code-block:: php
 
