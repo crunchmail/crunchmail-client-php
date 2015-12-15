@@ -10,6 +10,7 @@
 namespace Crunchmail\Tests;
 
 use Crunchmail;
+use Crunchmail\Entities\MessageEntity;
 use Crunchmail\PHPUnit\TestCase;
 
 /**
@@ -121,13 +122,26 @@ class MessageEntityTest extends TestCase
      * --------------------------------------------------------------------- */
 
     /**
-     * @covers ::__get
+     * @covers ::__construct
      */
-    public function testToStringReturnsMessageName()
+    public function testMessageCanBeCreated()
     {
-        $cli = $this->quickMock(['message_ok', '200']);
-        $msg = $cli->messages->get('https://fake');
-        $this->assertEquals((string) $msg, $msg->getBody()->name);
+        $data = $this->getStdTemplate('message_ok');
+        $cli  = $this->quickMock();
+        $entity = new MessageEntity($cli->messages, $data);
+
+        $this->assertEntity('Message', $entity);
+
+        return $entity;
+    }
+
+    /**
+     * @depends testMessageCanBeCreated
+     *
+     */
+    public function testMessageIsConvertedToString($entity)
+    {
+        $this->assertEquals($entity->name, (string) $entity);
     }
 
     /**
@@ -385,24 +399,25 @@ class MessageEntityTest extends TestCase
      */
     public function testAddingAFile()
     {
-        $client = $this->quickMock(
-            ['message_ok',    '200'],
+        $cli = $this->quickMock(
             ['attachment_ok', '200']
         );
-        $message = $client->messages->get('https://fake');
+
+        $data = $this->getStdTemplate('message_ok');
+        $msg = new MessageEntity($cli->messages, $data);
 
         $filepath= realpath(__DIR__ . '/../files/test.svg');
-        $attachment = $message->addAttachment($filepath);
+        $attachment = $msg->addAttachment($filepath);
 
         // checking request sent
-        $content = $this->getHistoryContent(1, false);
+        $content = $this->getHistoryContent(0, false);
 
         $this->assertContains('name="file"', $content);
         $this->assertContains('filename="test.svg"', $content);
         $this->assertContains('Content-Type: image/svg+xml', $content);
         $this->assertContains('Content-Length: 25354', $content);
 
-        $req = $this->getHistoryRequest(1);
+        $req = $this->getHistoryRequest(0);
         $this->assertEquals('POST', $req->getMethod());
         $this->assertEquals('attachments/', (string) $req->getUri());
 
@@ -411,6 +426,7 @@ class MessageEntityTest extends TestCase
 
     /**
      * @depends testAddingAFile
+     *
      * @covers ::addAttachment
      */
     public function testAddingAttachmentReturnsAProperEntity($attachment)
@@ -427,14 +443,15 @@ class MessageEntityTest extends TestCase
      */
     public function testAddingAnExistingFileThrowsAnException()
     {
-        $client = $this->quickMock(
-            ['message_ok',    '200'],
+        $cli = $this->quickMock(
             ['attachment_error', '400']
         );
-        $message = $client->messages->get('https://fake');
+
+        $data = $this->getStdTemplate('message_ok');
+        $msg = new MessageEntity($cli->messages, $data);
 
         $filepath= realpath(__DIR__ . '/../files/test.svg');
-        $message->addAttachment($filepath);
+        $msg->addAttachment($filepath);
     }
 
     /**
@@ -445,27 +462,29 @@ class MessageEntityTest extends TestCase
      */
     public function testAddingAMissingFileThrowsAnException()
     {
-        $client = $this->quickMock(
-            ['message_ok',    '200'],
+        $cli = $this->quickMock(
             ['attachment_error', '400']
         );
-        $message = $client->messages->get('https://fake');
-        $message->addAttachment('missing_file.svg');
+
+        $data = $this->getStdTemplate('message_ok');
+        $msg = new MessageEntity($cli->messages, $data);
+
+        $msg->addAttachment('missing_file.svg');
     }
 
     /**
      * @covers ::addAttachment
      *
+     * @depends testMessageCanBeCreated
+      *
      * @expectedException \RuntimeException
      * @expectedExceptionCode 0
      */
-    public function testAddingAnUnreadableFileThrowsAnException()
+    public function testAddingAnUnreadableFileThrowsAnException($msg)
     {
         $client = $this->quickMock(
-            ['message_ok',    '200'],
             ['attachment_error', '400']
         );
-        $message = $client->messages->get('https://fake');
         $filepath=$this->fileUnreadable;
 
         // check file is not readable first
@@ -474,7 +493,7 @@ class MessageEntityTest extends TestCase
             $this->markTestSkipped('The unreadable file is missing or readable');
         }
 
-        $message->addAttachment($filepath);
+        $msg->addAttachment($filepath);
     }
 
     /**
@@ -484,12 +503,13 @@ class MessageEntityTest extends TestCase
      */
     public function testAddingInvalidEmailReturnsFailure()
     {
-        $client = $this->quickMock(
-            ['message_ok'      , '200'],
+        $cli = $this->quickMock(
             ['mail_push_error' , '200']
         );
 
-        $msg = $client->messages->get('http://fakeid');
+        $data = $this->getStdTemplate('message_ok');
+        $msg  = new MessageEntity($cli->messages, $data);
+
         $res = $msg->addRecipients('error');
 
         $this->assertSame(0, $res->success_count);
@@ -498,5 +518,23 @@ class MessageEntityTest extends TestCase
 
         $this->assertInternalType('array', $invalid);
         $this->assertCount(1, $invalid);
+    }
+
+    /**
+     * @covers ::sendPreview
+     */
+    public function testPreviewSend()
+    {
+        $cli = $this->quickMock(
+            ['empty' , '200']
+        );
+
+        $data   = $this->getStdTemplate('message_ok');
+        $entity = new MessageEntity($cli->messages, $data);
+
+        $email = 'toto@fake.com';
+        $res = $entity->previewSend($email);
+
+        $this->assertGenericEntity($res);
     }
 }

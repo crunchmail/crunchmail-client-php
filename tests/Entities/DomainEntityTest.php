@@ -10,6 +10,7 @@
 namespace Crunchmail\Tests;
 
 use Crunchmail;
+use Crunchmail\Entities\DomainEntity;
 use Crunchmail\PHPUnit\TestCase;
 
 /**
@@ -30,17 +31,27 @@ class DomainEntityTest extends TestCase
     }
 
     /**
+     * @covers ::__construct
+     */
+    public function testDomainCanBeCreated()
+    {
+        $data = $this->getStdTemplate('domain_ok');
+        $cli  = $this->quickMock();
+        $entity = new DomainEntity($cli->domains, $data);
+
+        $this->assertEntity('Domain', $entity);
+
+        return $entity;
+    }
+
+    /**
+     * @depends testDomainCanBeCreated
+     *
      * @covers ::__toString
      */
-    public function testDomainIsConvertedToString()
+    public function testDomainIsConvertedToString($entity)
     {
-        $cli = $this->quickMock(['domains_ok', 200]);
-        $res = $cli->domains->get();
-
-        foreach ($res->current() as $domain)
-        {
-            $this->assertEquals($domain->name, (string) $domain);
-        }
+        $this->assertEquals($entity->name, (string) $entity);
     }
 
     /**
@@ -53,8 +64,9 @@ class DomainEntityTest extends TestCase
      * @dataProvider domainVerifyProvider
      *
      * @todo check call to post, with domain and email as parameter
+     * @todo use single entites templates
      */
-    public function testVerifyValidDomainReturnsTrue($tpl, $expected)
+    public function testVerifyValidDomainReturnsProperResult($tpl, $expected)
     {
         $cli = $this->quickMock([$tpl, 200]);
         $list = $cli->domains->get();

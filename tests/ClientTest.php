@@ -15,6 +15,8 @@ use Crunchmail\PHPUnit\TestCase;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 
+use GuzzleHttp\Psr7\Response;
+
 /**
  * Test class
  *
@@ -87,6 +89,23 @@ class ClientTest extends TestCase
     {
         $client = new Client(['base_uri' => '']);
         $this->assertInstanceOf('Crunchmail\Client', $client);
+
+        /*
+
+        $config = $client->getConfig();
+        $handler = $config['handler'];
+
+        $responses = [
+            new MockHandler([ new Response(200, [], '{coucou: 1}') ])
+        ];
+        $newhandler = new MockHandler($responses);
+        $newstack   = HandlerStack::create($newhandler);
+
+        $handler->push($newstack);
+
+        $m = $client->messages->get('https://feie');
+         */
+
         return $client;
     }
 
@@ -187,6 +206,38 @@ class ClientTest extends TestCase
         $req = $this->getHistoryRequest(0);
         $this->assertEquals((string) $req->getUri(), $uri);
         $this->assertInstanceOf('stdClass', $result);
+    }
+
+    /**
+     * @covers ::apiRequest
+     */
+    public function testQueryStringIsSent()
+    {
+        $query = ['test' => 'works'];
+
+        $cli = $this->quickMock(['messages', 200]);
+        $cli->apiRequest('get', '', [], $query);
+
+        $req = $this->getHistoryRequest(0);
+
+        $this->assertEquals('test=works', $req->getUri()->getQuery());
+    }
+
+    /**
+     * @covers ::apiRequest
+     */
+    public function testQueryStringIsMergedWithUri()
+    {
+        $query  = ['test'   => 'works'];
+
+        $cli = $this->quickMock(['messages', 200]);
+        $cli->apiRequest('get', '?search=hello', [], $query);
+
+        $req = $this->getHistoryRequest(0);
+        $sent = $req->getUri()->getQuery();
+
+        $this->assertContains('test=works', $sent);
+        $this->assertContains('search=hello', $sent);
     }
 
     /**

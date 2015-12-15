@@ -10,6 +10,7 @@
 namespace Crunchmail\Tests;
 
 use Crunchmail;
+use Crunchmail\Entities\AttachmentEntity;
 use Crunchmail\PHPUnit\TestCase;
 
 /**
@@ -20,25 +21,34 @@ use Crunchmail\PHPUnit\TestCase;
  */
 class AttachmentEntityTest extends TestCase
 {
-
     /**
      * @covers ::__construct
-     * @covers ::__toString
      */
-    public function testAttachmentIsConvertedToString()
+    public function testAttachmentCanBeCreated()
     {
-        $client = $this->quickMock(
-            ['attachment_ok', '200']
-        );
-        $attachment = $client->attachments->get('https://fake');
+        $data = $this->getStdTemplate('file_ok');
+        $cli  = $this->quickMock();
 
-        $this->assertEquals($attachment->file, (string) $attachment);
+        $entity = new AttachmentEntity($cli->attachments, $data);
 
-        return $attachment;
+        $this->assertEntity('Attachment', $entity);
+
+        return $entity;
     }
 
     /**
-     * @depends testAttachmentIsConvertedToString
+     * @depends testAttachmentCanBeCreated
+     *
+     * @covers ::__toString
+     */
+    public function testAttachmentIsConvertedToString($entity)
+    {
+        $this->assertEquals($entity->file, (string) $entity);
+    }
+
+    /**
+     * @depends testAttachmentCanBeCreated
+     *
      * @covers ::__construct
      */
     public function testAttachmentAreProperlyFormed($attachment)

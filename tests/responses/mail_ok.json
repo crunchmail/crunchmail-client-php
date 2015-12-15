@@ -1,0 +1,24 @@
+{
+    "url": "http://localhost/v1/mails/15/",
+    "to": "gentle-bar@example.com",
+    "date": "2014-08-05T12:45:14.378071Z",
+    "last_status": {
+        "status": "unknown",
+        "date": "2014-08-05T12:45:14.378071Z",
+        "raw_msg": "Mail passed to infrastructure"
+    },
+    "message": "http://localhost/v1/messages/3/",
+    "tracking": {
+        "opened": null,
+        "open_time": 0,
+        "clicked": []
+    },
+    "source_type": "",
+    "source_ref": "",
+    "properties": null,
+    "_links": {
+        "optout": {
+            "href": "http://localhost/v1/mails/15/optout/"
+        }
+    }
+}

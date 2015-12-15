@@ -1,0 +1,11 @@
+{
+    "url": "http://localhost/v1/domains/3/",
+    "name": "bad.sandbox.munchmail.net",
+    "dkim_status": "unknown",
+    "mx_status": "unknown",
+    "_links": {
+        "revalidate": {
+            "href": "http://localhost/v1/domains/3/revalidate/"
+        }
+    }
+}
