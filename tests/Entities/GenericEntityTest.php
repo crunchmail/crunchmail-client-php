@@ -12,6 +12,7 @@
 namespace Crunchmail\Tests;
 
 use Crunchmail;
+use Crunchmail\PHPUnit\TestCase;
 
 use Crunchmail\Entities\GenericEntity;
 
@@ -50,7 +51,7 @@ class GenericEntityTest extends TestCase
         $data = $this->getStdTemplate('message_error');
         $entity = new GenericEntity($cli->messages, $data);
 
-        $this->assertEntity($entity);
+        $this->assertGenericEntity($entity);
 
         return $entity;
     }

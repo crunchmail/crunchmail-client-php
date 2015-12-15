@@ -9,6 +9,7 @@
 
 namespace Crunchmail\Tests;
 
+use Crunchmail\PHPUnit\TestCase;
 use \Crunchmail\Exception\ApiException;
 
 /**

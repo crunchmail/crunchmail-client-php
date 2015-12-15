@@ -9,6 +9,8 @@
 
 namespace Crunchmail\Tests;
 
+use Crunchmail\PHPUnit\TestCase;
+
 /**
  * Test class
  *

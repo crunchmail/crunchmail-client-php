@@ -9,6 +9,8 @@
 
 namespace Crunchmail\Tests;
 
+use Crunchmail\PHPUnit\TestCase;
+
 /**
  * Test class
  *
@@ -65,7 +67,7 @@ class GenericResourceTest extends TestCase
         $client  = $this->mockClient($handler);
         $entity = $client->messages->get('https://fake');
 
-        $this->assertEntity($entity, 'Message');
+        $this->assertEntity('Message', $entity);
         return $entity;
     }
 
@@ -80,7 +82,7 @@ class GenericResourceTest extends TestCase
 
         $entity  = $client->$path->get('https://fake');
 
-        $this->assertEntity($entity, $entityName);
+        $this->assertEntity($entityName, $entity);
     }
 
 
@@ -109,7 +111,7 @@ class GenericResourceTest extends TestCase
     {
         $cli = $this->quickMock(['message_ok', '200']);
         $msg = $cli->messages->post([]);
-        $this->assertEntity($msg, 'Message');
+        $this->assertEntity('Message', $msg);
     }
 
 
@@ -198,7 +200,7 @@ class GenericResourceTest extends TestCase
 
         // because our response is message_ok, we shoul always get
         // a message entity
-        $this->assertEntity($res, 'Message');
+        $this->assertEntity('Message', $res);
     }
 
     /**

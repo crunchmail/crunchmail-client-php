@@ -7,7 +7,7 @@
  * @license   https://opensource.org/licenses/MIT MIT
  */
 
-namespace Crunchmail\Tests;
+namespace Crunchmail\PHPUnit;
 
 use Crunchmail\Client;
 
@@ -84,7 +84,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 
     public function getTemplate($tpl)
     {
-        $dir = __DIR__ . '/responses/';
+        $dir = __DIR__ . '/../../tests/responses/';
         $path = $dir . $tpl;
 
         // automatic json extension
@@ -155,9 +155,23 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf($name, $ent);
     }
 
-    public function assertEntity($ent, $name = 'Generic')
+    public static function assertGenericEntity($other)
     {
-        $name = '\Crunchmail\Entities\\' . $name . 'Entity';
-        $this->assertInstanceOf($name, $ent);
+        self::assertThat($other, self::isGenericEntity());
+    }
+
+    public static function assertEntity($type, $other)
+    {
+        self::assertThat($other, self::isEntity($type));
+    }
+
+    public static function isGenericEntity()
+    {
+        return new \Crunchmail\PHPUnit\IsGenericEntityConstraint();
+    }
+
+    public static function isEntity($type)
+    {
+        return new \Crunchmail\PHPUnit\IsEntityConstraint($type);
     }
 }

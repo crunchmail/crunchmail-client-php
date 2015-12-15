@@ -10,6 +10,7 @@
 namespace Crunchmail\Tests;
 
 use Crunchmail\Client;
+use Crunchmail\PHPUnit\TestCase;
 
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
