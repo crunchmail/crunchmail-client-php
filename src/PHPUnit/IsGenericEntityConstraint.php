@@ -8,4 +8,12 @@ class IsGenericEntityConstraint extends \PHPUnit_Framework_Constraint_IsInstance
         $name = '\Crunchmail\Entities\GenericEntity';
         parent::__construct($name);
     }
+
+    /**
+     * Make it public
+     */
+    public function matches($other)
+    {
+        return parent::matches($other);
+    }
 }

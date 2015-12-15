@@ -8,4 +8,12 @@ class IsResourceConstraint extends \PHPUnit_Framework_Constraint_IsInstanceOf
         $name = '\Crunchmail\Resources\\' . $name . 'Resource';
         parent::__construct($name);
     }
+
+    /**
+     * Make it public
+     */
+    public function matches($other)
+    {
+        return parent::matches($other);
+    }
 }

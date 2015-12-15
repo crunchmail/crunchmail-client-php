@@ -8,4 +8,12 @@ class IsGenericCollectionConstraint extends \PHPUnit_Framework_Constraint_IsInst
         $name = '\Crunchmail\Collections\GenericCollection';
         parent::__construct($name);
     }
+
+    /**
+     * Make it public
+     */
+    public function matches($other)
+    {
+        return parent::matches($other);
+    }
 }
