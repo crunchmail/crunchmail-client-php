@@ -217,7 +217,7 @@ class GenericResourceTest extends TestCase
 
         // because our response is messages, we shoul always get
         // a collection
-        $this->assertCollection($res);
+        $this->assertGenericCollection($res);
     }
 
     /**

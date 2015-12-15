@@ -5,6 +5,8 @@
  * @author    Yannick Huerre <dev@sheoak.fr>
  * @copyright 2015 (c) Oasiswork
  * @license   https://opensource.org/licenses/MIT MIT
+ *
+ * @todo find a way to add request to an already created mocked client
  */
 
 namespace Crunchmail\PHPUnit;
@@ -22,7 +24,7 @@ use GuzzleHttp\Middleware;
  */
 abstract class TestCase extends \PHPUnit_Framework_TestCase
 {
-    private $container = [];
+    private $container   = [];
     private $bodyHistory = [];
 
     /**
@@ -57,6 +59,8 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     public function mockHandler()
     {
         $responses = [];
+
+        // TODO: enhance this with middleware history?
         $this->bodyHistory = [];
 
         foreach (func_get_args() as $r)
@@ -69,17 +73,18 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
             $responses[] = new MockHandler([ new Response($code, [], $body) ]);
         }
 
-        // Create a mock and queue responses.
-        $mock = new MockHandler($responses);
-        $handler = HandlerStack::create($mock);
+        // Create a mock handler and queue responses.
+        $handler = new MockHandler($responses);
+        $stack   = HandlerStack::create($handler);
 
+        // keep history
         $this->container = [];
         $history = Middleware::history($this->container);
 
         // Add the history middleware to the handler stack.
-        $handler->push($history);
+        $stack->push($history);
 
-        return $handler;
+        return $stack;
     }
 
     public function getTemplate($tpl)
@@ -143,26 +148,45 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         return $decode ? json_decode($content) : $content;
     }
 
-    public function assertCollection($ent, $name = 'Generic')
-    {
-        $name = '\Crunchmail\Collections\\' . $name . 'Collection';
-        $this->assertInstanceOf($name, $ent);
-    }
-
-    public function assertResource($ent, $name = 'Generic')
-    {
-        $name = '\Crunchmail\Resources\\' . $name . 'Resource';
-        $this->assertInstanceOf($name, $ent);
-    }
-
+    /* ---------------------------------------------------------------------
+     * New assertions
+     * --------------------------------------------------------------------- */
     public static function assertGenericEntity($other)
     {
         self::assertThat($other, self::isGenericEntity());
     }
 
+    public static function assertGenericResource($other)
+    {
+        self::assertThat($other, self::isGenericResource());
+    }
+
+    public static function assertGenericCollection($other)
+    {
+        self::assertThat($other, self::isGenericCollection());
+    }
+
     public static function assertEntity($type, $other)
     {
         self::assertThat($other, self::isEntity($type));
+    }
+
+    public static function assertResource($type, $other)
+    {
+        self::assertThat($other, self::isResource($type));
+    }
+
+    /* ---------------------------------------------------------------------
+     * New constraints
+     * --------------------------------------------------------------------- */
+    public static function isGenericResource()
+    {
+        return new \Crunchmail\PHPUnit\IsGenericResourceConstraint();
+    }
+
+    public static function isGenericCollection()
+    {
+        return new \Crunchmail\PHPUnit\IsGenericCollectionConstraint();
     }
 
     public static function isGenericEntity()
@@ -174,4 +198,11 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     {
         return new \Crunchmail\PHPUnit\IsEntityConstraint($type);
     }
+
+    public static function isResource($type)
+    {
+        return new \Crunchmail\PHPUnit\IsResourceConstraint($type);
+    }
+
+
 }

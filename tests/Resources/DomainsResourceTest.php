@@ -94,7 +94,7 @@ class DomainsTest extends TestCase
     {
         $res = $this->prepareCheck('search', $tpl);
 
-        $this->assertCollection($res);
+        $this->assertGenericCollection($res);
 
         $res = $res->current();
         $this->assertInternalType('array', $res);

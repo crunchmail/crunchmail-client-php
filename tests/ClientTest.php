@@ -140,7 +140,7 @@ class ClientTest extends TestCase
         $handler = $this->mockHandler(['message_ok', '200']);
         $client  = $this->mockClient($handler);
 
-        $this->assertResource($client->$resource);
+        $this->assertGenericResource($client->$resource);
     }
 
     /**

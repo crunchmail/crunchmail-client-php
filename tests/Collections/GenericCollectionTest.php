@@ -43,7 +43,7 @@ class GenericCollectionTest extends TestCase
     {
         $client = $this->quickMock(['messages', 200]);
         $collection = $client->messages->get();
-        $this->assertCollection($collection);
+        $this->assertGenericCollection($collection);
     }
 
     /**
@@ -57,7 +57,7 @@ class GenericCollectionTest extends TestCase
     {
         $client = $this->quickMock(['messages', 200]);
         $collection = $client->messages->get();
-        $this->assertCollection($collection);
+        $this->assertGenericCollection($collection);
 
         $arr = $collection->current();
 

@@ -241,7 +241,7 @@ class MessageEntityTest extends TestCase
      */
     public function testAccessingResourceWorksProperly($path, $msg)
     {
-        $this->assertResource($msg->$path);
+        $this->assertGenericResource($msg->$path);
     }
 
     /**
