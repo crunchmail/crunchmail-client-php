@@ -5,7 +5,10 @@ Overview
 Requirements
 ============
 
-#. PHP 5.5.0
+- PHP 5.5+
+- Composer (recommended)
+
+Note that the client should work with PHP 7, but has not been fully tested yet.
 
 
 .. _installation:
