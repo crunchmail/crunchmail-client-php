@@ -5,9 +5,9 @@ PHPMD=./vendor/bin/phpmd
 
 help:
 	@echo "Use \`make <target>' where <target> is one of"
-	@echo "  docs 			build the documentation in build/api/"
+	@echo "  doc 			build the documentation in build/api/"
 	@echo "  test 			run unit tests"
-	@echo "  testdox 		gerenate testdox report in reports/"
+	@echo "  testdox 		gerenate testdox report in build/"
 	@echo "  show-testdox		run unit tests in testdox format"
 	@echo "  coverage 		generate code coverage report"
 	@echo "  show-coverage 	show code coverage report"
@@ -15,8 +15,9 @@ help:
 	@echo "  phpcbf		fix PHP Code with PHP_CodeSniffer"
 	@echo "  phpmd			check for code mess"
 	@echo "  changelog		generate CHANGELOG.md"
+	@echo "  clean		delete build/ folder content"
 
-docs:
+doc:
 	apigen generate --source src --destination build/api
 
 test:
@@ -26,10 +27,10 @@ show-testdox:
 	$(PU) --testdox
 
 testdox:
-	$(PU) --testdox-text reports/agile-doc.txt
+	$(PU) --testdox-text build/agile-doc.txt
 
 coverage:
-	$(PU) --coverage-html reports/coverage
+	$(PU) --coverage-html build/coverage
 
 show-coverage:
 	$(PU) --coverage-text
@@ -45,3 +46,6 @@ phpmd:
 
 changelog:
 	$(CHGLOG) github_changelog_generator
+
+clean:
+	rm -rf build/*

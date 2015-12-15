@@ -28,8 +28,8 @@
     </filter>
 
     <logging>
-        <!--<log type="coverage-html" target="./docs/coverage/"/>-->
-        <log type="testdox-text" target="./reports/agile-doc.txt"/>
+        <!--<log type="coverage-html" target="./build/coverage/"/>-->
+        <log type="testdox-text" target="./build/agile-doc.txt"/>
     </logging>
 
 </phpunit>
