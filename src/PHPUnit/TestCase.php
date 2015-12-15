@@ -151,6 +151,9 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     /* ---------------------------------------------------------------------
      * New assertions
      * --------------------------------------------------------------------- */
+
+    // @codeCoverageIgnoreStart
+
     public static function assertGenericEntity($other)
     {
         self::assertThat($other, self::isGenericEntity());
@@ -205,4 +208,5 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     }
 
 
+    // @codeCoverageIgnoreEnd
 }
