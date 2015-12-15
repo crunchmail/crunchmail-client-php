@@ -44,5 +44,7 @@ for your commit messages.
 
 # Additional Resources
 
+* [Travis CI](https://travis-ci.org/)
 * [Guzzle 6](http://docs.guzzlephp.org/en/latest/quickstart.html)
 * [PHPUnit](https://phpunit.de/)
+- [github_changelog_generator](https://github.com/skywinder/github-changelog-generator)
