@@ -16,7 +16,7 @@ help:
 	@echo "  phpmd			run phpmd to check PHP code"
 
 docs:
-	phpdoc -d src -t reports/phpdoc --force
+	apigen generate --source src --destination build/api
 
 test:
 	$(PU)
