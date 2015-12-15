@@ -1,4 +1,6 @@
 
+.. _collections:
+
 ===================
 Collections objects
 ===================

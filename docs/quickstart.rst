@@ -34,7 +34,7 @@ Creating a Client
 
 The client constructor accepts an associative array of options that matches the
 Guzzle format.
-`See Guzzle documentation <http://docs.guzzlephp.org/en/latest/testing.html>`.
+`See Guzzle documentation <http://docs.guzzlephp.org/en/latest/testing.html>`_.
 
 
 Sending Requests

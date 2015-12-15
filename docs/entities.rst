@@ -1,4 +1,6 @@
 
+.. _entities:
+
 ================
 Entities objects
 ================
