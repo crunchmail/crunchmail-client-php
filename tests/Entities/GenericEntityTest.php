@@ -161,4 +161,49 @@ class GenericEntityTest extends TestCase
         $this->assertEquals(strtoupper($method), (string) $req->getMethod());
         $this->assertEquals($msg->url, (string) $req->getUri());
     }
+
+    /**
+     * @depends testRetrivingAnEntity
+     * @covers ::__toString
+     */
+    public function testCanBeConvertedToString($entity)
+    {
+        $this->assertEquals($entity->url, (string) $entity);
+    }
+
+    /**
+     * @depends testRetrivingAnEntity
+     * @covers ::__isset
+     */
+    public function testFieldsCanBeTestedWithIsset($entity)
+    {
+        $this->assertInternalType('boolean', isset($entity->url));
+        $this->assertTrue(isset($entity->url));
+        $this->assertFalse(isset($entity->donotexists));
+    }
+
+    /**
+     * @depends testRetrivingAnEntity
+     * @covers ::__unset
+     *
+     * @expectedExceptionCode 0
+     * @expectedException RuntimeException
+     */
+    public function testThatUnsetIsForbidden($entity)
+    {
+        unset($entity->url);
+    }
+
+    /**
+     * @covers ::__get
+     */
+    public function testThatNullFieldsCanBeRead()
+    {
+        $cli  = $this->quickMock();
+        $data = new \stdClass();
+        $data->field = null;
+        $entity = new GenericEntity($cli->messages, $data);
+
+        $this->assertNull($entity->field);
+    }
 }

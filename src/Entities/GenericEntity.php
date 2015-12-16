@@ -70,6 +70,16 @@ class GenericEntity
     }
 
     /**
+     * Generic conversion to string
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return isset($this->_body->url) ? $this->url : '';
+    }
+
+    /**
      * Return Entity body
      *
      * @return stdClass
@@ -136,6 +146,30 @@ class GenericEntity
         }
 
         throw new \RuntimeException('Entity has no resource "' . $name . '"');
+    }
+
+    /**
+     * Allow use of isset on _body fields
+     *
+     * @param string $key key to check
+     *
+     * @return boolean
+     */
+    public function __isset($key)
+    {
+       return isset($this->_body->$key);
+    }
+
+    /**
+     * Allow use of isset on _body fields
+     *
+     * @param string $key key to check
+     *
+     * @return boolean
+     */
+    public function __unset($key)
+    {
+        throw new \RuntimeException('unset() is disabled');
     }
 
     /**
