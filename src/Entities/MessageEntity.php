@@ -165,24 +165,4 @@ class MessageEntity extends \Crunchmail\Entities\GenericEntity
     {
         return $this->status === 'sent';
     }
-
-    /**
-     * Retrieve html content (shortcut)
-     *
-     * @return string
-     */
-    public function html()
-    {
-        return (string) $this->preview->get()->html;
-    }
-
-    /**
-     * Retrieve text content (shortcut)
-     *
-     * @return string
-     */
-    public function txt()
-    {
-        return (string) $this->preview->get()->plaintext;
-    }
 }

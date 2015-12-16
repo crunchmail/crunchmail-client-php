@@ -217,36 +217,6 @@ class MessageEntityTest extends TestCase
         return $msg;
     }
 
-    public function retrievePreview($method)
-    {
-        $cli = $this->quickMock(
-            ['message_ok', '200'],
-            ['preview', '200']
-        );
-        $msg = $cli->messages->get('https://fake');
-        return $msg->$method();
-    }
-
-    /**
-     * @covers ::html
-     */
-    public function testRetrievingHtmlContent()
-    {
-        $result = $this->retrievePreview('html');
-        $this->assertStringStartsWith('<!DOCTYPE html', (string) $result);
-    }
-
-    /**
-     * @covers ::txt
-     */
-    public function testRetrievingTxtContent()
-    {
-        $result = $this->retrievePreview('txt');
-
-        $this->assertNotContains('DOCTYPE', (string) $result);
-        $this->assertContains('UNSUBSCRIBE', (string) $result);
-    }
-
     /**
      * @depends testGet
      * @dataProvider resourcesPathProvider

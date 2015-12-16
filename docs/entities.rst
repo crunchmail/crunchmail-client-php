@@ -173,38 +173,6 @@ Sending the preview
     This is a shortcut to $message->preview_send->send() method.
 
 
-Preview HTML
-------------
-
-:Method: ``html()``
-:Summary: Returns the message html content.
-:Returns: string
-
-.. code-block:: php
-
-    echo $message->html();
-
-.. note::
-    A request will be made to the API, as it's a shortcut to the ``preview``
-    sub-resource.
-
-
-Preview text
-------------
-
-:Method: ``txt()``
-:Summary: Returns the message text content.
-:Returns: string
-
-.. code-block:: php
-
-    echo $message->txt();
-
-.. note::
-    A request will be made to the API, as it's a shortcut to the ``preview``
-    sub-resource.
-
-
 Is the message ready?
 ---------------------
 
