@@ -1,11 +1,11 @@
 
-# Crunchmail-client-php 0.1
+# Crunchmail-client-php 0.2.1
 
 Official PHP wrapper for Crunchmail API
 
 [![Build Status](https://travis-ci.org/crunchmail/crunchmail-client-php.svg?branch=master)](https://travis-ci.org/crunchmail/crunchmail-client-php)
-[![Latest Stable Version](https://poser.pugx.org/crunchmail/crunchmail-client-php/v/stable)](https://packagist.org/packages/crunchmail/crunchmail-client-php) 
-[![Latest Unstable Version](https://poser.pugx.org/crunchmail/crunchmail-client-php/v/unstable)](https://packagist.org/packages/crunchmail/crunchmail-client-php) 
+[![Latest Stable Version](https://poser.pugx.org/crunchmail/crunchmail-client-php/v/stable)](https://packagist.org/packages/crunchmail/crunchmail-client-php)
+[![Latest Unstable Version](https://poser.pugx.org/crunchmail/crunchmail-client-php/v/unstable)](https://packagist.org/packages/crunchmail/crunchmail-client-php)
 
 
 # Important Notice

@@ -3,5 +3,6 @@ docs/_build
 composer.phar
 examples/config.php
 reports/*
+composer.lock
 *.swp
 *.log

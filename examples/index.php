@@ -47,19 +47,16 @@ $cli = new Client($config);
 /*
 // Send a message to yourself as a preview
 // for testing sending / preview
-$yourmail = '';
-
-if (empty($yourmail))
+if (empty($demo['sender']))
 {
-    throw new Exception('Please configure your email in <em>$youremail</em> var.');
+    throw new Exception('Please configure your email in configuration.');
 }
 
 $msg = $cli->messages->post($post);
-//FIXME
-//$msg->sendPreview($msg->url, $yourmail);
+$msg->previewSend($demo['sender']);
 
 // Confirm sending
-$msg->addRecipients($yourmail);
+$msg->addRecipients($demo['sender']);
 $msg->send();
 
 */
@@ -93,7 +90,7 @@ echo '<h3>Retrieve…</h3>';
 $other = $cli->messages->get($coolMsg->url);
 echo "Subject is: " . $other->subject;
 
-// FIXME: api format correct?
+// FIXME: api format has to change
 /*
 echo '<h3>Verify attachment is there:</h3>';
 $other = $msg->attachments->get();

@@ -2,12 +2,10 @@
 # Rethink
 
 - Exception system : RuntimeException vs Exception\ClientException
-- Add underscore to private properties to avoid conflicts
 
 # Missing
 
 - Domain revalidate
-
     $domain->revalidate()
 
 - Stats
@@ -31,8 +29,3 @@
 
 - unset(\$message->title) throws an error (magic method missing)
 - test raw requests
-
-
-# fix
-
-- preview conflict -> rename to ? direct method ?

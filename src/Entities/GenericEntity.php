@@ -63,7 +63,7 @@ class GenericEntity
      *
      * @return Crunchmail\Entity\GenericEntity
      */
-    public function __construct(GenericResource $resource, \stdClass $data)
+    public function __construct(GenericResource $resource, $data)
     {
         $this->_resource = $resource;
         $this->_body     = $data;

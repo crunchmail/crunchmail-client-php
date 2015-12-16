@@ -2,9 +2,6 @@
 
 ## Testing
 
-To run the Test suite, you will need PHP 5.6+.
-This might work with lower versions but has not been tested.
-
     cd /path/to/project
     # run all tests
     make test
@@ -17,12 +14,16 @@ This might work with lower versions but has not been tested.
     # show agile documentation
     make show-testdox
 
+or if you don't want to use make, and run with default options:
+
+    phpunit
+
 
 ## Documentation
 
     cd /path/to/project
-    # generate documentation from phpdoc comments
-    make docs
+    # generate documentation from phpdoc comments with apigen
+    make doc
 
 
 ## Submitting Changes
@@ -44,5 +45,7 @@ for your commit messages.
 
 # Additional Resources
 
+* [Travis CI](https://travis-ci.org/)
 * [Guzzle 6](http://docs.guzzlephp.org/en/latest/quickstart.html)
 * [PHPUnit](https://phpunit.de/)
+- [github_changelog_generator](https://github.com/skywinder/github-changelog-generator)
