@@ -1,0 +1,36 @@
+{
+    "optout": {
+        "feedback-loop": 0,
+        "abuse": 0,
+        "web": 0,
+        "mail": 0,
+        "total": 0,
+        "bounce": 0
+    },
+    "timing": {
+        "delivery_total": 45,
+        "delivery_median": 0
+    },
+    "tracking": {
+        "viewed_in_browser": 0,
+        "clicked": {
+            "any": 0
+        },
+        "opened": 0,
+        "open_median_time": 0
+    },
+    "count": {
+        "in_transit": 2,
+        "done": 0,
+        "total": 2,
+        "had_delay": 0
+    },
+    "last_status": {
+        "sending": 0,
+        "delivered": 0,
+        "softbounced": 0,
+        "unknown": 2,
+        "ignored": 0,
+        "hardbounced": 0
+    }
+}
