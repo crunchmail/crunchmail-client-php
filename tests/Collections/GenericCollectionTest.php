@@ -65,6 +65,7 @@ class GenericCollectionTest extends TestCase
 
         $body = $this->getSentBody(0);
         $this->assertSame($body->count, $collection->count());
+        $this->assertSame($body->count, count($collection));
         $this->assertSame($body->page_count, $collection->pageCount());
     }
 

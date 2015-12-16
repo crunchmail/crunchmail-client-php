@@ -16,7 +16,7 @@ use Crunchmail\Client;
 /**
  * Generic collection for Crunchmail API
  */
-class GenericCollection
+class GenericCollection implements \countable
 {
     /**
      * Resource that created the collection
