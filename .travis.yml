@@ -1,28 +1,21 @@
 
 language: php
 
-env:
-global:
-secure:
-    +hKc+1fWxHqgn1Vnj0rR/kh5Kz+/iYc4YY4yjRgGlJiPeFSbch5Yfs0Nwh8OTrLYJeLzymodOOEn+DFu0Hp0Am1V/lOmfmoYOOw+VfN/0ep7tfrZqAJrvYuYOHrUZ9vQI+OhtLNc
-    +xbDtQ1Nscw8GVVSPolAccoywkEDw2021qW4tW2Av8XovX5gMdtQz5HdnVc7N/DyTzXqLWa+HjNoxpTO3RU5Yqi4O89BDdqolMgVO1/IzlW9dLvX0p0ZNmfS2Zy/ku+HDk3nLgbY
-    +ZKm/94HLNkby4qiswncMwyZucfwJvnViDc89QjCxAriTEIIxihAwnTo6j8eNtJWZBHJnupnlp9LcifRfIjho5kIQwAabKlC79tl6O0ELBTt8wepEt5vafPIWkMMWnRRIJg49Ofp
-    +zUfjT5KGspS/qLMK2w83sbYtUknfrE0KMKc5SCepOnO/mf1JS+RB8Vd7Xhwc7UIG1JdaUof60FKpgayM6FoRwO315dI0Klxh75YrLpSImVYN3984svIiT5ZYBiLEUkJCKFSfrMR
-    +LwHDfN1fAKtyxVSSgutyG+U6DBTbiCALg74/azL5rqECjehzxHXc/NT6W20c20925U80rjr1Be6xBUfI/khT2dDCbVAlXBzEPaqHZQqXxwwUGEJAGrGRavwRrbdI9B2ByFQtnQl
-    +RMDyb3l0=
-
 # list any PHP version you want to test against
 php:
   - 5.5
   - 5.6
   - 7
+  - hhvm
 
 install:
   - composer install
 
-# omitting "script:" will default to phpunit
-# use the $DB env variable to determine the phpunit.xml to use
 script: phpunit -v
 
 after_success:
-      - if  [ $TRAVIS_PHP_VERSION = '5.6' ] && [ $TRAVIS_BRANCH = 'master' ] && [ $TRAVIS_PULL_REQUEST = 'false' ]; then sh bin/generate-api.sh; fi
+- if  [ $TRAVIS_PHP_VERSION = '5.6' ] && [ $TRAVIS_BRANCH = 'master' ] && [ $TRAVIS_PULL_REQUEST = 'false' ]; then sh bin/generate-api.sh; fi
+
+env:
+  global:
+    secure: hKc+1fWxHqgn1Vnj0rR/kh5Kz+/iYc4YY4yjRgGlJiPeFSbch5Yfs0Nwh8OTrLYJeLzymodOOEn+DFu0Hp0Am1V/lOmfmoYOOw+VfN/0ep7tfrZqAJrvYuYOHrUZ9vQI+OhtLNcxbDtQ1Nscw8GVVSPolAccoywkEDw2021qW4tW2Av8XovX5gMdtQz5HdnVc7N/DyTzXqLWa+HjNoxpTO3RU5Yqi4O89BDdqolMgVO1/IzlW9dLvX0p0ZNmfS2Zy/ku+HDk3nLgbYZKm/94HLNkby4qiswncMwyZucfwJvnViDc89QjCxAriTEIIxihAwnTo6j8eNtJWZBHJnupnlp9LcifRfIjho5kIQwAabKlC79tl6O0ELBTt8wepEt5vafPIWkMMWnRRIJg49OfpzUfjT5KGspS/qLMK2w83sbYtUknfrE0KMKc5SCepOnO/mf1JS+RB8Vd7Xhwc7UIG1JdaUof60FKpgayM6FoRwO315dI0Klxh75YrLpSImVYN3984svIiT5ZYBiLEUkJCKFSfrMRLwHDfN1fAKtyxVSSgutyG+U6DBTbiCALg74/azL5rqECjehzxHXc/NT6W20c20925U80rjr1Be6xBUfI/khT2dDCbVAlXBzEPaqHZQqXxwwUGEJAGrGRavwRrbdI9B2ByFQtnQlRMDyb3l0=
