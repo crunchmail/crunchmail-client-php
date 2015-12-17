@@ -12,7 +12,7 @@ The requests you send via the Crunchmail PHP Client will either return
 collections of entities or a single entities.
 
 In case of collection, the object will always be generic, of the class
-Collections\GenericCollection (this might change in the future).
+``Collections\GenericCollection`` (this might change in the future).
 
 GenericCollection
 =================

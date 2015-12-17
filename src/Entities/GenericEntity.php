@@ -98,6 +98,12 @@ class GenericEntity
      * @param array $args arguments
      *
      * @return Crunchmail\Entity\GenericEntity
+     *
+     * @method mixed get()    get() get entity (refresh)
+     * @method mixed delete() delete() delete entity
+     * @method mixed post()   post(array $values, string $format='json')   post values
+     * @method mixed put()    put(array $values, string $format='json')    put values
+     * @method mixed patch()  patch(array $values, string $format='json')  patch values
      */
     public function __call($method, $args)
     {
