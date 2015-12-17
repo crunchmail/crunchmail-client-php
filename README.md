@@ -1,5 +1,5 @@
 
-# Crunchmail-client-php 0.2.1
+# Crunchmail-client-php 0.3
 
 Official PHP wrapper for Crunchmail API
 
