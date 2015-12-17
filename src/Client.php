@@ -102,7 +102,7 @@ class Client extends \GuzzleHttp\Client
      */
     public function __get($name)
     {
-        return $this->createResource($name);
+        return $this->$name = $this->createResource($name);
     }
 
     /**
