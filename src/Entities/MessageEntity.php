@@ -14,6 +14,13 @@ namespace Crunchmail\Entities;
 class MessageEntity extends \Crunchmail\Entities\GenericEntity
 {
     /**
+     * Shortcuts to links href value
+     *
+     * @var array
+     */
+    protected static $exposeLinks = ['archive_url'];
+
+    /**
      * To string
      *
      * @return string

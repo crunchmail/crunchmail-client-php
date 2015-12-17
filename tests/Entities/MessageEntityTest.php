@@ -100,10 +100,7 @@ class MessageEntityTest extends TestCase
     {
         return [
             ['preview.html'],
-            ['preview.txt'],
-            ['archive_url'],
-            ['opt_outs'],
-            ['spam_details']
+            ['preview.txt']
         ];
     }
 
@@ -259,7 +256,7 @@ class MessageEntityTest extends TestCase
         $msg = $cli->messages->get('https://fake');
         $msg = $msg->delete();
 
-        $this->assertEmpty((array) $msg->getBody());
+        $this->assertNull($msg->getBody());
 
         $this->checkSentHistory('DELETE');
     }
@@ -362,6 +359,15 @@ class MessageEntityTest extends TestCase
     public function testBlacklistedResourcesAreNotReachable($field, $msg)
     {
         $msg->$field;
+    }
+
+    /**
+     * @covers ::__get
+     * @depends testGet
+     */
+    public function testAccessingArchiveUrlWorks($msg)
+    {
+        $this->assertContains('hosted', $msg->archive_url);
     }
 
     /**

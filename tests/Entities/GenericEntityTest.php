@@ -15,6 +15,7 @@ use Crunchmail;
 use Crunchmail\PHPUnit\TestCase;
 
 use Crunchmail\Entities\GenericEntity;
+use Crunchmail\Entities\MessageEntity;
 
 /**
  * Test class
@@ -81,7 +82,7 @@ class GenericEntityTest extends TestCase
     {
         $cli  = $this->quickMock(['message_ok', '200']);
         $data = $this->getStdTemplate('message_ok');
-        $entity = new GenericEntity($cli->messages, $data);
+        $entity = new MessageEntity($cli->messages, $data);
 
         $refresh = $entity->get();
 

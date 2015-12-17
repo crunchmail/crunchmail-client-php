@@ -30,6 +30,8 @@ class GenericEntity
      */
     protected $_body;
 
+    protected static $exposeLinks = [];
+
     /**
      * Links remapping
      *
@@ -49,10 +51,7 @@ class GenericEntity
      */
     private static $blacklistLinks = [
         'preview.html',
-        'preview.txt',
-        'archive_url',
-        'spam_details',
-        'opt_outs'
+        'preview.txt'
     ];
 
     /**
@@ -86,8 +85,18 @@ class GenericEntity
      */
     public function getBody()
     {
+        if (empty((array) $this->_body))
+        {
+            return null;
+        }
+
         $copy = clone $this->_body;
         unset($copy->_links);
+
+        foreach (static::$exposeLinks as $key)
+        {
+            $copy->$key = $this->getLink($key);
+        }
         return $copy;
     }
 
@@ -137,18 +146,20 @@ class GenericEntity
                 prohibited');
         }
 
+        $body = $this->getBody();
+
+        // shortcut to body fields, when no resource was found
+        if (property_exists($body, $name))
+        {
+            return $body->$name;
+        }
+
         // a subresource was found, create and return it
         if ($url = $this->getLink($name))
         {
             // save it, no need to create a new one each time
             $this->$name = $this->_resource->client->createResource($name, $url);
             return $this->$name;
-        }
-
-        // shortcut to body fields, when no resource was found
-        if (is_object($this->_body) && property_exists($this->_body, $name))
-        {
-            return $this->_body->$name;
         }
 
         throw new \RuntimeException('Entity has no resource "' . $name . '"');
@@ -191,6 +202,6 @@ class GenericEntity
         $map = isset(self::$links[$name]) ? self::$links[$name] : $name;
 
         return isset($this->_body->_links->$map) ?
-            $this->_body->_links->$map->href : false;
+            $this->_body->_links->$map->href : null;
     }
 }
