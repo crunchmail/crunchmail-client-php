@@ -43,16 +43,8 @@ class Client extends \GuzzleHttp\Client
      * @var array
      */
     public static $entities = [
-        'domains'      => 'domain',
-        'messages'     => 'message',
-        'recipients'   => 'recipient',
-        'attachments'  => 'attachment',
-        "customers"    => 'customer',
         "categories"   => 'category',
-        "bounces"      => 'bounce',
-        "users"        => 'user',
-        'preview'      => 'preview',
-        'preview_send' => 'preview_send'
+        'preview'      => 'preview'
     ];
 
     /**

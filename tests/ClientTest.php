@@ -89,23 +89,6 @@ class ClientTest extends TestCase
     {
         $client = new Client(['base_uri' => '']);
         $this->assertInstanceOf('Crunchmail\Client', $client);
-
-        /*
-
-        $config = $client->getConfig();
-        $handler = $config['handler'];
-
-        $responses = [
-            new MockHandler([ new Response(200, [], '{coucou: 1}') ])
-        ];
-        $newhandler = new MockHandler($responses);
-        $newstack   = HandlerStack::create($newhandler);
-
-        $handler->push($newstack);
-
-        $m = $client->messages->get('https://feie');
-         */
-
         return $client;
     }
 

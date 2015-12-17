@@ -107,18 +107,26 @@ class GenericResource
     }
 
     /**
+     * Map the resource name to the entity name by default we remove the
+     * trailing "s", but Client::$entities can contains special cases:
+     *
+     * @return string
+     */
+    public function getEntityName()
+    {
+        return !empty(Client::$entities[$this->_path]) ?
+            Client::$entities[$this->_path] :
+            preg_replace('/(s)$/', '', $this->_path);
+    }
+
+    /**
      * Return the class name for the entity, depending on resource path
      *
      * @return string
      */
     public function getEntityClass()
     {
-        if (empty(Client::$entities[$this->_path]))
-        {
-            throw new \RuntimeException('Unknow entity for  ' . $this->_path);
-        }
-
-        $path = Client::$entities[$this->_path];
+        $path = $this->getEntityName();
         return $this->getClass($path, 'Entities', 'Entity');
     }
 

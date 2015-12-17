@@ -37,7 +37,14 @@ class GenericResourceTest extends TestCase
     {
         return [
             ['messages',    'Message',    'message_ok'],
-            ['attachments', 'Attachment', 'attachment_ok']
+            ['domains',     'Domain',     'domain_ok'],
+            ['recipients',  'Recipient',  'mail_ok'],
+            ['attachments', 'Attachment', 'attachment_ok'],
+            ['stats',       'Generic',    'stat_ok'],
+            // FIXME: need more values
+            //['bounces',     'Generic',    'bounce_ok'],
+            //['spam_detail',     'Generic',    'spam_detail_ok'],
+            //['optouts',     'Generic',    'optout_ok'],
         ];
     }
 
@@ -290,13 +297,28 @@ class GenericResourceTest extends TestCase
 
     /**
      * @covers ::getEntityClass
-     *
-     * @expectedException RuntimeException
-     * @expectedExceptionCode 0
      */
-    public function testGetClassThrowsAnExceptionOnUnknowEntities()
+    public function testGetClassReturnsSingular()
     {
         $cli = $this->quickMock();
-        $cli->fake->getEntityClass();
+        $this->assertEquals('fake', $cli->fakes->getEntityName());
+    }
+
+    /**
+     * @covers ::getEntityClass
+     */
+    public function testGetClassReturnsIdenticalForSingularPath()
+    {
+        $cli = $this->quickMock();
+        $this->assertEquals('fake', $cli->fake->getEntityName());
+    }
+
+    /**
+     * @covers ::getEntityClass
+     */
+    public function testGetClassMapSpecialEntities()
+    {
+        $cli = $this->quickMock();
+        $this->assertEquals('category', $cli->categories->getEntityName());
     }
 }
