@@ -13,8 +13,8 @@ collections of entities or a single entities.
 
 In case of entities, the object returned might be a generic one (class
 ``Crunchmail\Entities\GenericEntity``) or a specific, like
-``Crunchmail\Entities\MessageEntity`` for the messages. Specific entities will have
-special methods that abstract the use of the API.
+``Crunchmail\Entities\MessageEntity`` for the messages. Specific entities will
+have special methods that abstract the use of the API.
 
 You will be able to access the fields returned by the API directly, using the
 magic properties of the entitiy:
@@ -29,6 +29,32 @@ GenericEntity
 
 All entity classes extends GenericEntity and therefore have access to some
 methods in common.
+
+Some entities do not have a specific class and will return a GenericEntity. It
+means they do not have any special methods to offer.
+
+Entity without specific class are:
+
+* Bounce
+* Stat
+* OptOut
+* Spam
+
+
+Conversion to string
+--------------------
+
+Entities can be autotically converted to string.
+
+.. code-block:: php
+
+    $message = $client->get($message_url);
+    // will print message name
+    echo $message;
+
+    $recpient = $client->get($recipient_url);
+    // will print field "to"
+    echo $recipient;
 
 
 GET request
