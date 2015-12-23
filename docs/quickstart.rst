@@ -2,7 +2,7 @@
 Quickstart
 ==========
 
-This page will helps you quickly understand how the library works with inline
+This page will help you quickly understand how the library works with inline
 examples.
 
 If you don't have installed the library yet, look at the :ref:`installation`
@@ -43,7 +43,7 @@ Sending Requests
 The client allows you to quickly request the API by abstracting the REST logic
 as well as some of the API's specific logic.
 
-All of the client request methods will return you one of this 2 types of
+All of the client's request methods will return you one of this 2 types of
 objects:
 
 - An :ref:`entity <entities>`
@@ -95,7 +95,7 @@ Or to directly access a resource when you know its id:
     $entity = $client->messages->get('https://api.crunchmail.net/messages/1234/');
 
 
-Resources can also be access from some entities who have sub-resources:
+Resources can also be accessed from some entities who have sub-resources:
 
 .. code-block:: php
 

@@ -4,8 +4,8 @@
 Crunchmail Documentation
 ========================
 
-Cruncmail PHP Client is a library to help you to easily request the Crunchmail
-API. It is based on Guzzle library.
+Crunchmail PHP Client is a library to help you easily request the Crunchmail
+API. It is based on *Guzzle* library.
 
 .. code-block:: php
 

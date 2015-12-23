@@ -48,6 +48,11 @@ class Client extends \GuzzleHttp\Client
     ];
 
     /**
+     * @var array
+     */
+    private $config;
+
+    /**
      * List of authorized methods on client.
      * ex: $client->get($url);
      *
@@ -77,6 +82,13 @@ class Client extends \GuzzleHttp\Client
         {
             throw new \RuntimeException('base_uri is missing in configuration');
         }
+
+        if (!isset($config['token_uri']))
+        {
+            throw new \RuntimeException('token_uri is missing in configuration');
+        }
+
+        $this->config = $config;
 
         return parent::__construct($config);
     }
@@ -196,6 +208,44 @@ class Client extends \GuzzleHttp\Client
         }
 
         return json_decode((string) $result->getBody());
+    }
+
+    /**
+     * Return an auth token from credentials
+     *
+     * @param string $identifier login
+     * @param string $password   password
+     * @return string
+     */
+    public function getTokenFromCredentials($identifier, $password)
+    {
+        return $this->getToken([
+            'identifier' => $identifier,
+            'password'   => $password
+        ]);
+    }
+
+    /**
+     * Return an auth token from api key
+     *
+     * @param string $apiKey API secret key
+     * @return string
+     */
+    public function getTokenFromApiKey($apiKey)
+    {
+        return $this->getToken(['api_key' => $apiKey]);
+    }
+
+    /**
+     * Return an auth token from given parameters
+     *
+     * @param string $params parameters to post
+     * @return string
+     */
+    public function getToken($params)
+    {
+        $result = $this->apiRequest('post', $this->config['token_uri'], $params);
+        return isset($result->token) ? $result->token : null;
     }
 
     /**

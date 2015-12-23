@@ -73,7 +73,6 @@ class ClientTest extends TestCase
         return $list;
     }
 
-
     /* ---------------------------------------------------------------------
      * Tests
      * --------------------------------------------------------------------- */
@@ -87,7 +86,7 @@ class ClientTest extends TestCase
      */
     public function testEmptyClientReturnsAResponse()
     {
-        $client = new Client(['base_uri' => '']);
+        $client = new Client(['base_uri' => '', 'token_uri' => '']);
         $this->assertInstanceOf('Crunchmail\Client', $client);
         return $client;
     }
@@ -101,6 +100,17 @@ class ClientTest extends TestCase
     public function testInvalidConfigurationThrowsAnException()
     {
         new Client([]);
+    }
+
+    /**
+     * @covers ::__construct
+     *
+     * @expectedExceptionCode 0
+     * @expectedException RuntimeException
+     */
+    public function testInvalidTokenUriThrowsAnException()
+    {
+        new Client(['base_uri' => '']);
     }
 
     /**
@@ -268,6 +278,9 @@ class ClientTest extends TestCase
         $this->fail('An expected exception has not been raised');
     }
 
+    /**
+     * @covers ::__get
+     */
     public function testThatMappedPathWork()
     {
         $cli = $this->quickMock(['message_ok', 200]);
@@ -275,5 +288,42 @@ class ClientTest extends TestCase
 
         $req = $this->getHistoryRequest(0);
         $this->assertEquals('mails/', (string) $req->getUri());
+    }
+
+    /**
+     * @covers ::tokenAuth
+     */
+    public function testTokenAuthWithAPIKeyWorks()
+    {
+        $data = $this->getStdTemplate('token_ok');
+
+        $cli = $this->quickMock(['token_ok', 200]);
+        $token = $cli->getTokenFromApiKey('api_key');
+
+        $req = $this->getHistoryContent(0);
+
+        // check sent request
+        $this->assertEquals('api_key', $req->api_key);
+
+        $this->assertEquals($data->token, $token);
+    }
+
+    /**
+     * @covers ::credentialsAuth
+     */
+    public function testTokenAuthWithCredentialsKeyWorks()
+    {
+        $data = $this->getStdTemplate('token_ok');
+
+        $cli = $this->quickMock(['token_ok', 200]);
+        $token = $cli->getTokenFromCredentials('user', 'password');
+
+        $req = $this->getHistoryContent(0);
+
+        // check sent request
+        $this->assertEquals('user', $req->identifier);
+        $this->assertEquals('password', $req->password);
+
+        $this->assertEquals($data->token, $token);
     }
 }

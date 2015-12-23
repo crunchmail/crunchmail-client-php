@@ -45,7 +45,11 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      */
     public function mockClient($handler)
     {
-        $client = new Client(['base_uri' => '', 'handler' => $handler]);
+        $client = new Client([
+            'base_uri'  => '',
+            'token_uri' => '',
+            'handler'   => $handler
+        ]);
         return $client;
     }
 
