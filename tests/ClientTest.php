@@ -298,13 +298,12 @@ class ClientTest extends TestCase
         $data = $this->getStdTemplate('token_ok');
 
         $cli = $this->quickMock(['token_ok', 200]);
-        $token = $cli->getTokenFromApiKey('api_key');
+        $token = $cli->getToken();
 
         $req = $this->getHistoryContent(0);
 
         // check sent request
-        $this->assertEquals('api_key', $req->api_key);
-
+        $this->assertEquals('key', $req->api_key);
         $this->assertEquals($data->token, $token);
     }
 

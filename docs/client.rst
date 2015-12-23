@@ -76,10 +76,8 @@ more details about the parameters for each methods.
 Get JWT token from API key
 --------------------------
 
-:Method: ``getTokenFromApiKey()``
-:Summary: Request a new token from the given API key
-:Parameters:
-    - ``String $apiKey`` your API key
+:Method: ``getToken()``
+:Summary: Request a new token from the configured gAPI key
 :Return: token
 
 .. code-block:: php

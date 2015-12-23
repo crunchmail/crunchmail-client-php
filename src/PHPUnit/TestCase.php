@@ -48,6 +48,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $client = new Client([
             'base_uri'  => '',
             'token_uri' => '',
+            'auth'      => ['api', 'key'],
             'handler'   => $handler
         ]);
         return $client;

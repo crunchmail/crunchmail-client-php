@@ -226,24 +226,23 @@ class Client extends \GuzzleHttp\Client
     }
 
     /**
-     * Return an auth token from api key
-     *
-     * @param string $apiKey API secret key
-     * @return string
-     */
-    public function getTokenFromApiKey($apiKey)
-    {
-        return $this->getToken(['api_key' => $apiKey]);
-    }
-
-    /**
      * Return an auth token from given parameters
      *
      * @param string $params parameters to post
      * @return string
      */
-    public function getToken($params)
+    public function getToken(array $params = null)
     {
+        if (is_null($params))
+        {
+            if (!isset($this->config['auth']) || count($this->config['auth']) < 2 )
+            {
+                throw new \RuntimeException('auth parameters are missing');
+            }
+
+            $params = ['api_key' => $this->config['auth'][1] ];
+        }
+
         $result = $this->apiRequest('post', $this->config['token_uri'], $params);
         return isset($result->token) ? $result->token : null;
     }
