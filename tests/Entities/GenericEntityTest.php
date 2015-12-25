@@ -207,4 +207,16 @@ class GenericEntityTest extends TestCase
 
         $this->assertNull($entity->field);
     }
+
+    /**
+     * @covers ::getBody
+     */
+    public function testThatEmptyEntityReturnsNull()
+    {
+        $cli    = $this->quickMock();
+        $data   = new \stdClass();
+        $entity = new GenericEntity($cli->messages, $data);
+
+        $this->assertNull($entity->getBody());
+    }
 }

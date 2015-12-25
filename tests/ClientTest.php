@@ -291,7 +291,7 @@ class ClientTest extends TestCase
     }
 
     /**
-     * @covers ::tokenAuth
+     * @covers ::getToken
      */
     public function testTokenAuthWithAPIKeyWorks()
     {
@@ -308,7 +308,7 @@ class ClientTest extends TestCase
     }
 
     /**
-     * @covers ::credentialsAuth
+     * @covers ::getTokenFromCredentials
      */
     public function testTokenAuthWithCredentialsKeyWorks()
     {
@@ -324,5 +324,21 @@ class ClientTest extends TestCase
         $this->assertEquals('password', $req->password);
 
         $this->assertEquals($data->token, $token);
+    }
+
+    /**
+     * @covers ::getToken
+     *
+     * @expectedException RuntimeException
+     * @expectedExceptionCode 0
+     */
+    public function testGettingTokenWithoutAuthConfigThrowsAnException()
+    {
+        $cli = new Client([
+            'base_uri'  => '',
+            'token_uri' => ''
+        ]);
+
+        $token = $cli->getToken();
     }
 }
