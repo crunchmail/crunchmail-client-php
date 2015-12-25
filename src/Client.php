@@ -235,7 +235,7 @@ class Client extends \GuzzleHttp\Client
     {
         if (is_null($params))
         {
-            if (!isset($this->config['auth']) || count($this->config['auth']) < 2 )
+            if (!isset($this->config['auth']) || count($this->config['auth']) < 2)
             {
                 throw new \RuntimeException('auth parameters are missing');
             }

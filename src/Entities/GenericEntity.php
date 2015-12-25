@@ -174,7 +174,7 @@ class GenericEntity
      */
     public function __isset($key)
     {
-       return isset($this->_body->$key);
+        return isset($this->_body->$key);
     }
 
     /**
