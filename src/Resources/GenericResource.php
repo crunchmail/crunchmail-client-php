@@ -245,4 +245,20 @@ class GenericResource
     {
         return $this->callRequest($method, $args);
     }
+
+    /**
+     * Create a resource when accessing resource properties and returns it
+     *
+     * Example:
+     * $client->contacts->lists
+     *
+     * @param string $name property
+     *
+     * @return Crunchmail\Resources\GenericResource
+     */
+    public function __get($name)
+    {
+        $path = $this->_url. $this->client->mapPath($name);
+        return $this->$name = $this->client->createResource($name, $path);
+    }
 }

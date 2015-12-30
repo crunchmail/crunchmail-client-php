@@ -321,4 +321,25 @@ class GenericResourceTest extends TestCase
         $cli = $this->quickMock();
         $this->assertEquals('category', $cli->categories->getEntityName());
     }
+
+    /**
+     * @covers ::__get
+     */
+    public function testSubResourcesHaveAProperPath()
+    {
+        $cli = $this->quickMock(['messages', 200]);
+        $cli->contacts->lists->get();
+
+        $req = $this->getHistoryRequest(0);
+        $this->assertEquals('contacts/lists', $req->getUri()->getPath());
+    }
+
+    /**
+     * @covers ::__get
+     */
+    public function testSubResourcesReturnAResource()
+    {
+        $cli = $this->quickMock();
+        $this->assertGenericResource($cli->contacts->lists);
+    }
 }
