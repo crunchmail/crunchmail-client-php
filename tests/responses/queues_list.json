@@ -1,0 +1,27 @@
+{
+    "count": 1,
+    "next": null,
+    "previous": null,
+    "page_count": 1,
+    "results": [
+        {
+            "url": "https://staging.crunchmail.net/v1/contacts/queues/2/",
+            "policies": [],
+            "properties": {},
+            "contact_fields": [
+                {
+                    "required": true,
+                    "type": "Char",
+                    "name": "identification"
+                }
+            ],
+            "contacts_count": {},
+            "_links": {
+                "consume": {
+                    "href": "https://staging.crunchmail.net/v1/contacts/queues/2/consume/"
+                }
+            },
+            "subscription": "https://staging-app.crunchmail.net/subscribe/e45a662b-378b-4db3-b0ce-f81ed063617e"
+        }
+    ]
+}

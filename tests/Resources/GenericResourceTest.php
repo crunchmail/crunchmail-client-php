@@ -5,6 +5,8 @@
  * @author    Yannick Huerre <dev@sheoak.fr>
  * @copyright 2015 (c) Oasiswork
  * @license   https://opensource.org/licenses/MIT MIT
+ *
+ * @todo check that path contains a trailing /
  */
 
 namespace Crunchmail\Tests;
@@ -92,7 +94,6 @@ class GenericResourceTest extends TestCase
         $this->assertEntity($entityName, $entity);
     }
 
-
     /**
      * Resource path can be override by an absolute url
      *
@@ -120,7 +121,6 @@ class GenericResourceTest extends TestCase
         $msg = $cli->messages->post([]);
         $this->assertEntity('Message', $msg);
     }
-
 
     /**
      * When creating a sub-resource, we need te be able to force the url
@@ -320,5 +320,26 @@ class GenericResourceTest extends TestCase
     {
         $cli = $this->quickMock();
         $this->assertEquals('category', $cli->categories->getEntityName());
+    }
+
+    /**
+     * @covers ::__get
+     */
+    public function testSubResourcesHaveAProperPath()
+    {
+        $cli = $this->quickMock(['messages', 200]);
+        $cli->contacts->lists->get();
+
+        $req = $this->getHistoryRequest(0);
+        $this->assertEquals('contacts/lists/', $req->getUri()->getPath());
+    }
+
+    /**
+     * @covers ::__get
+     */
+    public function testSubResourcesReturnAResource()
+    {
+        $cli = $this->quickMock();
+        $this->assertGenericResource($cli->contacts->lists);
     }
 }

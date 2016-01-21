@@ -37,9 +37,16 @@ class GenericEntity
      *
      * @var array
      */
-    private static $links = [
+    protected static $links = [
         'recipients'   => 'mails'
     ];
+
+    /**
+     * Resource mapping
+     *
+     * @var array
+     */
+    protected static $resources = [];
 
     /**
      * Some links could lead to confusion, because they would not return
@@ -120,6 +127,15 @@ class GenericEntity
         {
             throw new \RuntimeException('Entity has no url');
         }
+
+        // allow use of rest actions, if a link is actually an action
+        // and not a classic rest resource.
+        // ex: $queue->consume() instead of $queue->consume->post()
+        if (array_key_exists($method, (array) $this->_body->_links))
+        {
+            return call_user_func_array([$this->$method, 'post'], $args);
+        }
+
         return $this->_resource->callRequest($method, $args, $this->url);
     }
 
@@ -139,7 +155,7 @@ class GenericEntity
      */
     public function __get($name)
     {
-        // forbidden resource
+        // forbidden resource ie. : $entity->forbidden->post();
         if (in_array($name, self::$blacklistLinks))
         {
             throw new \RuntimeException('Direct access to ' . $name . ' is
@@ -148,21 +164,42 @@ class GenericEntity
 
         $body = $this->getBody();
 
+        if (is_null($body))
+        {
+            throw new \RuntimeException('Entity body is empty');
+        }
+
         // shortcut to body fields, when no resource was found
+        // ex: echo $entity->fielname;
         if (property_exists($body, $name))
         {
             return $body->$name;
         }
 
         // a subresource was found, create and return it
+        // assign url to the subresource url (may need mapping)
         if ($url = $this->getLink($name))
         {
-            // save it, no need to create a new one each time
-            $this->$name = $this->_resource->client->createResource($name, $url);
+            $resourceName = $this->getResourceName($name);
+            // save it to $this->$name, no need to create a new one each time
+            $this->$name = $this->_resource->client->createResource(
+                $resourceName, $url);
             return $this->$name;
         }
 
         throw new \RuntimeException('Entity has no resource "' . $name . '"');
+    }
+
+    /**
+     * Check if the resource name is registered has belonging to a special
+     * resource class, ie. 'ContactList'
+     *
+     * @param string $name resource name
+     * @return string
+     */
+    private function getResourceName($name)
+    {
+        return isset(static::$resources[$name]) ? static::$resources[$name] : $name;
     }
 
     /**

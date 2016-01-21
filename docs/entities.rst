@@ -120,6 +120,38 @@ DELETE Request
     // edit the sender_name field
     $messages = $message->delete();
 
+REST Actions
+------------
+
+On occasions, you may have noticed that crunchmail API exposes some links that
+are not classic REST resources in the `_links` property. This is the case, for
+example, for `consume` link in contact queues entities.
+
+In that case, you can use a shortcut method en the entity to directly post to
+this pseudo-resource:
+
+.. code-block:: php
+
+    // shorthand syntax to consume the queue:
+    $queue->consume();
+
+    // is a shortcut to:
+    $queue->consume->post();
+
+
+Note that you can also pass parameters to the shorthand method.
+
+You can also use the shorthand method on any resource, but this is not
+recommended as it would lead to confusion between actions and resources:
+
+.. code-block:: php
+
+    // works but not recommended
+    $client->messages($values);
+
+    // better, the intention is clear:
+    $client->messages->post($values);
+
 
 MessageEntity
 =============

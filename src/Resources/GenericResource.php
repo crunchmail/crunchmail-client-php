@@ -165,7 +165,7 @@ class GenericResource
      *
      * message->get(url)
      * message->put($values, 'multipart', url)
-     * message->post($values, $options=['url' => force, 'format' => 'json]so
+     * message->post($values, $options=['url' => force, 'format' => 'json])
      */
     public function request($method, $url = null, $values = [], $format = 'json')
     {
@@ -244,5 +244,21 @@ class GenericResource
     public function __call($method, $args)
     {
         return $this->callRequest($method, $args);
+    }
+
+    /**
+     * Create a resource when accessing resource properties and returns it
+     *
+     * Example:
+     * $client->contacts->lists
+     *
+     * @param string $name property
+     *
+     * @return Crunchmail\Resources\GenericResource
+     */
+    public function __get($name)
+    {
+        $path = $this->_url . $this->client->mapPath($name) . '/';
+        return $this->$name = $this->client->createResource($name, $path);
     }
 }

@@ -1,4 +1,21 @@
 
+# Chain methods ?
+
+$client->multipart()
+       ->contentType('text/csv')
+       ->post()
+
+
+-> return the client with a different format / content type
+
+
+
+
+# TODO
+
+getSubResources() return links mapped
+documentation
+
 # Rethink
 
 - Exception system : RuntimeException vs Exception\ClientException
