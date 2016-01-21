@@ -35,7 +35,6 @@ class ContactListEntityTest extends TestCase
 
     /**
      * @covers ::merge
-     * @todo verify enpoint
      */
     public function testMergeMethodReturnsAContactList()
     {
@@ -50,7 +49,6 @@ class ContactListEntityTest extends TestCase
     }
 
     /**
-     * Check sent values are the same ids than entities ids
      * @covers ::merge
      */
     public function testMergeMethodWorksWithEntities()

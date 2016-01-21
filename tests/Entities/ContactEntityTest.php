@@ -27,14 +27,15 @@ class ContactEntityTest extends TestCase
      */
     public function testCopyMethodReturnsAContact()
     {
-        $client  = $this->quickMock(['contact_ok' , '200']);
-        $data    = $this->getStdTemplate('contact_ok');
-        $contact = new ContactEntity($client->contacts, $data);
+        $client = $this->quickMock(['contact_ok' , '200']);
+
+        $data   = $this->getStdTemplate('contact_ok');
 
         $dataList = new \stdClass();
         $dataList->url = 'fakeurl';
 
-        $list = new ContactListEntity($client->contacts->lists, $dataList);
+        $contact = new ContactEntity($client->contacts, $data);
+        $list    = new ContactListEntity($client->contacts->lists, $dataList);
 
         // call to test
         $clone = $contact->copyTo($list);
@@ -45,5 +46,7 @@ class ContactEntityTest extends TestCase
         // check request history
         $content = $this->getHistoryContent(0);
         $this->assertEquals('fakeurl', $content->contact_list);
+
+        $this->assertEntity('Contact', $clone);
     }
 }
