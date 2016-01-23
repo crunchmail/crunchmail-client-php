@@ -22,13 +22,14 @@ use Crunchmail\PHPUnit\TestCase;
 class ContactQueueEntityTest extends TestCase
 {
     /**
-     * @covers ::consume
+     * @covers ::__call
      */
     public function testConsumeCallThePoperMethod()
     {
         $client  = $this->quickMock(['empty', '200']);
         $data    = $this->getStdTemplate('queue_ok');
-        $queue = new ContactQueueEntity($client->queues->queues, $data);
+
+        $queue = new ContactQueueEntity($client->queues, $data);
 
         $queue->consume();
 

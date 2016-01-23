@@ -23,7 +23,7 @@ class ContactListEntityTest extends TestCase
 {
 
     /**
-     * @covers ::get
+     * @covers ::__get
      */
     public function testNestedResourcesReturnsANestedEntity()
     {
