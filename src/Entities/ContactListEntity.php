@@ -76,5 +76,4 @@ class ContactListEntity extends \Crunchmail\Entities\GenericEntity
 
         return $resource->post($content);
     }
-
 }

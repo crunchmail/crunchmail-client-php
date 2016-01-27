@@ -129,5 +129,4 @@ class ContactListEntityTest extends TestCase
 
     }
      */
-
 }

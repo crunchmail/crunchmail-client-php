@@ -183,7 +183,9 @@ class GenericEntity
             $resourceName = $this->getResourceName($name);
             // save it to $this->$name, no need to create a new one each time
             $this->$name = $this->_resource->client->createResource(
-                $resourceName, $url);
+                $resourceName,
+                $url
+            );
             return $this->$name;
         }
 
