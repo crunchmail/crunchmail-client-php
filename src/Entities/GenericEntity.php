@@ -227,6 +227,19 @@ class GenericEntity
     }
 
     /**
+     * Set the body field
+     *
+     * @param string $name  field name
+     * @param mixed  $value field value
+     *
+     * @return mixed the value
+     */
+    public function setBody($name, $value)
+    {
+        return $this->_body->$name = $value;
+    }
+
+    /**
      * Get the content of the links attribute, mapping the name first
      *
      * @param string $name name of the field
