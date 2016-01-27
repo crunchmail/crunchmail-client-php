@@ -53,17 +53,6 @@ class ContactListEntity extends \Crunchmail\Entities\GenericEntity
     }
 
     /**
-     * Duplicate contact list
-     *
-     * @return ContactListEntity
-     */
-    public function duplicate()
-    {
-        $cli = $this->_resource->client;
-        return $cli->contacts->lists->post($this->getBody());
-    }
-
-    /**
      * Import CSV
      * By default, keep all fields
      * If fields is specified, only keep those ones

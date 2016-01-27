@@ -11,6 +11,7 @@ namespace Crunchmail\Tests;
 
 use Crunchmail;
 use Crunchmail\Entities\ContactEntity;
+use Crunchmail\Entities\ContactListEntity;
 use Crunchmail\PHPUnit\TestCase;
 
 /**
@@ -21,21 +22,28 @@ use Crunchmail\PHPUnit\TestCase;
  */
 class ContactEntityTest extends TestCase
 {
-    public function testThisIsEmpty()
-    {
-    }
-
     /**
-     * @covers ::clone
-     * @todo verify enpoint
-    public function testCloneMethodReturnsAContact()
+     * @covers ::copyTo
+     */
+    public function testCopyMethodReturnsAContact()
     {
         $client  = $this->quickMock(['contact_ok' , '200']);
         $data    = $this->getStdTemplate('contact_ok');
         $contact = new ContactEntity($client->contacts, $data);
 
-        $clone = $contact->copyTo('fake');
+        $dataList = new \stdClass();
+        $dataList->url = 'fakeurl';
+
+        $list = new ContactListEntity($client->contacts->lists, $dataList);
+
+        // call to test
+        $clone = $contact->copyTo($list);
+
+        // check result
         $this->assertEntity('Contact', $clone);
+
+        // check request history
+        $content = $this->getHistoryContent(0);
+        $this->assertEquals('fakeurl', $content->contact_list);
     }
-     */
 }

@@ -49,34 +49,36 @@ class ContactListEntityTest extends TestCase
         $this->assertEntity('ContactList', $merge);
     }
 
-    // check sent values are the same ids
     /**
-     * @covers ::merge
-     */
-    public function testMergeMethodWorksWithStrings()
-    {
-    }
-
-    // check sent values are the same ids than entities ids
-    /**
+     * Check sent values are the same ids than entities ids
      * @covers ::merge
      */
     public function testMergeMethodWorksWithEntities()
-    {
-    }
-
-    /**
-     * @covers ::duplicate
-     * @todo verify enpoint
-     */
-    public function testDuplicateMethodReturnsAContactList()
     {
         $client = $this->quickMock(['contact_list_ok' , '200']);
         $data   = $this->getStdTemplate('contact_list_ok');
         $clist  = new ContactListEntity($client->contacts->lists, $data);
 
-        $clone = $clist->duplicate();
-        $this->assertEntity('ContactList', $clone);
+        $data2 = clone $data;
+        $data3 = clone $data;
+
+        $data2->url = 'fake2';
+        $data3->url = 'fake3';
+
+        // ContactListEntity->merge->post
+        $list = [
+            new ContactListEntity($client->contacts->lists, $data2),
+            new ContactListEntity($client->contacts->lists, $data3)
+        ];
+
+        $merge = $clist->merge($list);
+
+        $content = $this->getHistoryContent(0);
+
+        $this->assertEquals('fake2', $content[0]);
+        $this->assertEquals('fake3', $content[1]);
+
+        $this->assertEntity('ContactList', $merge);
     }
 
     /**

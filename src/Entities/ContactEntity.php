@@ -25,9 +25,18 @@ class ContactEntity extends \Crunchmail\Entities\GenericEntity
 
     /**
      * Copy contact to another list
+     *
+     * @param ContactListEntity $list List where to copy
+     *
+     * @return ContactEntity
+     */
     public function copyTo($list)
     {
-        //return $this->_resource->client->contacts->lists->post($list->getBody());
+        $body = $this->getBody();
+
+        unset($body->url);
+        $body->contact_list = $list->url;
+
+        return $this->_resource->client->contacts->post($body);
     }
-     */
 }
