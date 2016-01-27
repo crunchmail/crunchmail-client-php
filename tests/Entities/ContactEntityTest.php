@@ -23,6 +23,19 @@ use Crunchmail\PHPUnit\TestCase;
 class ContactEntityTest extends TestCase
 {
     /**
+     * @depends testRetrivingAnEntity
+     * @covers ::__toString
+     */
+    public function testCanBeConvertedToString($entity)
+    {
+        $client = $this->quickMock();
+        $data   = $this->getStdTemplate('contact_ok');
+        $contact = new ContactEntity($client->contacts, $data);
+
+        $this->assertEquals($contact->name, (string) $contact);
+    }
+
+    /**
      * @covers ::copyTo
      */
     public function testCopyMethodReturnsAContact()

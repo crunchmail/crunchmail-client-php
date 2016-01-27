@@ -80,6 +80,21 @@ class ContactListEntityTest extends TestCase
     }
 
     /**
+     * @covers ::import
+    public function testCsvImport()
+    {
+        $client = $this->quickMock(['contact_list_ok' , '200']);
+        $data   = $this->getStdTemplate('contact_list_ok');
+
+        $clist  = new ContactListEntity($client->contacts->lists, $data);
+
+        $content = $this->getTemplate('import.csv');
+
+        $result = $clist->import($content);
+    }
+     */
+
+    /**
      * @covers ::addProperty
     public function testAddingPropertyWorks()
     {

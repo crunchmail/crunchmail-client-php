@@ -12,6 +12,7 @@
 namespace Crunchmail\Tests;
 
 use Crunchmail\PHPUnit\TestCase;
+use Crunchmail\Resources\GenericResource;
 
 /**
  * Test class

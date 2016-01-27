@@ -64,7 +64,7 @@ class ContactListEntity extends \Crunchmail\Entities\GenericEntity
      */
     public function import($content, array $fields = null)
     {
-        $resource = $this->mails;
+        $resource = $this->contacts;
 
         // keep only specified fields
         // ?fields=[a,b,c]
