@@ -131,7 +131,8 @@ class GenericEntity
         // allow use of rest actions, if a link is actually an action
         // and not a classic rest resource.
         // ex: $queue->consume() instead of $queue->consume->post()
-        if (array_key_exists($method, (array) $this->_body->_links))
+        if (isset($this->_body->_links) &&
+            array_key_exists($method, (array) $this->_body->_links))
         {
             return call_user_func_array([$this->$method, 'post'], $args);
         }
@@ -226,19 +227,6 @@ class GenericEntity
     public function __unset($key)
     {
         throw new \RuntimeException('unset() is disabled');
-    }
-
-    /**
-     * Set the body field
-     *
-     * @param string $name  field name
-     * @param mixed  $value field value
-     *
-     * @return mixed the value
-     */
-    public function setBody($name, $value)
-    {
-        return $this->_body->$name = $value;
     }
 
     /**

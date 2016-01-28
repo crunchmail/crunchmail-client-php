@@ -196,17 +196,6 @@ class GenericEntityTest extends TestCase
     }
 
     /**
-     * @depends testSettingBodyField
-     * @covers ::setBody
-     */
-    public function testThatEntityFieldCanBeSet($entity)
-    {
-        $entity->test = 2;
-
-        $this->assertEquals(2, $entity->test);
-    }
-
-    /**
      * @covers ::__get
      */
     public function testThatNullFieldsCanBeRead()
