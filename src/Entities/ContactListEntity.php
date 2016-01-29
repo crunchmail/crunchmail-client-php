@@ -74,6 +74,6 @@ class ContactListEntity extends \Crunchmail\Entities\GenericEntity
             $resource = $resource->filter(['fields' => $fields]);
         }
 
-        return $resource->contentType('text/csv')->post($content);
+        return $resource->contentType('text/csv; charset=utf-8')->post($content);
     }
 }

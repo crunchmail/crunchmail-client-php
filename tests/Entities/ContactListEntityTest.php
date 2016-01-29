@@ -101,7 +101,7 @@ class ContactListEntityTest extends TestCase
         $this->assertEquals($content, $history);
 
         $this->assertEquals('contacts/', $request->getUri()->getPath());
-        $this->assertEquals('text/csv', $request->getHeaders()['Content-Type'][0]);
+        $this->assertEquals('text/csv; charset=utf-8', $request->getHeaders()['Content-Type'][0]);
     }
 
     /**
