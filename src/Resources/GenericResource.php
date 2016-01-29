@@ -227,6 +227,32 @@ class GenericResource
     }
 
     /**
+     * Change resource content-type and returns it
+     *
+     * @param string $type Content Type
+     *
+     * @return GenericResource
+     */
+    public function contentType($type)
+    {
+        $that = clone $this;
+        $that->client->headers['Content-Type'] = $type;
+        return $that;
+    }
+
+    /**
+     * Change ressource format to multipart and returns it
+     *
+     * @return GenericResource
+     */
+    public function multipart()
+    {
+        $that = clone $this;
+        $that->client->format = 'multipart';
+        return $that;
+    }
+
+    /**
      * Catch post, put… methods but no get
      *
      * Ex: $cli->messages->post($values)

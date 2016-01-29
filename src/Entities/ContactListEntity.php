@@ -64,7 +64,7 @@ class ContactListEntity extends \Crunchmail\Entities\GenericEntity
      */
     public function import($content, array $fields = null)
     {
-        $resource = $this->contacts;
+        $resource = $this->_resource->client->contacts;
 
         // keep only specified fields
         // ?fields=[a,b,c]
@@ -74,6 +74,6 @@ class ContactListEntity extends \Crunchmail\Entities\GenericEntity
             $resource = $resource->filter(['fields' => $fields]);
         }
 
-        return $resource->post($content);
+        return $resource->contentType('text/csv')->post($content);
     }
 }

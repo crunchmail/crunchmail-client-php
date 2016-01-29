@@ -75,14 +75,14 @@ class Client extends \GuzzleHttp\Client
      *
      * @param string
      */
-    private $format = 'json';
+    public $format = 'json';
 
     /**
      * Default headers
      *
      * @param array
      */
-    private $headers = [];
+    public $headers = [];
 
     /**
       * Initilialize the client, extends guzzle constructor
@@ -182,14 +182,12 @@ class Client extends \GuzzleHttp\Client
      * Request the API with the given method and params.
      *
      * This will execute a guzzle call and catch any guzzle exception.
-     * Default mode is json, but you can specify a multipart format.
      * In that case the values must be in the format expected from guzzle
      *
      * @param string  $method    method to test
      * @param string  $url       url id
      * @param array   $values    data
      * @param array   $filters   filters to apply
-     * @param string  $format    change default json format
      *
      * @return stdClass
      *
@@ -199,7 +197,7 @@ class Client extends \GuzzleHttp\Client
      * @todo Refactor to match guzzle format ( request() )
      */
     //public function apiRequest($method, $url = '', $values = [], $filters = [])
-    public function apiRequest($method, $url = '', $values = [], $filters = [], $format = 'json')
+    public function apiRequest($method, $url = '', $values = [], $filters = [])
     {
         $parse = parse_url($url);
 
@@ -217,10 +215,9 @@ class Client extends \GuzzleHttp\Client
             // TODO: merge headers or use guzzle default on client?
             // making the guzzle call, json or multipart
             $result = $this->$method($url, [
-                $format => $values,
-                //$this->format => $values,
-                'query' => $filters,
-                //'headers' => $this->headers
+                $this->format   => $values,
+                'query'         => $filters,
+                'headers'       => $this->headers
             ]);
         }
         catch (\Exception $e)
@@ -267,52 +264,6 @@ class Client extends \GuzzleHttp\Client
 
         $result = $this->apiRequest('post', $this->config['token_uri'], $params);
         return isset($result->token) ? $result->token : null;
-    }
-
-    /**
-     * Set a cloned client to mulitpart and returns it
-     *
-     * @return Client
-     */
-    public function multipart()
-    {
-        $that = clone $this;
-        $that->setFormat('multipart');
-        return $that;
-    }
-
-    /**
-     * Set a default request format
-     *
-     * @param string $format format
-     */
-    public function setFormat($format = 'json')
-    {
-        $this->format = $format;
-    }
-
-    /**
-     * Set content type to requested type and return a clone client
-     *
-     * @param string $type content type
-     * @return Client
-     */
-    public function contentType($type)
-    {
-        $that = clone $this;
-        $that->setHeader('Content-type', $type);
-        return $that;
-    }
-
-    /**
-     * Set a default header
-     *
-     * @param string $header header name
-     * @param string $value  header value
-     */
-    public function setHeader($header, $value)
-    {
-        $this->headers[$header] = $value;
     }
 
     /**

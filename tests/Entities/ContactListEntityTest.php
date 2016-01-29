@@ -81,18 +81,28 @@ class ContactListEntityTest extends TestCase
 
     /**
      * @covers ::import
+     */
     public function testCsvImport()
     {
-        $client = $this->quickMock(['contact_list_ok' , '200']);
+        $client = $this->quickMock(['contacts' , '200']);
         $data   = $this->getStdTemplate('contact_list_ok');
 
         $clist  = new ContactListEntity($client->contacts->lists, $data);
 
         $content = $this->getTemplate('import.csv');
-
         $result = $clist->import($content);
+
+        $this->assertGenericCollection($result);
+
+        $history = $this->getHistoryContent(0);
+        $request = $this->getHistoryRequest(0);
+
+        // check that content is sent as raw data
+        $this->assertEquals($content, $history);
+
+        $this->assertEquals('contacts/', $request->getUri()->getPath());
+        $this->assertEquals('text/csv', $request->getHeaders()['Content-Type'][0]);
     }
-     */
 
     /**
      * @covers ::addProperty

@@ -100,7 +100,9 @@ class MessageEntity extends \Crunchmail\Entities\GenericEntity
 
         $body = fopen($path, 'r');
 
-        return $this->_resource->client->attachments->post([
+        $client = $this->_resource->multipart()->client;
+
+        return $client->attachments->post([
             [
                 'name' => 'file',
                 'contents' => $body
@@ -109,7 +111,7 @@ class MessageEntity extends \Crunchmail\Entities\GenericEntity
                 'name' => 'message',
                 'contents' => $this->url
             ]
-        ], 'multipart');
+        ]);
     }
 
     /**
