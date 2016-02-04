@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class Crunchmail\Client</title>
+
+	<link rel="stylesheet" href="resources/style.css?e99947befd7bf673c6b43ff75e9e0f170c88a60e">
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+				<li class="active">
+					<a href="namespace-Crunchmail.html">
+						Crunchmail<span></span>
+					</a>
+
+						<ul>
+				<li>
+					<a href="namespace-Crunchmail.Collections.html">
+						Collections					</a>
+
+						</li>
+				<li>
+					<a href="namespace-Crunchmail.Entities.html">
+						Entities					</a>
+
+						</li>
+				<li>
+					<a href="namespace-Crunchmail.Exception.html">
+						Exception					</a>
+
+						</li>
+				<li>
+					<a href="namespace-Crunchmail.PHPUnit.html">
+						PHPUnit					</a>
+
+						</li>
+				<li>
+					<a href="namespace-Crunchmail.Resources.html">
+						Resources					</a>
+
+						</li>
+							</ul></li>
+			</ul>
+		</div>
+
+		<hr>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li class="active"><a href="class-Crunchmail.Client.html">Client</a></li>
+			</ul>
+
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="">
+		<input type="hidden" name="ie" value="UTF-8">
+		<input type="text" name="q" class="text" placeholder="Search">
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-Crunchmail.html" title="Summary of Crunchmail"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class Client</h1>
+
+
+	<div class="description">
+	<p>Crunchmail\Client main class</p>
+	</div>
+
+	<dl class="tree">
+		<dd style="padding-left:0px">
+GuzzleHttp\Client
+			
+			
+		</dd>
+		<dd style="padding-left:30px">
+			<img src="resources/inherit.png" alt="Extended by">
+<b><span>Crunchmail\Client</span></b>			
+			
+			
+		</dd>
+	</dl>
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-Crunchmail.html">Crunchmail</a><br>
+		
+
+			<b>Located at</b> <a href="source-class-Crunchmail.Client.html#23-287" title="Go to source code">Client.php</a>
+		<br>
+	</div>
+
+
+
+	<table class="summary methods" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+
+			object
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-Crunchmail.Client.html#87-109" title="Go to source code">__construct</a>( <span>array <var>$config</var> = []</span> )</code>
+
+		<div class="description short">
+			<p>Initilialize the client, extends guzzle constructor</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Initilialize the client, extends guzzle constructor</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$config</var></dt>
+					<dd>API configuration</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					object
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="__get" id="___get">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-Crunchmail.Resources.GenericResource.html">Crunchmail\Resources\GenericResource</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___get">#</a>
+		<code><a href="source-class-Crunchmail.Client.html#111-125" title="Go to source code">__get</a>( <span>string <var>$name</var></span> )</code>
+
+		<div class="description short">
+			<p>Create a resource when accessing client properties and returns it</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Create a resource when accessing client properties and returns it</p>
+
+<p>Example:
+$client->messages
+$messageEntity->recipients</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd>property</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-Crunchmail.Resources.GenericResource.html">Crunchmail\Resources\GenericResource</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="createResource" id="_createResource">
+
+		<td class="attributes"><code>
+			 public 
+
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_createResource">#</a>
+		<code><a href="source-class-Crunchmail.Client.html#139-167" title="Go to source code">createResource</a>( <span>string <var>$name</var></span>, <span>string <var>$url</var> = <span class="php-quote">''</span></span> )</code>
+
+		<div class="description short">
+			<p>Create a resource depending on name</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Create a resource depending on name</p>
+
+<p>If a specific class exists for this type of ressource (ie:
+attachmentResource) then it will be used.</p>
+
+<p>Forcing an url is usefull when creating a sub-resource from an
+entity object, because the base url is then specific</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd>name of the resource (ie: attachments)</dd>
+					<dt><var>$url</var></dt>
+					<dd>force an url for the resource</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					mixed
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="mapPath" id="_mapPath">
+
+		<td class="attributes"><code>
+			 public 
+
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_mapPath">#</a>
+		<code><a href="source-class-Crunchmail.Client.html#169-179" title="Go to source code">mapPath</a>( <span>string <var>$path</var></span> )</code>
+
+		<div class="description short">
+			<p>Convert resource path if map is found, path otherwise</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Convert resource path if map is found, path otherwise</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$path</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					string
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="apiRequest" id="_apiRequest">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_apiRequest">#</a>
+		<code><a href="source-class-Crunchmail.Client.html#200-230" title="Go to source code">apiRequest</a>( <span> <var>$method</var></span>, <span> <var>$url</var> = <span class="php-quote">''</span></span>, <span> <var>$values</var> = []</span>, <span> <var>$filters</var> = []</span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getTokenFromCredentials" id="_getTokenFromCredentials">
+
+		<td class="attributes"><code>
+			 public 
+
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getTokenFromCredentials">#</a>
+		<code><a href="source-class-Crunchmail.Client.html#232-245" title="Go to source code">getTokenFromCredentials</a>( <span>string <var>$identifier</var></span>, <span>string <var>$password</var></span> )</code>
+
+		<div class="description short">
+			<p>Return an auth token from credentials</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Return an auth token from credentials</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$identifier</var></dt>
+					<dd>login</dd>
+					<dt><var>$password</var></dt>
+					<dd>password</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					string
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getToken" id="_getToken">
+
+		<td class="attributes"><code>
+			 public 
+
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getToken">#</a>
+		<code><a href="source-class-Crunchmail.Client.html#247-267" title="Go to source code">getToken</a>( <span>array <var>$params</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			<p>Return an auth token from given parameters</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Return an auth token from given parameters</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$params</var></dt>
+					<dd>parameters to post</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					string
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="catchGuzzleException" id="_catchGuzzleException">
+
+		<td class="attributes"><code>
+			 protected 
+
+			null
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_catchGuzzleException">#</a>
+		<code><a href="source-class-Crunchmail.Client.html#269-286" title="Go to source code">catchGuzzleException</a>( <span>mixed <var>$exc</var></span> )</code>
+
+		<div class="description short">
+			<p>Catch all guzzle exception types and execute proper action</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Catch all guzzle exception types and execute proper action</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$exc</var></dt>
+					<dd>$e guzzle exception</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					null
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary properties" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="paths" id="$paths">
+		<td class="attributes"><code>
+			public static 
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Crunchmail.Client.html#28-37" title="Go to source code"><var>$paths</var></a>
+
+			<div class="description short">
+				<p>Allowed paths and mapping to api resource path
+ex: $client->recipients will access path /mails</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Allowed paths and mapping to api resource path
+ex: $client->recipients will access path /mails</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$paths" class="anchor">#</a>
+				<code>[
+    <span class="php-quote">'recipients'</span>  =&gt; <span class="php-quote">'mails'</span>,
+    <span class="php-quote">&quot;optouts&quot;</span>     =&gt; <span class="php-quote">'opt-outs'</span>
+]</code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="entities" id="$entities">
+		<td class="attributes"><code>
+			public static 
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Crunchmail.Client.html#39-49" title="Go to source code"><var>$entities</var></a>
+
+			<div class="description short">
+				<p>Plural / Singular names of entites
+This is used to generate class name that need singular form</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Plural / Singular names of entites
+This is used to generate class name that need singular form</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$entities" class="anchor">#</a>
+				<code>[
+    <span class="php-quote">'categories'</span>   =&gt; <span class="php-quote">'category'</span>,
+    <span class="php-quote">'preview'</span>      =&gt; <span class="php-quote">'preview'</span>,
+    <span class="php-quote">'lists'</span>        =&gt; <span class="php-quote">'contactList'</span>
+]</code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="methods" id="$methods">
+		<td class="attributes"><code>
+			public static 
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Crunchmail.Client.html#56-71" title="Go to source code"><var>$methods</var></a>
+
+			<div class="description short">
+				<p>List of authorized methods on client.
+ex: $client->get($url);</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>List of authorized methods on client.
+ex: $client->get($url);</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$methods" class="anchor">#</a>
+				<code>[
+    <span class="php-quote">'get'</span>,
+    <span class="php-quote">'delete'</span>,
+    <span class="php-quote">'head'</span>,
+    <span class="php-quote">'options'</span>,
+    <span class="php-quote">'patch'</span>,
+    <span class="php-quote">'post'</span>,
+    <span class="php-quote">'put'</span>
+    <span class="php-comment">//'request' // request is disable for now, not implemented</span>
+]</code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="format" id="$format">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Crunchmail.Client.html#73-78" title="Go to source code"><var>$format</var></a>
+
+			<div class="description short">
+				<p>Default request format</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Default request format</p>
+
+					<h4>Param</h4>
+					<div class="list">
+							string<br>
+					</div>
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$format" class="anchor">#</a>
+				<code><span class="php-quote">'json'</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="headers" id="$headers">
+		<td class="attributes"><code>
+			public  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Crunchmail.Client.html#80-85" title="Go to source code"><var>$headers</var></a>
+
+			<div class="description short">
+				<p>Default headers</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Default headers</p>
+
+					<h4>Param</h4>
+					<div class="list">
+							array<br>
+					</div>
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$headers" class="anchor">#</a>
+				<code>[]</code>
+			</div>
+		</td>
+	</tr>
+	</table>
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		 API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>

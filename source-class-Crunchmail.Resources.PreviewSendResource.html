@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="robots" content="noindex">
+
+	<title>File Resources/PreviewSendResource.php</title>
+
+	<link rel="stylesheet" href="resources/style.css?e99947befd7bf673c6b43ff75e9e0f170c88a60e">
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+				<li>
+					<a href="namespace-Crunchmail.html">
+						Crunchmail<span></span>
+					</a>
+
+						<ul>
+				<li>
+					<a href="namespace-Crunchmail.Collections.html">
+						Collections					</a>
+
+						</li>
+				<li>
+					<a href="namespace-Crunchmail.Entities.html">
+						Entities					</a>
+
+						</li>
+				<li>
+					<a href="namespace-Crunchmail.Exception.html">
+						Exception					</a>
+
+						</li>
+				<li>
+					<a href="namespace-Crunchmail.PHPUnit.html">
+						PHPUnit					</a>
+
+						</li>
+				<li>
+					<a href="namespace-Crunchmail.Resources.html">
+						Resources					</a>
+
+						</li>
+							</ul></li>
+			</ul>
+		</div>
+
+		<hr>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-Crunchmail.Client.html">Crunchmail\Client</a></li>
+				<li><a href="class-Crunchmail.Collections.GenericCollection.html">Crunchmail\Collections\GenericCollection</a></li>
+				<li><a href="class-Crunchmail.Entities.AttachmentEntity.html">Crunchmail\Entities\AttachmentEntity</a></li>
+				<li><a href="class-Crunchmail.Entities.ContactEntity.html">Crunchmail\Entities\ContactEntity</a></li>
+				<li><a href="class-Crunchmail.Entities.ContactListEntity.html">Crunchmail\Entities\ContactListEntity</a></li>
+				<li><a href="class-Crunchmail.Entities.ContactQueueEntity.html">Crunchmail\Entities\ContactQueueEntity</a></li>
+				<li><a href="class-Crunchmail.Entities.DomainEntity.html">Crunchmail\Entities\DomainEntity</a></li>
+				<li><a href="class-Crunchmail.Entities.GenericEntity.html">Crunchmail\Entities\GenericEntity</a></li>
+				<li><a href="class-Crunchmail.Entities.MessageEntity.html">Crunchmail\Entities\MessageEntity</a></li>
+				<li><a href="class-Crunchmail.Entities.RecipientEntity.html">Crunchmail\Entities\RecipientEntity</a></li>
+				<li><a href="class-Crunchmail.PHPUnit.IsEntityConstraint.html">Crunchmail\PHPUnit\IsEntityConstraint</a></li>
+				<li><a href="class-Crunchmail.PHPUnit.IsGenericCollectionConstraint.html">Crunchmail\PHPUnit\IsGenericCollectionConstraint</a></li>
+				<li><a href="class-Crunchmail.PHPUnit.IsGenericEntityConstraint.html">Crunchmail\PHPUnit\IsGenericEntityConstraint</a></li>
+				<li><a href="class-Crunchmail.PHPUnit.IsGenericResourceConstraint.html">Crunchmail\PHPUnit\IsGenericResourceConstraint</a></li>
+				<li><a href="class-Crunchmail.PHPUnit.IsResourceConstraint.html">Crunchmail\PHPUnit\IsResourceConstraint</a></li>
+				<li><a href="class-Crunchmail.PHPUnit.TestCase.html">Crunchmail\PHPUnit\TestCase</a></li>
+				<li><a href="class-Crunchmail.Resources.DomainsResource.html">Crunchmail\Resources\DomainsResource</a></li>
+				<li><a href="class-Crunchmail.Resources.GenericResource.html">Crunchmail\Resources\GenericResource</a></li>
+				<li><a href="class-Crunchmail.Resources.PreviewSendResource.html">Crunchmail\Resources\PreviewSendResource</a></li>
+			</ul>
+
+
+
+			<h3>Exceptions</h3>
+			<ul>
+				<li><a href="class-Crunchmail.Exception.ApiException.html">Crunchmail\Exception\ApiException</a></li>
+			</ul>
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="">
+		<input type="hidden" name="ie" value="UTF-8">
+		<input type="text" name="q" class="text" placeholder="Search">
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+<span>Namespace</span>			</li>
+			<li>
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<pre><code><span id="1" class="l"><a href="#1"> 1: </a><span class="xlang">&lt;?php</span>
+</span><span id="2" class="l"><a href="#2"> 2: </a><span class="php-comment">/**
+</span></span><span id="3" class="l"><a href="#3"> 3: </a><span class="php-comment"> * Preview Send resource
+</span></span><span id="4" class="l"><a href="#4"> 4: </a><span class="php-comment"> *
+</span></span><span id="5" class="l"><a href="#5"> 5: </a><span class="php-comment"> * This resource is not a classic resource in the API, but it is easier
+</span></span><span id="6" class="l"><a href="#6"> 6: </a><span class="php-comment"> * to handle it this way as it simplifies the code.
+</span></span><span id="7" class="l"><a href="#7"> 7: </a><span class="php-comment"> *
+</span></span><span id="8" class="l"><a href="#8"> 8: </a><span class="php-comment"> * It allows to send the preview easily form a message entitiy:
+</span></span><span id="9" class="l"><a href="#9"> 9: </a><span class="php-comment"> * $message-&gt;preview_send-&gt;post($values);
+</span></span><span id="10" class="l"><a href="#10">10: </a><span class="php-comment"> *
+</span></span><span id="11" class="l"><a href="#11">11: </a><span class="php-comment"> * @author    Yannick Huerre &lt;dev@sheoak.fr&gt;
+</span></span><span id="12" class="l"><a href="#12">12: </a><span class="php-comment"> * @copyright 2015 (c) Oasiswork
+</span></span><span id="13" class="l"><a href="#13">13: </a><span class="php-comment"> * @license   https://opensource.org/licenses/MIT MIT
+</span></span><span id="14" class="l"><a href="#14">14: </a><span class="php-comment"> */</span>
+</span><span id="15" class="l"><a href="#15">15: </a>
+</span><span id="16" class="l"><a href="#16">16: </a><span class="php-keyword1">namespace</span> Crunchmail\Resources;
+</span><span id="17" class="l"><a href="#17">17: </a>
+</span><span id="18" class="l"><a href="#18">18: </a><span class="php-comment">/**
+</span></span><span id="19" class="l"><a href="#19">19: </a><span class="php-comment"> * Preview resource class
+</span></span><span id="20" class="l"><a href="#20">20: </a><span class="php-comment"> */</span>
+</span><span id="21" class="l"><a href="#21">21: </a><span class="php-keyword1">class</span> PreviewSendResource <span class="php-keyword1">extends</span> GenericResource
+</span><span id="22" class="l"><a href="#22">22: </a>{
+</span><span id="23" class="l"><a href="#23">23: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> send(<span class="php-var">$recipients</span>)
+</span><span id="24" class="l"><a href="#24">24: </a>    {
+</span><span id="25" class="l"><a href="#25">25: </a>        <span class="php-var">$recipients</span> = <span class="php-keyword2">is_array</span>(<span class="php-var">$recipients</span>) ? <span class="php-var">$recipients</span> : [ <span class="php-var">$recipients</span> ];
+</span><span id="26" class="l"><a href="#26">26: </a>        <span class="php-var">$values</span> = [<span class="php-quote">'to'</span> =&gt; <span class="php-keyword2">implode</span>(<span class="php-quote">','</span>, <span class="php-var">$recipients</span>) ];
+</span><span id="27" class="l"><a href="#27">27: </a>
+</span><span id="28" class="l"><a href="#28">28: </a>        <span class="php-comment">// sending the preview via crunchmail API</span>
+</span><span id="29" class="l"><a href="#29">29: </a>        <span class="php-keyword1">return</span> <span class="php-var">$this</span>-&gt;post(<span class="php-var">$values</span>);
+</span><span id="30" class="l"><a href="#30">30: </a>    }
+</span><span id="31" class="l"><a href="#31">31: </a>}
+</span><span id="32" class="l"><a href="#32">32: </a></span></code></pre>
+
+	<div id="footer">
+		 API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+</div>
+<script src="resources/combined.js?1c908f70d348a0962a7ae387f2b05713bcb6ee2e"></script>
+<script src="elementlist.js?dcb69bec405e69a92e391475c9d4135f1281a4d5"></script>
+</body>
+</html>

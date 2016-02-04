@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class Crunchmail\Collections\GenericCollection</title>
+
+	<link rel="stylesheet" href="resources/style.css?e99947befd7bf673c6b43ff75e9e0f170c88a60e">
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+				<li class="active">
+					<a href="namespace-Crunchmail.html">
+						Crunchmail<span></span>
+					</a>
+
+						<ul>
+				<li class="active">
+					<a href="namespace-Crunchmail.Collections.html">
+						Collections					</a>
+
+						</li>
+				<li>
+					<a href="namespace-Crunchmail.Entities.html">
+						Entities					</a>
+
+						</li>
+				<li>
+					<a href="namespace-Crunchmail.Exception.html">
+						Exception					</a>
+
+						</li>
+				<li>
+					<a href="namespace-Crunchmail.PHPUnit.html">
+						PHPUnit					</a>
+
+						</li>
+				<li>
+					<a href="namespace-Crunchmail.Resources.html">
+						Resources					</a>
+
+						</li>
+							</ul></li>
+			</ul>
+		</div>
+
+		<hr>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li class="active"><a href="class-Crunchmail.Collections.GenericCollection.html">GenericCollection</a></li>
+			</ul>
+
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="">
+		<input type="hidden" name="ie" value="UTF-8">
+		<input type="text" name="q" class="text" placeholder="Search">
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-Crunchmail.Collections.html" title="Summary of Crunchmail\Collections"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class GenericCollection</h1>
+
+
+	<div class="description">
+	<p>Generic collection for Crunchmail API</p>
+	</div>
+
+	<dl class="tree">
+		<dd style="padding-left:0px">
+<b><span>Crunchmail\Collections\GenericCollection</span></b>			
+			 implements 
+<span>countable</span>
+			
+			
+		</dd>
+	</dl>
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-Crunchmail.html">Crunchmail</a>\<a href="namespace-Crunchmail.Collections.html">Collections</a><br>
+		
+
+			<b>Located at</b> <a href="source-class-Crunchmail.Collections.GenericCollection.html#16-147" title="Go to source code">Collections/GenericCollection.php</a>
+		<br>
+	</div>
+
+
+
+	<table class="summary methods" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+
+			object
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-Crunchmail.Collections.GenericCollection.html#42-63" title="Go to source code">__construct</a>( <span><code><a href="class-Crunchmail.Resources.GenericResource.html">Crunchmail\Resources\GenericResource</a></code> <var>$resource</var></span>, <span>array <var>$data</var></span> )</code>
+
+		<div class="description short">
+			<p>Initilialize the collection by populating the collection as an array of
+entities</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Initilialize the collection by populating the collection as an array of
+entities</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$resource</var></dt>
+					<dd>parent resource</dd>
+					<dt><var>$data</var></dt>
+					<dd>$config API configuration</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					object
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getResponse" id="_getResponse">
+
+		<td class="attributes"><code>
+			 public 
+
+			GuzzleHttp\Psr7\Response
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getResponse">#</a>
+		<code><a href="source-class-Crunchmail.Collections.GenericCollection.html#65-73" title="Go to source code">getResponse</a>( )</code>
+
+		<div class="description short">
+			<p>Returns the raw response</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns the raw response</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					GuzzleHttp\Psr7\Response
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="count" id="_count">
+
+		<td class="attributes"><code>
+			 public 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_count">#</a>
+		<code><a href="source-class-Crunchmail.Collections.GenericCollection.html#75-83" title="Go to source code">count</a>( )</code>
+
+		<div class="description short">
+			<p>Return the number of results</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Return the number of results</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					integer
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="pageCount" id="_pageCount">
+
+		<td class="attributes"><code>
+			 public 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_pageCount">#</a>
+		<code><a href="source-class-Crunchmail.Collections.GenericCollection.html#85-93" title="Go to source code">pageCount</a>( )</code>
+
+		<div class="description short">
+			<p>Return the number of pages</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Return the number of pages</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					integer
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="current" id="_current">
+
+		<td class="attributes"><code>
+			 public 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_current">#</a>
+		<code><a href="source-class-Crunchmail.Collections.GenericCollection.html#95-103" title="Go to source code">current</a>( )</code>
+
+		<div class="description short">
+			<p>Return the current set of results</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Return the current set of results</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="next" id="_next">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-Crunchmail.Collections.GenericCollection.html">Crunchmail\Collections\GenericCollection</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_next">#</a>
+		<code><a href="source-class-Crunchmail.Collections.GenericCollection.html#105-113" title="Go to source code">next</a>( )</code>
+
+		<div class="description short">
+			<p>Repopulate collection with next results</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Repopulate collection with next results</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-Crunchmail.Collections.GenericCollection.html">Crunchmail\Collections\GenericCollection</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="previous" id="_previous">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-Crunchmail.Collections.GenericCollection.html">Crunchmail\Collections\GenericCollection</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_previous">#</a>
+		<code><a href="source-class-Crunchmail.Collections.GenericCollection.html#115-123" title="Go to source code">previous</a>( )</code>
+
+		<div class="description short">
+			<p>Repopulate current collection with previous results</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Repopulate current collection with previous results</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-Crunchmail.Collections.GenericCollection.html">Crunchmail\Collections\GenericCollection</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getAdjacent" id="_getAdjacent">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-Crunchmail.Collections.GenericCollection.html">Crunchmail\Collections\GenericCollection</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getAdjacent">#</a>
+		<code><a href="source-class-Crunchmail.Collections.GenericCollection.html#125-136" title="Go to source code">getAdjacent</a>( <span>string <var>$direction</var></span> )</code>
+
+		<div class="description short">
+			<p>Return next or previous page</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Return next or previous page</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$direction</var></dt>
+					<dd>next or previous</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-Crunchmail.Collections.GenericCollection.html">Crunchmail\Collections\GenericCollection</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="refresh" id="_refresh">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-Crunchmail.Collections.GenericCollection.html">Crunchmail\Collections\GenericCollection</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_refresh">#</a>
+		<code><a href="source-class-Crunchmail.Collections.GenericCollection.html#138-146" title="Go to source code">refresh</a>( )</code>
+
+		<div class="description short">
+			<p>Repopulate current collection with fresh data</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Repopulate current collection with fresh data</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-Crunchmail.Collections.GenericCollection.html">Crunchmail\Collections\GenericCollection</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		 API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>
