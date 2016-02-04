@@ -316,3 +316,72 @@ Verifying  a domain
     $client->domains->verify($domain);
 
 
+ContactEntity
+=============
+
+Copy a contact to another list
+------------------------------
+
+:Method: ``copyTo($list)``
+:Summary: Copy the current contact to another contact list
+:Parameters:
+    - ``GenericEntity $list`` : Contact list Entity
+:Returns: ContactEntity
+
+.. code-block:: php
+
+    // $contactList is a contact list entity
+    $newContact = $contact->copyTo($contactList);
+
+
+ContactListEntity
+=================
+
+Merge contact lists together
+----------------------------
+
+:Method: ``merge($lists)``
+:Summary: Merge the given contact lists into the current one
+:Parameters:
+    - ``Array $lists`` : List of contact lists entities or contact lists url
+:Returns: ContactListEntity
+
+.. code-block:: php
+
+    // $contactList is a contact list entity
+
+    // merge using contact lists urls:
+    $newContactList = $contactlist->merge([$url1, $url2]);
+    // or contact lists entities:
+    $newContactList = $contactlist->merge([$contactList1, $contactList2]);
+
+
+Import
+======
+
+Import contacts in a CSV format into a contact list
+---------------------------------------------------
+
+:Method: ``import($content, $fields = null)``
+:Summary: Import the CSV into $content into the current contact list
+:Parameters:
+    - ``String $content`` : CSV content
+    - ``Array  $fields`` : Only keep those fields (all if null)
+:Returns: ContactListEntity
+
+.. code-block:: php
+
+    // $contactList is a contact list entity
+
+    $content = file_get_contents('contacts.csv');
+
+    // import content with all fields
+    $newContactList = $contactlist->import($content);
+
+    // import content with only some fields
+    $fields = ['name', 'age'];
+    $newContactList = $contactlist->import($content, $fields);
+
+.. note::
+
+    See API documentation for the CSV formatting

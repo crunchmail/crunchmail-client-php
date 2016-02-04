@@ -114,6 +114,7 @@ Direct acces to a page
 
     $collection = $client->messages->page(3);
 
+
 DomainsResource
 ===============
 
@@ -175,3 +176,17 @@ PreviewSendResource
 
     $messageEntity->preview_send->send('ilove@crunchmail.net');
 
+
+Sub-resources
+=============
+
+You can also access sub-resources directly using the recursive syntax.
+This is useful when using, for example, the contact lists features.
+
+.. code-block:: php
+
+    // accessing /contacts/lists/ end-point
+    $contactListsCollection  = $client->contacts->lists->get();
+
+    // accessing /contacts/queues/ end-point
+    $contactQueuesCollection = $client->contacts->queues->get();
