@@ -27,12 +27,11 @@ class Client extends \GuzzleHttp\Client
 {
     /**
      * Allowed paths and mapping to api resource path
-     * ex: $client->recipients will access path /mails
+     * ex: $client->optouts will access path /opt-outs
      *
      * @var array
      */
     public static $paths = [
-        'recipients'  => 'mails',
         "optouts"     => 'opt-outs'
     ];
 
