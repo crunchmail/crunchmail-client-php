@@ -37,9 +37,7 @@ class GenericEntity
      *
      * @var array
      */
-    protected static $links = [
-        'recipients'   => 'mails'
-    ];
+    protected static $links = [];
 
     /**
      * Resource mapping
